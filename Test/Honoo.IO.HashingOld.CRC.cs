@@ -9,7 +9,7 @@
 
 using System;
 
-namespace Honoo.IO.Hashing
+namespace Honoo.IO.HashingOld
 {
     /// <summary>
     /// CRC algorithm helper.

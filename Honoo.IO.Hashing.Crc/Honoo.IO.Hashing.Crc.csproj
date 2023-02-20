@@ -13,7 +13,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
-		<PackageTags>Honoo Hashing Crc Crc4 Crc5 Crc6 Crc7 Crc8 Crc16 Crc32 Crc64</PackageTags>
+		<PackageTags>Honoo Hashing Crc Crc4 Crc5 Crc6 Crc7 Crc8 Crc16 Crc32 Crc64 Custom</PackageTags>
 		<AssemblyName>Honoo.IO.Hashing.Crc</AssemblyName>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
 		<Version>1.0.0</Version>
@@ -37,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
