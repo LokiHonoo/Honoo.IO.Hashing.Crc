@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Honoo.IO.Hashing.Crc", "Honoo.IO.Hashing.Crc\Honoo.IO.Hashing.Crc.csproj", "{6F5FFE6D-B30A-4C2C-ABBD-5A32050B3272}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{B9A2DCE1-CD98-4342-8F03-CE66C231CEC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F5FFE6D-B30A-4C2C-ABBD-5A32050B3272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5FFE6D-B30A-4C2C-ABBD-5A32050B3272}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5FFE6D-B30A-4C2C-ABBD-5A32050B3272}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5FFE6D-B30A-4C2C-ABBD-5A32050B3272}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A2DCE1-CD98-4342-8F03-CE66C231CEC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A2DCE1-CD98-4342-8F03-CE66C231CEC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A2DCE1-CD98-4342-8F03-CE66C231CEC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A2DCE1-CD98-4342-8F03-CE66C231CEC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFA4C883-FB51-4D29-9FFF-ADDF38B289BD}
+	EndGlobalSection
+EndGlobal
