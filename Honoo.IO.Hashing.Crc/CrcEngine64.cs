@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace Honoo.IO.HashingOld
+namespace Honoo.IO.Hashing
 {
     internal sealed class CrcEngine64 : CrcEngine
     {
         #region Properties
 
-        private readonly int _checksumLength;
+        private readonly int _checksumByteLength;
+        private readonly int _checksumStringLength;
         private readonly ulong _init;
         private readonly int _move;
         private readonly ulong _poly;
@@ -27,12 +28,13 @@ namespace Honoo.IO.HashingOld
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 64.", nameof(checksumSize));
             }
-            _checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
+            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 64 - checksumSize;
             _refin = refin;
             _refout = refout;
-                _poly = Parse(poly, _move, _refin);
-                _init = Parse(init, _move, _refin);          
+            _poly = Parse(poly, _move, _refin);
+            _init = Parse(init, _move, _refin);
             _xorout = xorout;
             _crc = _init;
         }
@@ -44,7 +46,8 @@ namespace Honoo.IO.HashingOld
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 64.", nameof(checksumSize));
             }
-            _checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
+            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 64 - checksumSize;
             _refin = refin;
             _refout = refout;
@@ -83,7 +86,7 @@ namespace Honoo.IO.HashingOld
             ulong[] table = new ulong[256];
             for (int i = 0; i < 256; i++)
             {
-                ulong data = (ulong)(i << 56);
+                ulong data = (ulong)i << 56;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data & 0x8000000000000000) == 0x8000000000000000)
@@ -112,7 +115,8 @@ namespace Honoo.IO.HashingOld
             }
             return input;
         }
-        internal override object DoFinal()
+
+        internal override string DoFinal()
         {
             if (_refout ^ _refin)
             {
@@ -123,10 +127,18 @@ namespace Honoo.IO.HashingOld
                 _crc >>= _move;
             }
             _crc ^= _xorout;
-            object result = _crc;
+            string result = Convert.ToString((long)_crc, 16).PadLeft(16, '0');
             _crc = _init;
-            return result;
+            if (result.Length > _checksumStringLength)
+            {
+                return result.Substring(result.Length - _checksumStringLength, _checksumStringLength).ToUpperInvariant();
+            }
+            else
+            {
+                return result.ToUpperInvariant();
+            }
         }
+
         internal override byte[] DoFinal(bool littleEndian)
         {
             if (_refout ^ _refin)
@@ -138,7 +150,7 @@ namespace Honoo.IO.HashingOld
                 _crc >>= _move;
             }
             _crc ^= _xorout;
-            byte[] result = new byte[_checksumLength];
+            byte[] result = new byte[_checksumByteLength];
             if (littleEndian)
             {
                 for (int i = 0; i < result.Length; i++)
@@ -181,7 +193,7 @@ namespace Honoo.IO.HashingOld
             }
             else
             {
-                _crc ^= (ulong)(input << 56);
+                _crc ^= (ulong)input << 56;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((_crc & 0x8000000000000000) == 0x8000000000000000)

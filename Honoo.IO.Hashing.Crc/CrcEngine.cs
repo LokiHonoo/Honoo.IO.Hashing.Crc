@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Honoo.IO.HashingOld
+namespace Honoo.IO.Hashing
 {
     internal abstract class CrcEngine
     {
@@ -8,10 +8,10 @@ namespace Honoo.IO.HashingOld
 
         private readonly string _algorithmName;
         private readonly int _checksumSize;
-        private readonly bool _useTable;
+        private readonly bool _withTable;
         internal string AlgorithmName => _algorithmName;
         internal int ChecksumSize => _checksumSize;
-        internal bool UseTable => _useTable;
+        internal bool WithTable => _withTable;
 
         #endregion Properties
 
@@ -21,12 +21,12 @@ namespace Honoo.IO.HashingOld
         {
             _algorithmName = algorithmName ?? throw new ArgumentNullException(nameof(algorithmName));
             _checksumSize = checksumSize;
-            _useTable = useTable;
+            _withTable = useTable;
         }
 
         #endregion Construction
 
-        internal abstract object DoFinal();
+        internal abstract string DoFinal();
 
         internal abstract byte[] DoFinal(bool littleEndian);
 
@@ -34,7 +34,7 @@ namespace Honoo.IO.HashingOld
 
         internal void Update(byte input)
         {
-            if (_useTable)
+            if (_withTable)
             {
                 UpdateWithTable(input);
             }

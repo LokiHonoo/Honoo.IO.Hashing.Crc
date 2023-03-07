@@ -1,77 +1,85 @@
-﻿namespace Honoo.IO.HashingOld
+﻿namespace Honoo.IO.Hashing
 {
     /// <summary>
-    /// CRC-16/AUG-CCITT.
+    /// CRC-16. CRC-16/ARC, ARC, CRC-16/LHA, CRC-IBM.
     /// </summary>
-    public sealed class Crc16AugCcitt : Crc
+    public sealed class Crc16 : Crc
     {
         private static ushort[] _table;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16AugCcitt class.
+        /// Initializes a new instance of the Crc16Ccitt class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16AugCcitt(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16(bool withTable = true) : base(GetEngine("CRC-16", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
-            // poly = 0x1021;
+            // poly = 0x8005; reverse = 0xA001;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
-                    _table = CrcEngine16.GenerateTable(0x1021);
+                    _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16("CRC-16/AUG-CCITT", 16, false, false, _table, 0x1D0F, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/AUG-CCITT", 16, false, false, 0x1021, 0x1D0F, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/BUYPASS.
+    /// CRC-16/UMTS, CRC-16/BUYPASS, CRC-16/VERIFONE.
     /// </summary>
-    public sealed class Crc16BuyPass : Crc
+    public sealed class Crc16Umts : Crc
     {
         private static ushort[] _table;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16BuyPass class.
+        /// Initializes a new instance of the Crc16Umts class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16BuyPass(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Umts(bool withTable = true) : base(GetEngine("CRC-16/UMTS", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Umts(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x8005);
                 }
-                return new CrcEngine16("CRC-16/BUYPASS", 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/BUYPASS", 16, false, false, 0x8005, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/CCITT. CRC-16/KERMIT.
+    /// CRC-16/CCITT. CRC-CCITT, CRC-16/CCITT-TRUE, CRC-16/KERMIT, KERMIT, CRC-16/BLUETOOTH, CRC-16/V-41-LSB.
     /// </summary>
     public sealed class Crc16Ccitt : Crc
     {
@@ -80,33 +88,37 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Ccitt class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Ccitt(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Ccitt(bool withTable = true) : base(GetEngine("CRC-16/CCITT", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Ccitt(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-16/CCITT", 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/CCITT", 16, true, true, 0x1021, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x0000, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/CCITT-FALSE.
+    /// CRC-16/CCITT-FALSE, CRC-16/IBM-3740, CRC-16/AUTOSAR.
     /// </summary>
     public sealed class Crc16CcittFalse : Crc
     {
@@ -115,28 +127,32 @@
         /// <summary>
         /// Initializes a new instance of the Crc16CcittFalse class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16CcittFalse(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16CcittFalse(bool withTable = true) : base(GetEngine("CRC-16/CCITT-FALSE", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16CcittFalse(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16("CRC-16/CCITT-FALSE", 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/CCITT-FALSE", 16, false, false, 0x1021, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0x0000);
             }
         }
     }
@@ -151,27 +167,62 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Cdma2000 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Cdma2000(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Cdma2000(bool withTable = true) : base(GetEngine("CRC-16/CDMA2000", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0xC867;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0xC867);
                 }
-                return new CrcEngine16("CRC-16/CDMA2000", 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/CDMA2000", 16, false, false, 0xC867, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xC867, 0xFFFF, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/CMS.
+    /// </summary>
+    public sealed class Crc16Cms : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16Cms class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Cms(bool withTable = true) : base(GetEngine("CRC-16/CMS", withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x8005;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x8005);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0xFFFF, 0x0000);
             }
         }
     }
@@ -186,33 +237,33 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Dds110 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Dds110(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Dds110(bool withTable = true) : base(GetEngine("CRC-16/DDS-110", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8005;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x8005);
                 }
-                return new CrcEngine16("CRC-16/DDS-110", 16, false, false, _table, 0x800D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x800D, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/DDS-110", 16, false, false, 0x8005, 0x800D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x800D, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/DECT-R.
+    /// CRC-16/DECT-R, R-CRC-16.
     /// </summary>
     public sealed class Crc16DectR : Crc
     {
@@ -221,33 +272,37 @@
         /// <summary>
         /// Initializes a new instance of the Crc16DectR class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16DectR(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16DectR(bool withTable = true) : base(GetEngine("CRC-16/DECT-R", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16DectR(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x0589;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x0589);
                 }
-                return new CrcEngine16("CRC-16/DECT-R", 16, false, false, _table, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0001);
             }
             else
             {
-                return new CrcEngine16("CRC-16/DECT-R", 16, false, false, 0x0589, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0001);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/DECT-X.
+    /// CRC-16/DECT-X, X-CRC-16.
     /// </summary>
     public sealed class Crc16DectX : Crc
     {
@@ -256,27 +311,31 @@
         /// <summary>
         /// Initializes a new instance of the Crc16DectX class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16DectX(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16DectX(bool withTable = true) : base(GetEngine("CRC-16/DECT-X", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16DectX(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x0589;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x0589);
                 }
-                return new CrcEngine16("CRC-16/DECT-X", 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/DECT-X", 16, false, false, 0x0589, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0000);
             }
         }
     }
@@ -291,27 +350,27 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Dnp class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Dnp(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Dnp(bool withTable = true) : base(GetEngine("CRC-16/DNP", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x3D65; reverse = 0xA6BC;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA6BC);
                 }
-                return new CrcEngine16("CRC-16/DNP", 16, true, true, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/DNP", 16, true, true, 0x3D65, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x3D65, 0x0000, 0xFFFF);
             }
         }
     }
@@ -326,33 +385,33 @@
         /// <summary>
         /// Initializes a new instance of the Crc16En13757 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16En13757(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16En13757(bool withTable = true) : base(GetEngine("CRC-16/EN-13757", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x3D65;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x3D65);
                 }
-                return new CrcEngine16("CRC-16/EN-13757", 16, false, false, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/EN-13757", 16, false, false, 0x3D65, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x3D65, 0x0000, 0xFFFF);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/GENIBUS.
+    /// CRC-16/GENIBUS, CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE.
     /// </summary>
     public sealed class Crc16Genibus : Crc
     {
@@ -361,68 +420,142 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Genibus class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Genibus(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Genibus(bool withTable = true) : base(GetEngine("CRC-16/GENIBUS", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Genibus(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16("CRC-16/GENIBUS", 16, false, false, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/GENIBUS", 16, false, false, 0x1021, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0xFFFF);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/IBM. CRC-16/ARC. CRC-16/LHA.
+    ///  CRC-16/GSM.
     /// </summary>
-    public sealed class Crc16Ibm : Crc
+    public sealed class Crc16Gsm : Crc
     {
         private static ushort[] _table;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Ibm class.
+        /// Initializes a new instance of the Crc16Gsm class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Ibm(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Gsm(bool withTable = true) : base(GetEngine("CRC-16/GSM", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
-            // poly = 0x8005; reverse = 0xA001;
+            // poly = 0x1021;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
-                    _table = CrcEngine16.GenerateReversedTable(0xA001);
+                    _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16("CRC-16/IBM", 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/IBM", 16, true, true, 0x8005, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0xFFFF);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/MAXIM.
+    /// CRC-16/LJ1200.
+    /// </summary>
+    public sealed class Crc16Lj1200 : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16Lj1200 class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Lj1200(bool withTable = true) : base(GetEngine("CRC-16/LJ1200", withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x6F63;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x6F63);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x6F63, 0x0000, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/M17.
+    /// </summary>
+    public sealed class Crc16M17 : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16M17 class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16M17(bool withTable = true) : base(GetEngine("CRC-16/M17", withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x5935;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x5935);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0xFFFF, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/MAXIM, CRC-16/MAXIM-DOW.
     /// </summary>
     public sealed class Crc16Maxim : Crc
     {
@@ -431,27 +564,31 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Ibm class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Maxim(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Maxim(bool withTable = true) : base(GetEngine("CRC-16/MAXIM", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Maxim(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8005; reverse = 0xA001;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16("CRC-16/MAXIM", 16, true, true, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/MAXIM", 16, true, true, 0x8005, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0xFFFF);
             }
         }
     }
@@ -466,34 +603,34 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Mcrf4XX class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Mcrf4XX(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Mcrf4XX(bool withTable = true) : base(GetEngine("CRC-16/MCRF4XX", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-16/MCRF4XX", 16, true, true, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/MCRF4XX", 16, true, true, 0x1021, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/MODBUS.
+    /// CRC-16/MODBUS, MODBUS.
     /// </summary>
     public sealed class Crc16Modbus : Crc
     {
@@ -502,28 +639,184 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Modbus class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Modbus(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Modbus(bool withTable = true) : base(GetEngine("CRC-16/MODBUS", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Modbus(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8005; reverse = 0xA001;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16("CRC-16/MODBUS", 16, true, true, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/MODBUS", 16, true, true, 0x8005, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/NRSC-5.
+    /// </summary>
+    public sealed class Crc16Nrsc5 : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16Nrsc5 class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Nrsc5(bool withTable = true) : base(GetEngine("CRC-16/NRSC-5", withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x080B; reverse = 0xD010;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateReversedTable(0xD010);
+                }
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, true, true, 0x080B, 0xFFFF, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/OPENSAFETY-A.
+    /// </summary>
+    public sealed class Crc16OpensafetyA : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16OpensafetyA class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16OpensafetyA(bool withTable = true) : base(GetEngine("CRC-16/OPENSAFETY-A", withTable))
+        {
+        }
+
+        internal Crc16OpensafetyA(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x5935;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x5935);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0x0000, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/OPENSAFETY-B.
+    /// </summary>
+    public sealed class Crc16OpensafetyB : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16OpensafetyB class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16OpensafetyB(bool withTable = true) : base(GetEngine("CRC-16/OPENSAFETY-B", withTable))
+        {
+        }
+
+        internal Crc16OpensafetyB(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x755B;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x755B);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x755B, 0x0000, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/PROFIBUS, CRC-16/IEC-61158-2.
+    /// </summary>
+    public sealed class Crc16Profibus : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16Profibus class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Profibus(bool withTable = true) : base(GetEngine("CRC-16/PROFIBUS", withTable))
+        {
+        }
+
+        internal Crc16Profibus(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x1DCF;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x1DCF);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0xFFFF);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1DCF, 0xFFFF, 0xFFFF);
             }
         }
     }
@@ -538,29 +831,68 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Riello class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Riello(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Riello(bool withTable = true) : base(GetEngine("CRC-16/RIELLO", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             // init = 0xB2AA; reverse = 0x554D;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-16/RIELLO", 16, true, true, _table, 0x554D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x554D, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/RIELLO", 16, true, true, 0x1021, 0xB2AA, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xB2AA, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/SPI-FUJITSU, CRC-16/AUG-CCITT.
+    /// </summary>
+    public sealed class Crc16SpiFujitsu : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16AugCcitt class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16SpiFujitsu(bool withTable = true) : base(GetEngine("CRC-16/SPI-FUJITSU", withTable))
+        {
+        }
+
+        internal Crc16SpiFujitsu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x1021;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x1021);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x1D0F, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x1D0F, 0x0000);
             }
         }
     }
@@ -575,28 +907,28 @@
         /// <summary>
         /// Initializes a new instance of the Crc16T10Dif class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16T10Dif(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16T10Dif(bool withTable = true) : base(GetEngine("CRC-16/T10-DIF", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8BB7;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x8BB7);
                 }
-                return new CrcEngine16("CRC-16/T10-DIF", 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/T10-DIF", 16, false, false, 0x8BB7, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8BB7, 0x0000, 0x0000);
             }
         }
     }
@@ -611,27 +943,27 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Teledisk class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Teledisk(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Teledisk(bool withTable = true) : base(GetEngine("CRC-16/TELEDISK", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0xA097;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0xA097);
                 }
-                return new CrcEngine16("CRC-16/TELEDISK", 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/TELEDISK", 16, false, false, 0xA097, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xA097, 0x0000, 0x0000);
             }
         }
     }
@@ -646,29 +978,29 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Tms37157 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Tms37157(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Tms37157(bool withTable = true) : base(GetEngine("CRC-16/TMS37157", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             // poly = 0x89EC; reverse = 0x3791;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-16/TMS37157", 16, true, true, _table, 0x3791, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x3791, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/TMS37157", 16, true, true, 0x1021, 0x89EC, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x89EC, 0x0000);
             }
         }
     }
@@ -683,33 +1015,33 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Usb class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Usb(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Usb(bool withTable = true) : base(GetEngine("CRC-16/USB", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8005; reverse = 0xA001;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16("CRC-16/USB", 16, true, true, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/USB", 16, true, true, 0x8005, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0xFFFF);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/X25.
+    /// CRC-16/X-25. X-25, CRC-16/IBM-SDLC, CRC-16/ISO-HDLC, CRC-16/ISO-IEC-14443-3-B, CRC-B.
     /// </summary>
     public sealed class Crc16X25 : Crc
     {
@@ -718,34 +1050,38 @@
         /// <summary>
         /// Initializes a new instance of the Crc16X25 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16X25(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16X25(bool withTable = true) : base(GetEngine("CRC-16/X-25", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16X25(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-16/X25", 16, true, true, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0xFFFF);
             }
             else
             {
-                return new CrcEngine16("CRC-16/X25", 16, true, true, 0x1021, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0xFFFF);
             }
         }
     }
 
     /// <summary>
-    /// CRC-16/XMODEM. CRC-16/ZMODEM. CRC-16/ACORN.
+    /// CRC-16/XMODEM. XMODEM, ZMODEM, CRC-16/ACORN, CRC-16/LTE, CRC-16/V-41-MSB.
     /// </summary>
     public sealed class Crc16Xmodem : Crc
     {
@@ -754,27 +1090,31 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Xmodem class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Xmodem(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Xmodem(bool withTable = true) : base(GetEngine("CRC-16/XMODEM", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal Crc16Xmodem(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021;
             //
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16("CRC-16/XMODEM", 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/XMODEM", 16, false, false, 0x1021, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0x0000);
             }
         }
     }
@@ -789,34 +1129,34 @@
         /// <summary>
         /// Initializes a new instance of the Crc16Xmodem2 class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public Crc16Xmodem2(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Xmodem2(bool withTable = true) : base(GetEngine("CRC-16/XMODEM2", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x8408; reverse = 0x1021;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x1021);
                 }
-                return new CrcEngine16("CRC-16/XMODEM2", 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-16/XMODEM2", 16, true, true, 0x8408, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8408, 0x0000, 0x0000);
             }
         }
     }
 
     /// <summary>
-    /// CRC-A.
+    /// CRC-A, CRC-16/ISO-IEC-14443-3-A.
     /// </summary>
     public sealed class CrcA : Crc
     {
@@ -825,29 +1165,33 @@
         /// <summary>
         /// Initializes a new instance of the CrcA class.
         /// </summary>
-        /// <param name="useTable">Calculations using the table.</param>
-        public CrcA(bool useTable = true) : base(GetEngine(useTable))
+        /// <param name="withTable">Calculations with the table.</param>
+        public CrcA(bool withTable = true) : base(GetEngine("CRC-A", withTable))
         {
         }
 
-        private static CrcEngine GetEngine(bool useTable)
+        internal CrcA(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
             // poly = 0x1021; reverse = 0x8408;
             // init = 0xC6C6; reverse = 0x6363;
             //
 
-            if (useTable)
+            if (withTable)
             {
                 if (_table == null)
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16("CRC-A", 16, true, true, _table, 0x6363, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x6363, 0x0000);
             }
             else
             {
-                return new CrcEngine16("CRC-A", 16, true, true, 0x1021, 0xC6C6, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xC6C6, 0x0000);
             }
         }
     }

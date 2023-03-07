@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="catalogue.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="catalogue.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Honoo.IO.Hashing.Crc\Honoo.IO.Hashing.Crc.csproj" />
   </ItemGroup>
 

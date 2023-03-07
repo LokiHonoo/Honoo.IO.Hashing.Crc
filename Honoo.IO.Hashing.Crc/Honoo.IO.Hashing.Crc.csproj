@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
@@ -6,15 +6,19 @@
 		<Company>Loki Honoo</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
-		<SignAssembly>true</SignAssembly>
+		<SignAssembly>false</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<Authors>Loki Honoo</Authors>
-		<Description></Description>
+		<Description>
+			CRC implemenations.
+			All CRC of catalogue(112) are supported.
+			Arbitrary lengths and custom parameters are supported.
+			Catalogue of parametrised CRC algorithms: https://reveng.sourceforge.io/crc-catalogue/all.htm .
+		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
-		<PackageTags>Honoo Hashing Crc Crc4 Crc5 Crc6 Crc7 Crc8 Crc16 Crc32 Crc64 Custom</PackageTags>
-		<AssemblyName>Honoo.IO.Hashing.Crc</AssemblyName>
+		<PackageTags>Honoo Hashing Crc Crc3 Crc4 Crc5 Crc6 Crc7 Crc8 Crc12 Crc16 Crc24 Crc32 Crc64 Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
 		<Version>1.0.0</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
