@@ -6,7 +6,7 @@
 		<Company>Loki Honoo</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
-		<SignAssembly>false</SignAssembly>
+		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<Authors>Loki Honoo</Authors>
 		<Description>CRC implemenations. All CRC of catalogue(112) are supported. Arbitrary lengths and custom parameters are supported.</Description>
@@ -15,7 +15,7 @@
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
 		<PackageTags>Honoo Hashing Crc Crc3 Crc4 Crc5 Crc6 Crc7 Crc8 Crc12 Crc16 Crc24 Crc32 Crc40 Crc64 Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
