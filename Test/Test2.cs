@@ -76,10 +76,10 @@ namespace Test
         {
             _error = 0;
             Alg[] algs = GetAlgs();
-            foreach (Alg alg in algs)
-            {
-                Console.WriteLine(string.Join(',', alg.Names)+",");
-            }
+            //foreach (Alg alg in algs)
+            //{
+            //    Console.WriteLine(string.Join(',', alg.Names)+",");
+            //}
             string str = "1111221ADV233334444555566677788000AAAABB";
             byte[] input = Encoding.UTF8.GetBytes(str);
             foreach (Alg alg in algs)
@@ -142,7 +142,7 @@ namespace Test
         private static string Calc(Crc crc, byte[] input)
         {
             byte[] checksum = crc.DoFinal(false, input);
-            ulong l = GetBEUInt64(checksum);
+            string l = CrcUtilities.ToHex(false, checksum, 0, (int)Math.Ceiling(crc.ChecksumSize / 4d));
             string v = crc.DoFinal(input);
             Console.Write(crc.AlgorithmName.PadRight(20));
             Console.Write($"WITH_TABLE {crc.WithTable}".PadRight(20));
@@ -150,17 +150,6 @@ namespace Test
             Console.Write(v + "   ");
             Console.WriteLine(l);
             return v;
-        }
-
-        private static ulong GetBEUInt64(byte[] input)
-        {
-            ulong result = 0;
-            int length = Math.Min(input.Length, 8);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (input[length - 1 - i] & 0xFFUL) << (8 * i);
-            }
-            return result;
         }
 
         internal struct Alg

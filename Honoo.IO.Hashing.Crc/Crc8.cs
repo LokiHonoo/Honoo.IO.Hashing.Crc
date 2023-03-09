@@ -15,7 +15,7 @@
         {
         }
 
-        internal Crc8(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc8(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -229,7 +229,7 @@
         {
         }
 
-        internal Crc8Ebu(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc8Ebu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -408,7 +408,7 @@
         {
         }
 
-        internal Crc8Itu(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc8Itu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -483,7 +483,7 @@
         {
         }
 
-        internal Crc8Maxim(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc8Maxim(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

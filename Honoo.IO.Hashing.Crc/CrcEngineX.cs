@@ -175,8 +175,6 @@ namespace Honoo.IO.Hashing
             {
                 return result.ToString().ToUpperInvariant();
             }
-            // byte[] result = DoFinal(false);
-            // return BitConverter.ToString(result).Replace("-", null);
         }
 
         internal override byte[] DoFinal(bool littleEndian)

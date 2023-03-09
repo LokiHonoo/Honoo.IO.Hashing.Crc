@@ -51,7 +51,7 @@
         {
         }
 
-        internal Crc12Dect(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc12Dect(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -125,7 +125,7 @@
         {
         }
 
-        internal Crc12Umts(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc12Umts(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

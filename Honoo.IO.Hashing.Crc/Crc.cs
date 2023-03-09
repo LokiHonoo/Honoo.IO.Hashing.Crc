@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
-    /// <br/>Catalogue of parametrised CRC algorithms: <see cref="https://reveng.sourceforge.io/crc-catalogue/all.htm"/>
+    /// <br/>Catalogue of parametrised CRC algorithms: https://reveng.sourceforge.io/crc-catalogue/all.htm .
     /// </summary>
     public abstract class Crc
     {
@@ -50,7 +49,7 @@ namespace Honoo.IO.Hashing
         {
             if (string.IsNullOrWhiteSpace(algorithmName))
             {
-                throw new CryptographicException("Unsupported algorithm name.");
+                throw new ArgumentException("Unsupported algorithm name.", nameof(algorithmName));
             }
             algorithmName = algorithmName.Replace("_", null).Replace("-", null).Replace("/", null).Replace("\\", null).Trim().ToUpperInvariant();
             switch (algorithmName)

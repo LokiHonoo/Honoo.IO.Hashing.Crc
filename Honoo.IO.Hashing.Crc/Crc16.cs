@@ -40,45 +40,6 @@
     }
 
     /// <summary>
-    /// CRC-16/UMTS, CRC-16/BUYPASS, CRC-16/VERIFONE.
-    /// </summary>
-    public sealed class Crc16Umts : Crc
-    {
-        private static ushort[] _table;
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Umts class.
-        /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc16Umts(bool withTable = true) : base(GetEngine("CRC-16/UMTS", withTable))
-        {
-        }
-
-        internal Crc16Umts(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
-        {
-        }
-
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
-        {
-            //
-            // poly = 0x1021;
-            //
-            if (withTable)
-            {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0x8005);
-                }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
-            }
-            else
-            {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000);
-            }
-        }
-    }
-
-    /// <summary>
     /// CRC-16/CCITT. CRC-CCITT, CRC-16/CCITT-TRUE, CRC-16/KERMIT, KERMIT, CRC-16/BLUETOOTH, CRC-16/V-41-LSB.
     /// </summary>
     public sealed class Crc16Ccitt : Crc
@@ -1001,6 +962,45 @@
             else
             {
                 return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x89EC, 0x0000);
+            }
+        }
+    }
+
+    /// <summary>
+    /// CRC-16/UMTS, CRC-16/BUYPASS, CRC-16/VERIFONE.
+    /// </summary>
+    public sealed class Crc16Umts : Crc
+    {
+        private static ushort[] _table;
+
+        /// <summary>
+        /// Initializes a new instance of the Crc16Umts class.
+        /// </summary>
+        /// <param name="withTable">Calculations with the table.</param>
+        public Crc16Umts(bool withTable = true) : base(GetEngine("CRC-16/UMTS", withTable))
+        {
+        }
+
+        internal Crc16Umts(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        {
+        }
+
+        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        {
+            //
+            // poly = 0x1021;
+            //
+            if (withTable)
+            {
+                if (_table == null)
+                {
+                    _table = CrcEngine16.GenerateTable(0x8005);
+                }
+                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+            }
+            else
+            {
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000);
             }
         }
     }

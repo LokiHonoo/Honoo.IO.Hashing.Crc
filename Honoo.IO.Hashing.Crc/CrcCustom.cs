@@ -91,39 +91,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        private static ushort GetBEUInt16(byte[] input)
-        {
-            ushort result = 0;
-            int length = Math.Min(input.Length, 2);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (ushort)((input[length - 1 - i] & 0xFF) << (8 * i));
-            }
-            return result;
-        }
-
-        private static uint GetBEUInt32(byte[] input)
-        {
-            uint result = 0;
-            int length = Math.Min(input.Length, 4);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (input[length - 1 - i] & 0xFFU) << (8 * i);
-            }
-            return result;
-        }
-
-        private static ulong GetBEUInt64(byte[] input)
-        {
-            ulong result = 0;
-            int length = Math.Min(input.Length, 8);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (input[length - 1 - i] & 0xFFUL) << (8 * i);
-            }
-            return result;
-        }
-
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable)
         {
             if (withTable)
@@ -239,9 +206,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ushort poly = GetBEUInt16(polyBytes);
-                        ushort init = GetBEUInt16(initBytes);
-                        ushort xorout = GetBEUInt16(xoroutBytes);
+                        ushort poly = CrcUtilities.ToUInt16(false, polyBytes, 0);
+                        ushort init = CrcUtilities.ToUInt16(false, initBytes, 0);
+                        ushort xorout = CrcUtilities.ToUInt16(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
@@ -250,9 +217,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ushort poly = GetBEUInt16(polyBytes);
-                        ushort init = GetBEUInt16(initBytes);
-                        ushort xorout = GetBEUInt16(xoroutBytes);
+                        ushort poly = CrcUtilities.ToUInt16(false, polyBytes, 0);
+                        ushort init = CrcUtilities.ToUInt16(false, initBytes, 0);
+                        ushort xorout = CrcUtilities.ToUInt16(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 
@@ -261,9 +228,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        uint poly = GetBEUInt32(polyBytes);
-                        uint init = GetBEUInt32(initBytes);
-                        uint xorout = GetBEUInt32(xoroutBytes);
+                        uint poly = CrcUtilities.ToUInt32(false, polyBytes, 0);
+                        uint init = CrcUtilities.ToUInt32(false, initBytes, 0);
+                        uint xorout = CrcUtilities.ToUInt32(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
@@ -272,9 +239,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        uint poly = GetBEUInt32(polyBytes);
-                        uint init = GetBEUInt32(initBytes);
-                        uint xorout = GetBEUInt32(xoroutBytes);
+                        uint poly = CrcUtilities.ToUInt32(false, polyBytes, 0);
+                        uint init = CrcUtilities.ToUInt32(false, initBytes, 0);
+                        uint xorout = CrcUtilities.ToUInt32(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 
@@ -283,9 +250,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ulong poly = GetBEUInt64(polyBytes);
-                        ulong init = GetBEUInt64(initBytes);
-                        ulong xorout = GetBEUInt64(xoroutBytes);
+                        ulong poly = CrcUtilities.ToUInt64(false, polyBytes, 0);
+                        ulong init = CrcUtilities.ToUInt64(false, initBytes, 0);
+                        ulong xorout = CrcUtilities.ToUInt64(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
@@ -294,9 +261,9 @@ namespace Honoo.IO.Hashing
                         byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
                         byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
                         byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ulong poly = GetBEUInt64(polyBytes);
-                        ulong init = GetBEUInt64(initBytes);
-                        ulong xorout = GetBEUInt64(xoroutBytes);
+                        ulong poly = CrcUtilities.ToUInt64(false, polyBytes, 0);
+                        ulong init = CrcUtilities.ToUInt64(false, initBytes, 0);
+                        ulong xorout = CrcUtilities.ToUInt64(false, xoroutBytes, 0);
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 

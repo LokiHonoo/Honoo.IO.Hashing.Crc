@@ -1,7 +1,5 @@
 ﻿namespace Honoo.IO.Hashing
 {
-
-
     /// <summary>
     /// CRC-14/DARC.
     /// </summary>

@@ -15,7 +15,7 @@
         {
         }
 
-        internal Crc7(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc7(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

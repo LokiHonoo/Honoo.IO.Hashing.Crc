@@ -186,9 +186,6 @@ namespace Honoo.IO.Hashing
             {
                 return result.ToString().ToUpperInvariant();
             }
-
-            // byte[] result = DoFinal(false);
-            // return BitConverter.ToString(result).Replace("-", null);
         }
 
         internal override byte[] DoFinal(bool littleEndian)
@@ -206,16 +203,16 @@ namespace Honoo.IO.Hashing
             if (littleEndian)
             {
                 int j = -1;
-                int m = 3;
+                int m = 24;
                 for (int i = 0; i < result.Length; i++)
                 {
                     if (i % 4 == 0)
                     {
                         j++;
-                        m = 3;
+                        m = 24;
                     }
-                    result[i] = (byte)(_crc[j] << (m * 8));
-                    m--;
+                    result[i] = (byte)(_crc[j] << m);
+                    m -= 8;
                 }
             }
             else
@@ -229,8 +226,8 @@ namespace Honoo.IO.Hashing
                         j--;
                         m = 0;
                     }
-                    result[result.Length - 1 - i] = (byte)(_crc[j] >> (m * 8));
-                    m++;
+                    result[result.Length - 1 - i] = (byte)(_crc[j] >> m);
+                    m += 8;
                 }
             }
             _crc = (uint[])_init.Clone();

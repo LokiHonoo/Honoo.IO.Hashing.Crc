@@ -14,9 +14,11 @@
         public Crc64(bool withTable = true) : base(GetEngine("CRC-64", withTable))
         {
         }
-        internal Crc64(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+
+        internal Crc64(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
+
         private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
@@ -191,9 +193,11 @@
         public Crc64Xz(bool withTable = true) : base(GetEngine("CRC-64/XZ", withTable))
         {
         }
-        internal Crc64Xz(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+
+        internal Crc64Xz(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
+
         private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //

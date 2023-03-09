@@ -15,7 +15,7 @@
         {
         }
 
-        internal Crc32(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -54,7 +54,7 @@
         {
         }
 
-        internal Crc32Bzip2(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Bzip2(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -93,7 +93,7 @@
         {
         }
 
-        internal Crc32c(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32c(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -167,7 +167,7 @@
         {
         }
 
-        internal Crc32Cksum(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Cksum(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -206,7 +206,7 @@
         {
         }
 
-        internal Crc32d(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32d(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -280,7 +280,7 @@
         {
         }
 
-        internal Crc32JamCrc(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32JamCrc(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -424,7 +424,7 @@
         {
         }
 
-        internal Crc32q(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32q(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -498,7 +498,7 @@
         {
         }
 
-        internal Crc32Xfer(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Xfer(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

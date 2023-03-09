@@ -165,8 +165,9 @@ private static void Demo2()
 {
     var crc = new Crc16Modbus();
     crc.Update(inputBytes);
-    // The return value length with Algorithm width.
+    // The return value length with Algorithm width / 8.
     byte[] checksum = crc.DoFinal(littleEndian);
+    ushort modbus = CrcUtilities.ToUInt16(littleEndian, checksum, 0);
 }
 
 private static void Demo3()

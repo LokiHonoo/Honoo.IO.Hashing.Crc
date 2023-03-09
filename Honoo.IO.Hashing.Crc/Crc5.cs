@@ -15,7 +15,7 @@
         {
         }
 
-        internal Crc5Epc(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc5Epc(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -55,7 +55,7 @@
         {
         }
 
-        internal Crc5Itu(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc5Itu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

@@ -20,8 +20,8 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine8(string algorithmName,  int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout)
-            : base(algorithmName,  checksumSize, false)
+        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout)
+            : base(algorithmName, checksumSize, false)
         {
             if (checksumSize <= 0 || checksumSize > 8)
             {
@@ -38,7 +38,7 @@ namespace Honoo.IO.Hashing
         }
 
         internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte[] table, byte init, byte xorout)
-            : base(algorithmName,  checksumSize, true)
+            : base(algorithmName, checksumSize, true)
         {
             if (checksumSize <= 0 || checksumSize > 8)
             {

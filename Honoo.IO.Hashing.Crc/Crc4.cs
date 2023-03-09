@@ -14,9 +14,11 @@
         public Crc4Itu(bool withTable = true) : base(GetEngine("CRC-4/ITU", withTable))
         {
         }
-        internal Crc4Itu(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+
+        internal Crc4Itu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
+
         private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
@@ -72,6 +74,4 @@
             }
         }
     }
-
-
 }

@@ -157,7 +157,7 @@
         {
         }
 
-        internal Crc6Itu(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc6Itu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 

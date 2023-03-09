@@ -8,9 +8,8 @@
         {
             Test2.Test();
             Console.WriteLine();
-            Console.WriteLine(); 
+            Console.WriteLine();
             Spped.Test();
-
             //
             //
             //

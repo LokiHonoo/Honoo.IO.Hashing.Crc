@@ -1,6 +1,5 @@
 ﻿namespace Honoo.IO.Hashing
 {
-
     /// <summary>
     /// CRC-15, CRC-15/CAN.
     /// </summary>
@@ -16,7 +15,7 @@
         {
         }
 
-        internal Crc15(string alias,bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc15(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
         {
         }
 
@@ -43,7 +42,7 @@
     /// <summary>
     /// CRC-15/MPT1327.
     /// </summary>
-    public sealed  class Crc15Mpt1327 : Crc
+    public sealed class Crc15Mpt1327 : Crc
     {
         private static ushort[] _table;
 
