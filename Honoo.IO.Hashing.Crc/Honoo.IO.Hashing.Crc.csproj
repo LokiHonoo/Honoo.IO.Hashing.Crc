@@ -9,18 +9,13 @@
 		<SignAssembly>false</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<Authors>Loki Honoo</Authors>
-		<Description>
-			CRC implemenations.
-			All CRC of catalogue(112) are supported.
-			Arbitrary lengths and custom parameters are supported.
-			Catalogue of parametrised CRC algorithms: https://reveng.sourceforge.io/crc-catalogue/all.htm .
-		</Description>
+		<Description>CRC implemenations. All CRC of catalogue(112) are supported. Arbitrary lengths and custom parameters are supported.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
-		<PackageTags>Honoo Hashing Crc Crc3 Crc4 Crc5 Crc6 Crc7 Crc8 Crc12 Crc16 Crc24 Crc32 Crc64 Crc82</PackageTags>
+		<PackageTags>Honoo Hashing Crc Crc3 Crc4 Crc5 Crc6 Crc7 Crc8 Crc12 Crc16 Crc24 Crc32 Crc40 Crc64 Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
