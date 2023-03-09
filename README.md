@@ -13,9 +13,9 @@
 
 CRC implemenations.
 
-All CRC of catalogue(112) are supported.
+CRC name of catalogue(112) are supported.
 
-Arbitrary lengths and custom parameters are supported.
+Custom lengths and parameters are supported.
 
 Catalogue of parametrised CRC algorithms: <https://reveng.sourceforge.io/crc-catalogue/all.htm> .
 
@@ -165,33 +165,44 @@ private static void Demo2()
 {
     var crc = new Crc16Modbus();
     crc.Update(inputBytes);
-    // The return value length with Algorithm width / 8.
+    // The return value length is crc.ChecksumLength.
     byte[] checksum = crc.DoFinal(littleEndian);
-    ushort modbus = CrcUtilities.ToUInt16(littleEndian, checksum, 0);
 }
 
 private static void Demo3()
 {
-    // Arbitrary lengths and custom parameters are supported.
+    var crc = Crc.Create("CRC-40/GSM");
+    crc.Update(inputBytes);
+    // Checksum size is 40 bits, ulong is 64 bits, The truncated is "False".
+    bool truncated = crc.DoFinal(out ulong checksum);
+    crc.Update(inputBytes);
+    // Checksum size is 40 bits, uint is 32 bits, The truncated is "True".
+    bool truncated = crc.DoFinal(out uint checksum);
+}
+
+private static void Demo4()
+{
+    // Custom lengths and parameters are supported.
     var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
-    byte[] checksum = crc.DoFinal(littleEndian, inputBytes);
+    crc.Update(inputBytes);
+    byte[] checksum = new byte[crc.ChecksumLength];
+    int length = crc.DoFinal(littleEndian, checksum, 0);
 }
 
 ```
 
 ### Speed
 
-CRC-64 calc 100000 times elapsed: 257 ms
-
-CRC-64 with table calc 100000 times elapsed: 93 ms
-
-CRC-64 Sharding8 core calc 100000 times elapsed: 1928 ms
-
-CRC-64 Sharding8 core with table calc 100000 times elapsed: 316 ms
-
-CRC-64 Sharding32 core calc 100000 times elapsed: 831 ms
-
-CRC-64 Sharding32 core with table calc 100000 times elapsed: 137 ms
+|algorithm|core|table|times|elapsed|
+|:-------:|:--:|:---:|:---:|------:|
+|CRC-32|32 bits|false|100000|81 ms|
+|CRC-32|32 bits|true|100000|26 ms|
+|CRC-32|sharding 8 bits|false|100000|400 ms|
+|CRC-32|sharding 8 bits|true|100000|72 ms|
+|CRC-32|sharding 32 bits|false|100000|253 ms|
+|CRC-32|sharding 32 bits|true|100000|42 ms|
+|CRC-64/REDIS|64 bits|true|100000|28 ms|
+|CRC-64/REDIS|sharding 32 bits|true|100000|53 ms|
 
 ## License
 

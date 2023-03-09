@@ -115,15 +115,7 @@ namespace Honoo.IO.Hashing
 
         internal override string DoFinal()
         {
-            if (_refout ^ _refin)
-            {
-                _crc = Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                _crc >>= _move;
-            }
-            _crc ^= _xorout;
+            Finish();
             string result = Convert.ToString(_crc, 16).PadLeft(2, '0');
             _crc = _init;
             if (result.Length > _checksumStringLength)
@@ -138,18 +130,49 @@ namespace Honoo.IO.Hashing
 
         internal override byte[] DoFinal(bool littleEndian)
         {
-            if (_refout ^ _refin)
-            {
-                _crc = Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                _crc >>= _move;
-            }
-            _crc ^= _xorout;
-            byte[] result = new byte[] { _crc };
-            _crc = _init;
+            byte[] result = new byte[1];
+            DoFinal(littleEndian, result, 0);
             return result;
+        }
+
+        internal override int DoFinal(bool littleEndian, byte[] output, int offset)
+        {
+            Finish();
+            output[offset] = _crc;
+            _crc = _init;
+            return 1;
+        }
+
+        internal override bool DoFinal(out byte checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out ushort checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out uint checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out ulong checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
         }
 
         internal override void Reset()
@@ -209,6 +232,19 @@ namespace Honoo.IO.Hashing
             input = (byte)((input & 0x33) << 2 | (input >> 2) & 0x33);
             input = (byte)((input & 0x0F) << 4 | (input >> 4) & 0x0F);
             return input;
+        }
+
+        private void Finish()
+        {
+            if (_refout ^ _refin)
+            {
+                _crc = Reverse(_crc);
+            }
+            if (_move > 0 && !_refout)
+            {
+                _crc >>= _move;
+            }
+            _crc ^= _xorout;
         }
     }
 }

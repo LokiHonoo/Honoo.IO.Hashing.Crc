@@ -7,6 +7,7 @@ namespace Honoo.IO.Hashing
         #region Properties
 
         private readonly int _checksumByteLength;
+        private readonly int _checksumSize;
         private readonly int _checksumStringLength;
         private readonly ushort _init;
         private readonly int _move;
@@ -28,6 +29,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 16 - checksumSize;
@@ -46,6 +48,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 16 - checksumSize;
@@ -118,15 +121,7 @@ namespace Honoo.IO.Hashing
 
         internal override string DoFinal()
         {
-            if (_refout ^ _refin)
-            {
-                _crc = Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                _crc >>= _move;
-            }
-            _crc ^= _xorout;
+            Finish();
             string result = Convert.ToString(_crc, 16).PadLeft(4, '0');
             _crc = _init;
             if (result.Length > _checksumStringLength)
@@ -141,32 +136,62 @@ namespace Honoo.IO.Hashing
 
         internal override byte[] DoFinal(bool littleEndian)
         {
-            if (_refout ^ _refin)
-            {
-                _crc = Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                _crc >>= _move;
-            }
-            _crc ^= _xorout;
             byte[] result = new byte[_checksumByteLength];
+            DoFinal(littleEndian, result, 0);
+            return result;
+        }
+
+        internal override int DoFinal(bool littleEndian, byte[] output, int offset)
+        {
+            Finish();
             if (littleEndian)
             {
-                for (int i = 0; i < result.Length; i++)
+                for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    result[i] = (byte)(_crc >> (i * 8));
+                    output[i] = (byte)(_crc >> (i * 8));
                 }
             }
             else
             {
-                for (int i = 0; i < result.Length; i++)
+                for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    result[result.Length - 1 - i] = (byte)(_crc >> (i * 8));
+                    output[_checksumByteLength - 1 - i] = (byte)(_crc >> (i * 8));
                 }
             }
             _crc = _init;
-            return result;
+            return _checksumByteLength;
+        }
+
+        internal override bool DoFinal(out byte checksum)
+        {
+            Finish();
+            checksum = (byte)_crc;
+            _crc = _init;
+            return _checksumSize > 8;
+        }
+
+        internal override bool DoFinal(out ushort checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out uint checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out ulong checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
         }
 
         internal override void Reset()
@@ -227,6 +252,19 @@ namespace Honoo.IO.Hashing
             input = (ushort)((input & 0x0F0F) << 4 | (input >> 4) & 0x0F0F);
             input = (ushort)((input & 0x00FF) << 8 | (input >> 8) & 0x00FF);
             return input;
+        }
+
+        private void Finish()
+        {
+            if (_refout ^ _refin)
+            {
+                _crc = Reverse(_crc);
+            }
+            if (_move > 0 && !_refout)
+            {
+                _crc >>= _move;
+            }
+            _crc ^= _xorout;
         }
     }
 }

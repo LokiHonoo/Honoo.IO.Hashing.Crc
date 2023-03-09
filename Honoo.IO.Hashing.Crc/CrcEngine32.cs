@@ -16,6 +16,7 @@ namespace Honoo.IO.Hashing
         private readonly uint[] _table;
         private readonly uint _xorout;
         private uint _crc;
+        private readonly int _checksumSize;
 
         #endregion Properties
 
@@ -28,6 +29,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 32 - checksumSize;
@@ -46,6 +48,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             _move = 32 - checksumSize;
@@ -118,15 +121,7 @@ namespace Honoo.IO.Hashing
 
         internal override string DoFinal()
         {
-            if (_refout ^ _refin)
-            {
-                _crc = Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                _crc >>= _move;
-            }
-            _crc ^= _xorout;
+            Finish();
             string result = Convert.ToString(_crc, 16).PadLeft(8, '0');
             _crc = _init;
             if (result.Length > _checksumStringLength)
@@ -141,6 +136,66 @@ namespace Honoo.IO.Hashing
 
         internal override byte[] DoFinal(bool littleEndian)
         {
+            byte[] result = new byte[_checksumByteLength];
+            DoFinal(littleEndian, result, 0);
+            return result;
+        }
+
+        internal override int DoFinal(bool littleEndian, byte[] output, int offset)
+        {
+            Finish();
+            if (littleEndian)
+            {
+                for (int i = 0; i < _checksumByteLength; i++)
+                {
+                    output[i] = (byte)(_crc >> (i * 8));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _checksumByteLength; i++)
+                {
+                    output[_checksumByteLength - 1 - i] = (byte)(_crc >> (i * 8));
+                }
+            }
+            _crc = _init;
+            return _checksumByteLength;
+        }
+
+        internal override bool DoFinal(out byte checksum)
+        {
+            Finish();
+            checksum = (byte)_crc;
+            _crc = _init;
+            return _checksumSize > 8;
+        }
+
+        internal override bool DoFinal(out ushort checksum)
+        {
+            Finish();
+            checksum = (ushort)_crc;
+            _crc = _init;
+            return _checksumSize > 16;
+        }
+
+        internal override bool DoFinal(out uint checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        internal override bool DoFinal(out ulong checksum)
+        {
+            Finish();
+            checksum = _crc;
+            _crc = _init;
+            return false;
+        }
+
+        private void Finish()
+        {
             if (_refout ^ _refin)
             {
                 _crc = Reverse(_crc);
@@ -150,23 +205,6 @@ namespace Honoo.IO.Hashing
                 _crc >>= _move;
             }
             _crc ^= _xorout;
-            byte[] result = new byte[_checksumByteLength];
-            if (littleEndian)
-            {
-                for (int i = 0; i < result.Length; i++)
-                {
-                    result[i] = (byte)(_crc >> (i * 8));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < result.Length; i++)
-                {
-                    result[result.Length - 1 - i] = (byte)(_crc >> (i * 8));
-                }
-            }
-            _crc = _init;
-            return result;
         }
 
         internal override void Reset()

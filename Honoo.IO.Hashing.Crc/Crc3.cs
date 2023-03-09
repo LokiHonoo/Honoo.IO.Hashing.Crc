@@ -18,20 +18,20 @@
         private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
-            // poly = 0x03; reverse >>(8-3) = 0x06;
-            // init = 0x07; reverse >>(8-3) = 0x07;
+            // poly = 0x3; reverse >>(8-3) = 0x6;
+            // init = 0x7; reverse >>(8-3) = 0x7;
             //
             if (withTable)
             {
                 if (_table == null)
                 {
-                    _table = CrcEngine8.GenerateReversedTable(0x06);
+                    _table = CrcEngine8.GenerateReversedTable(0x6);
                 }
-                return new CrcEngine8(algorithmName, 3, true, true, _table, 0x07, 0x00);
+                return new CrcEngine8(algorithmName, 3, true, true, _table, 0x7, 0x0);
             }
             else
             {
-                return new CrcEngine8(algorithmName, 3, true, true, 0x03, 0x07, 0x00);
+                return new CrcEngine8(algorithmName, 3, true, true, 0x3, 0x7, 0x0);
             }
         }
     }
@@ -54,7 +54,7 @@
         private static CrcEngine GetEngine(string algorithmName, bool withTable)
         {
             //
-            // poly = 0x03; <<(8-3) = 0x60;
+            // poly = 0x3; <<(8-3) = 0x60;
             //
             if (withTable)
             {
@@ -62,11 +62,11 @@
                 {
                     _table = CrcEngine8.GenerateTable(0x60);
                 }
-                return new CrcEngine8(algorithmName, 3, false, false, _table, 0x00, 0x07);
+                return new CrcEngine8(algorithmName, 3, false, false, _table, 0x0, 0x7);
             }
             else
             {
-                return new CrcEngine8(algorithmName, 3, false, false, 0x03, 0x00, 0x07);
+                return new CrcEngine8(algorithmName, 3, false, false, 0x3, 0x0, 0x7);
             }
         }
     }

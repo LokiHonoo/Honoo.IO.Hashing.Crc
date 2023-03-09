@@ -7,6 +7,7 @@ namespace Test
 {
     internal static class Test2
     {
+        private static readonly Random _random = new Random();
         private static int _error = 0;
 
         internal static Alg[] GetAlgs()
@@ -86,42 +87,34 @@ namespace Test
             {
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
-                if (alg.Width <= 64)
-                {
-                    Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
-                }
-                else
-                {
-                    Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout}");
-                    Console.WriteLine($"Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
-                }
-                string v = string.Empty;
+                Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
+                string t = string.Empty;
                 bool error = false;
                 foreach (var name in alg.Names)
                 {
-                    v = Calc(Crc.Create(name), input);
-                    if (Calc(Crc.Create(name, false), input) != v)
+                    t = Calc(Crc.Create(name), input);
+                    if (Calc(Crc.Create(name, false), input) != t)
                     {
                         error = true;
                     }
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto), input) != v)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto), input) != t)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != v)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != t)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != v)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != t)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != v)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != t)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != v)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != t)
                 {
                     error = true;
                 }
@@ -141,15 +134,39 @@ namespace Test
 
         private static string Calc(Crc crc, byte[] input)
         {
-            byte[] checksum = crc.DoFinal(false, input);
-            string l = CrcUtilities.ToHex(false, checksum, 0, (int)Math.Ceiling(crc.ChecksumSize / 4d));
-            string v = crc.DoFinal(input);
+            crc.Update(input);
+            byte[] checksum = crc.DoFinal(false);
+            string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
+            crc.Update(input);
+            string t = crc.DoFinal();
+            crc.Update(input);
+            crc.DoFinal(out byte b);
+            string bb = Convert.ToString(b, 16).ToUpperInvariant();
+            crc.Update(input);
+            crc.DoFinal(out ushort s);
+            string ss = Convert.ToString(s, 16).ToUpperInvariant();
+            crc.Update(input);
+            crc.DoFinal(out uint i);
+            string ii = Convert.ToString(i, 16).ToUpperInvariant();
+            crc.Update(input);
+            bool truncated = crc.DoFinal(out ulong l);
+            string ll = Convert.ToString((long)l, 16).ToUpperInvariant();
             Console.Write(crc.AlgorithmName.PadRight(20));
-            Console.Write($"WITH_TABLE {crc.WithTable}".PadRight(20));
-            Console.Write(BitConverter.ToString(checksum).Replace('-', (char)0) + "   ");
-            Console.Write(v + "   ");
-            Console.WriteLine(l);
-            return v;
+            Console.Write(crc.WithTable ? "TABLE   " : "        ");
+            Console.Write(a + " ");
+            Console.Write(t + " ");
+            Console.Write(bb + " ");
+            Console.Write(ss + " ");
+            Console.Write(ii + " ");
+            Console.Write(ll + " ");
+            Console.WriteLine(truncated);
+            bool error = false;
+            if (!a.EndsWith(t)) error = true;
+            if (!t.EndsWith(bb.ToString())) error = true;
+            if (!t.EndsWith(ss.ToString())) error = true;
+            if (!t.EndsWith(ii.ToString())) error = true;
+            if (!t.EndsWith(ll.ToString())) error = true;
+            return error ? _random.NextDouble().ToString() : t;
         }
 
         internal struct Alg

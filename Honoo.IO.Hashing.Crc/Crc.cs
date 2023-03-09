@@ -18,6 +18,11 @@ namespace Honoo.IO.Hashing
         public string AlgorithmName => _engine.AlgorithmName;
 
         /// <summary>
+        /// Gets checksum byte length.
+        /// </summary>
+        public int ChecksumLength => _engine.ChecksumLength;
+
+        /// <summary>
         /// Gets checksum size bits.
         /// </summary>
         public int ChecksumSize => _engine.ChecksumSize;
@@ -39,7 +44,7 @@ namespace Honoo.IO.Hashing
         #endregion Construction
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by algorithm name.
         /// </summary>
         /// <param name="algorithmName">Crc algorithm name.</param>
         /// <param name="withTable">Calculations with the table.</param>
@@ -249,7 +254,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="checksumSize">Checkum size bits. The allowed values are between 0 - 8.</param>
         /// <param name="refin">Reflects input value.</param>
@@ -265,7 +270,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="checksumSize">Checkum size bits. The allowed values are between 0 - 16.</param>
         /// <param name="refin">Reflects input value.</param>
@@ -281,7 +286,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="checksumSize">Checkum size bits. The allowed values are between 0 - 32.</param>
         /// <param name="refin">Reflects input value.</param>
@@ -297,7 +302,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="checksumSize">Checkum size bits. The allowed values are between 0 - 64.</param>
         /// <param name="refin">Reflects input value.</param>
@@ -313,7 +318,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Creates an instance of the specified implementation of a CRC algorithm.
+        /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="checksumSize">Checkum size bits. The allowed values are more than 0.</param>
         /// <param name="refin">Reflects input value.</param>
@@ -329,7 +334,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Compute input crc value and reset calculator. The return value is "Hex String".
+        /// Calculates checksum and reset the calculator. The return value is "Hex String".
         /// </summary>
         /// <returns></returns>
         public string DoFinal()
@@ -338,47 +343,9 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Compute input crc value and reset calculator. The return value is "Hex String".
+        /// Calculates checksum and reset the calculator.
         /// </summary>
-        /// <param name="input">Input.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string DoFinal(byte input)
-        {
-            Update(input);
-            return DoFinal();
-        }
-
-        /// <summary>
-        /// Compute input crc value and reset calculator. The return value is "Hex String".
-        /// </summary>
-        /// <param name="input">Input.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string DoFinal(byte[] input)
-        {
-            Update(input);
-            return DoFinal();
-        }
-
-        /// <summary>
-        /// Compute input crc value and reset calculator. The return value is "Hex String".
-        /// </summary>
-        /// <param name="buffer">Input buffer.</param>
-        /// <param name="offset">Read start offset from buffer.</param>
-        /// <param name="length">Read length from buffer.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string DoFinal(byte[] buffer, int offset, int length)
-        {
-            Update(buffer, offset, length);
-            return DoFinal();
-        }
-
-        /// <summary>
-        /// Compute input crc value and reset calculator.
-        /// </summary>
-        /// <param name="littleEndian">Output little endian bytes.</param>
+        /// <param name="littleEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         public byte[] DoFinal(bool littleEndian)
         {
@@ -386,44 +353,65 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Compute input crc value and reset calculator.
+        /// Calculates checksum and reset the calculator.
+        /// <br/>Write to output buffer and return checksum byte length.
         /// </summary>
-        /// <param name="littleEndian">Output little endian bytes.</param>
-        /// <param name="input">Input.</param>
+        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="output">Output buffer.</param>
+        /// <param name="offset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public byte[] DoFinal(bool littleEndian, byte input)
+        public int DoFinal(bool littleEndian, byte[] output, int offset)
         {
-            Update(input);
-            return DoFinal(littleEndian);
+            return _engine.DoFinal(littleEndian, output, offset);
         }
 
         /// <summary>
-        /// Compute input crc value and reset calculator.
+        /// Calculates checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a value indicating whether the checksum is truncated.
         /// </summary>
-        /// <param name="littleEndian">Output little endian bytes.</param>
-        /// <param name="input">Input.</param>
+        /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public byte[] DoFinal(bool littleEndian, byte[] input)
+        public bool DoFinal(out byte checksum)
         {
-            Update(input);
-            return DoFinal(littleEndian);
+            return _engine.DoFinal(out checksum);
         }
 
         /// <summary>
-        /// Compute input crc value and reset calculator.
+        /// Calculates checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a value indicating whether the checksum is truncated.
         /// </summary>
-        /// <param name="littleEndian">Output little endian bytes.</param>
-        /// <param name="buffer">Input buffer.</param>
-        /// <param name="offset">Read start offset from buffer.</param>
-        /// <param name="length">Read length from buffer.</param>
+        /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public byte[] DoFinal(bool littleEndian, byte[] buffer, int offset, int length)
+        public bool DoFinal(out ushort checksum)
         {
-            Update(buffer, offset, length);
-            return DoFinal(littleEndian);
+            return _engine.DoFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Calculates checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a value indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool DoFinal(out uint checksum)
+        {
+            return _engine.DoFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Calculates checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a value indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool DoFinal(out ulong checksum)
+        {
+            return _engine.DoFinal(out checksum);
         }
 
         /// <summary>

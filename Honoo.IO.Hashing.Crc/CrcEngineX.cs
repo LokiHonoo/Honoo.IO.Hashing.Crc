@@ -8,6 +8,7 @@ namespace Honoo.IO.Hashing
         #region Properties
 
         private readonly int _checksumByteLength;
+        private readonly int _checksumSize;
         private readonly int _checksumStringLength;
         private readonly byte[] _init;
         private readonly int _move;
@@ -29,6 +30,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             int rem = checksumSize % 8;
@@ -48,6 +50,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
             }
+            _checksumSize = checksumSize;
             _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
             _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             int rem = checksumSize % 8;
@@ -152,15 +155,7 @@ namespace Honoo.IO.Hashing
 
         internal override string DoFinal()
         {
-            if (_refout ^ _refin)
-            {
-                Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                ShiftRight(_crc, _move);
-            }
-            Xor(_crc, _xorout);
+            Finish();
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < _crc.Length; i++)
             {
@@ -179,32 +174,73 @@ namespace Honoo.IO.Hashing
 
         internal override byte[] DoFinal(bool littleEndian)
         {
-            if (_refout ^ _refin)
-            {
-                Reverse(_crc);
-            }
-            if (_move > 0 && !_refout)
-            {
-                ShiftRight(_crc, _move);
-            }
-            Xor(_crc, _xorout);
             byte[] result = new byte[_checksumByteLength];
+            DoFinal(littleEndian, result, 0);
+            return result;
+        }
+
+        internal override int DoFinal(bool littleEndian, byte[] output, int offset)
+        {
+            Finish();
             if (littleEndian)
             {
-                for (int i = 0; i < result.Length; i++)
+                for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    result[result.Length - 1 - i] = _crc[i];
+                    output[_checksumByteLength - 1 - i + offset] = _crc[i];
                 }
             }
             else
             {
-                for (int i = 0; i < result.Length; i++)
+                for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    result[i] = _crc[i];
+                    output[i + offset] = _crc[i];
                 }
             }
             _crc = (byte[])_init.Clone();
-            return result;
+            return _checksumByteLength;
+        }
+
+        internal override bool DoFinal(out byte checksum)
+        {
+            Finish();
+            checksum = _crc[_crc.Length - 1];
+            _crc = (byte[])_init.Clone();
+            return _checksumSize > 8;
+        }
+
+        internal override bool DoFinal(out ushort checksum)
+        {
+            Finish();
+            checksum = _crc[_crc.Length - 1];
+            if (_crc.Length > 1) checksum |= (ushort)((_crc[_crc.Length - 1 - 1] & 0xFF) << 8);
+            _crc = (byte[])_init.Clone();
+            return _checksumSize > 16;
+        }
+
+        internal override bool DoFinal(out uint checksum)
+        {
+            Finish();
+            checksum = _crc[_crc.Length - 1];
+            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFU) << 8;
+            if (_crc.Length > 2) checksum |= (_crc[_crc.Length - 1 - 2] & 0xFFU) << 16;
+            if (_crc.Length > 3) checksum |= (_crc[_crc.Length - 1 - 3] & 0xFFU) << 24;
+            _crc = (byte[])_init.Clone();
+            return _checksumSize > 32;
+        }
+
+        internal override bool DoFinal(out ulong checksum)
+        {
+            Finish();
+            checksum = _crc[_crc.Length - 1];
+            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFUL) << 8;
+            if (_crc.Length > 2) checksum |= (_crc[_crc.Length - 1 - 2] & 0xFFUL) << 16;
+            if (_crc.Length > 3) checksum |= (_crc[_crc.Length - 1 - 3] & 0xFFUL) << 24;
+            if (_crc.Length > 4) checksum |= (_crc[_crc.Length - 1 - 4] & 0xFFUL) << 32;
+            if (_crc.Length > 5) checksum |= (_crc[_crc.Length - 1 - 5] & 0xFFUL) << 40;
+            if (_crc.Length > 6) checksum |= (_crc[_crc.Length - 1 - 6] & 0xFFUL) << 48;
+            if (_crc.Length > 7) checksum |= (_crc[_crc.Length - 1 - 7] & 0xFFUL) << 56;
+            _crc = (byte[])_init.Clone();
+            return _checksumSize > 64;
         }
 
         internal override void Reset()
@@ -315,6 +351,19 @@ namespace Honoo.IO.Hashing
             {
                 inputModified[i] ^= input2[i];
             }
+        }
+
+        private void Finish()
+        {
+            if (_refout ^ _refin)
+            {
+                Reverse(_crc);
+            }
+            if (_move > 0 && !_refout)
+            {
+                ShiftRight(_crc, _move);
+            }
+            Xor(_crc, _xorout);
         }
     }
 }

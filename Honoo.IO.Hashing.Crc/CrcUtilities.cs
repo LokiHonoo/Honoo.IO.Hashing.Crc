@@ -9,35 +9,59 @@ namespace Honoo.IO.Hashing
     public sealed class CrcUtilities
     {
         /// <summary>
-        /// Specify the type of endian, convert to the numeric value according to the bytes.
+        /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the input bytes is little endian.</param>
-        /// <param name="input">An array of bytes.</param>
-        /// <param name="startIndex">The starting position within <paramref name="input"/>.</param>
-        /// <param name="outputLength">Truncate to the length from the output string header.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="buffer">Checksum buffer bytes.</param>
+        /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
+        /// <param name="checksumSize">Checksum size bits.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public static string ToHex(bool littleEndian, byte[] input, int startIndex, int outputLength)
+        public static byte ToByte(bool littleEndian, byte[] buffer, int startIndex, int checksumSize)
         {
+            if (littleEndian)
+            {
+                return buffer[startIndex];
+            }
+            else
+            {
+                int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+                return buffer[checksumLength - 1 + startIndex];
+            }
+        }
+
+        /// <summary>
+        /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// </summary>
+        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="buffer">Checksum buffer bytes.</param>
+        /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
+        /// <param name="checksumSize">Checksum size bits.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"/>
+        public static string ToHexString(bool littleEndian, byte[] buffer, int startIndex, int checksumSize)
+        {
+            int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            int stringLength = (int)Math.Ceiling(checksumSize / 4d);
+            int length = Math.Min(checksumLength, buffer.Length - startIndex);
             StringBuilder result = new StringBuilder();
-            int length = input.Length + startIndex;
             if (littleEndian)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    result.Append(Convert.ToString(input[length - 1 - i + startIndex], 16).PadLeft(2, '0'));
+                    result.Append(Convert.ToString(buffer[length - 1 - i + startIndex], 16).PadLeft(2, '0'));
                 }
             }
             else
             {
                 for (int i = 0; i < length; i++)
                 {
-                    result.Append(Convert.ToString(input[i + startIndex], 16).PadLeft(2, '0'));
+                    result.Append(Convert.ToString(buffer[i + startIndex], 16).PadLeft(2, '0'));
                 }
             }
-            if (result.Length > outputLength)
+            if (result.Length > stringLength)
             {
-                return result.ToString(result.Length - outputLength, outputLength).ToUpperInvariant();
+                return result.ToString(result.Length - stringLength, stringLength).ToUpperInvariant();
             }
             else
             {
@@ -46,90 +70,96 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Specify the type of endian, convert to the numeric value according to the bytes (read to end, and max to 2 bytes).
+        /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the input bytes is little endian.</param>
-        /// <param name="input">An array of bytes.</param>
-        /// <param name="startIndex">The starting position within <paramref name="input"/>.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="buffer">Checksum buffer bytes.</param>
+        /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
+        /// <param name="checksumSize">Checksum size bits.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public static ushort ToUInt16(bool littleEndian, byte[] input, int startIndex)
+        public static ushort ToUInt16(bool littleEndian, byte[] buffer, int startIndex, int checksumSize)
         {
-            ushort result = 0;
-            int length = Math.Min(input.Length + startIndex, 2);
+            int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            ushort result;
             if (littleEndian)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (ushort)((input[i + startIndex] & 0xFF) << (8 * i));
-                }
+                result = buffer[startIndex];
+                if (checksumLength > 1) result |= (ushort)((buffer[startIndex + 1] & 0xFF) << 8);
             }
             else
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (ushort)((input[length - 1 - i + startIndex] & 0xFF) << (8 * i));
-                }
+                result = buffer[checksumLength - 1 + startIndex];
+                if (checksumLength > 1) result |= (ushort)((buffer[checksumLength - 1 + startIndex - 1] & 0xFF) << 8);
             }
             return result;
         }
 
         /// <summary>
-        /// Specify the type of endian, convert to the numeric value according to the bytes (read to end, and max to 4 bytes).
+        /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the input bytes is little endian.</param>
-        /// <param name="input">An array of bytes.</param>
-        /// <param name="startIndex">The starting position within <paramref name="input"/>.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="buffer">Checksum buffer bytes.</param>
+        /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
+        /// <param name="checksumSize">Checksum size bits.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public static uint ToUInt32(bool littleEndian, byte[] input, int startIndex)
+        public static uint ToUInt32(bool littleEndian, byte[] buffer, int startIndex, int checksumSize)
         {
-            uint result = 0;
-            int length = Math.Min(input.Length + startIndex, 4);
+            int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            uint result;
             if (littleEndian)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (input[i + startIndex] & 0xFFU) << (8 * i);
-                }
+                result = buffer[startIndex];
+                if (checksumLength > 1) result |= (buffer[startIndex + 1] & 0xFFU) << 8;
+                if (checksumLength > 2) result |= (buffer[startIndex + 2] & 0xFFU) << 16;
+                if (checksumLength > 3) result |= (buffer[startIndex + 3] & 0xFFU) << 24;
             }
             else
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (input[length - 1 - i + startIndex] & 0xFFU) << (8 * i);
-                }
+                result = buffer[checksumLength - 1 + startIndex];
+                if (checksumLength > 1) result |= (buffer[checksumLength - 1 + startIndex - 1] & 0xFFU) << 8;
+                if (checksumLength > 2) result |= (buffer[checksumLength - 1 + startIndex - 2] & 0xFFU) << 16;
+                if (checksumLength > 3) result |= (buffer[checksumLength - 1 + startIndex - 3] & 0xFFU) << 24;
             }
             return result;
         }
 
         /// <summary>
-        /// Specify the type of endian, convert to the numeric value according to the bytes (read to end, and max to 8 bytes).
+        /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the input bytes is little endian.</param>
-        /// <param name="input">An array of bytes.</param>
-        /// <param name="startIndex">The starting position within <paramref name="input"/>.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="buffer">Checksum buffer bytes.</param>
+        /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
+        /// <param name="checksumSize">Checksum size bits.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public static ulong ToUInt64(bool littleEndian, byte[] input, int startIndex)
+        public static ulong ToUInt64(bool littleEndian, byte[] buffer, int startIndex, int checksumSize)
         {
-            ulong result = 0;
-            int length = Math.Min(input.Length + startIndex, 8);
+            int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
+            ulong result;
             if (littleEndian)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (input[i + startIndex] & 0xFFUL) << (8 * i);
-                }
+                result = buffer[startIndex];
+                if (checksumLength > 1) result |= (buffer[startIndex + 1] & 0xFFUL) << 8;
+                if (checksumLength > 2) result |= (buffer[startIndex + 2] & 0xFFUL) << 16;
+                if (checksumLength > 3) result |= (buffer[startIndex + 3] & 0xFFUL) << 24;
+                if (checksumLength > 4) result |= (buffer[startIndex + 4] & 0xFFUL) << 32;
+                if (checksumLength > 5) result |= (buffer[startIndex + 5] & 0xFFUL) << 40;
+                if (checksumLength > 6) result |= (buffer[startIndex + 6] & 0xFFUL) << 48;
+                if (checksumLength > 7) result |= (buffer[startIndex + 7] & 0xFFUL) << 56;
             }
             else
             {
-                for (int i = 0; i < length; i++)
-                {
-                    result |= (input[length - 1 - i + startIndex] & 0xFFUL) << (8 * i);
-                }
+                result = buffer[checksumLength - 1 + startIndex];
+                if (checksumLength > 1) result |= (buffer[checksumLength - 1 + startIndex - 1] & 0xFFUL) << 8;
+                if (checksumLength > 2) result |= (buffer[checksumLength - 1 + startIndex - 2] & 0xFFUL) << 16;
+                if (checksumLength > 3) result |= (buffer[checksumLength - 1 + startIndex - 3] & 0xFFUL) << 24;
+                if (checksumLength > 4) result |= (buffer[checksumLength - 1 + startIndex - 4] & 0xFFUL) << 32;
+                if (checksumLength > 5) result |= (buffer[checksumLength - 1 + startIndex - 5] & 0xFFUL) << 40;
+                if (checksumLength > 6) result |= (buffer[checksumLength - 1 + startIndex - 6] & 0xFFUL) << 48;
+                if (checksumLength > 7) result |= (buffer[checksumLength - 1 + startIndex - 7] & 0xFFUL) << 56;
             }
-
             return result;
         }
 
