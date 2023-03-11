@@ -88,19 +88,19 @@ namespace Test
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
-                string t = string.Empty;
+
+                string t = Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto), input);
                 bool error = false;
                 foreach (var name in alg.Names)
                 {
-                    t = Calc(Crc.Create(name), input);
+                    if (Calc(Crc.Create(name), input) != t)
+                    {
+                        error = true;
+                    }
                     if (Calc(Crc.Create(name, false), input) != t)
                     {
                         error = true;
                     }
-                }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto), input) != t)
-                {
-                    error = true;
                 }
                 if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != t)
                 {

@@ -11,7 +11,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of <paramref name="buffer"/>.</param>
         /// <param name="buffer">Checksum buffer bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
         /// <param name="checksumSize">Checksum size bits.</param>
@@ -33,7 +33,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of <paramref name="buffer"/>.</param>
         /// <param name="buffer">Checksum buffer bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
         /// <param name="checksumSize">Checksum size bits.</param>
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of <paramref name="buffer"/>.</param>
         /// <param name="buffer">Checksum buffer bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
         /// <param name="checksumSize">Checksum size bits.</param>
@@ -98,7 +98,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of <paramref name="buffer"/>.</param>
         /// <param name="buffer">Checksum buffer bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
         /// <param name="checksumSize">Checksum size bits.</param>
@@ -128,7 +128,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Convert checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// </summary>
-        /// <param name="littleEndian">Indicates whether the type of endian of checksum buffer.</param>
+        /// <param name="littleEndian">Indicates whether the type of endian of <paramref name="buffer"/>.</param>
         /// <param name="buffer">Checksum buffer bytes.</param>
         /// <param name="startIndex">The starting position within <paramref name="buffer"/>.</param>
         /// <param name="checksumSize">Checksum size bits.</param>
