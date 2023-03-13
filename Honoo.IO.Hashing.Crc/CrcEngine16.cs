@@ -6,57 +6,62 @@ namespace Honoo.IO.Hashing
     {
         #region Properties
 
-        private readonly int _checksumByteLength;
-        private readonly int _checksumSize;
-        private readonly int _checksumStringLength;
         private readonly ushort _init;
-        private readonly int _move;
+        private readonly string _initHex;
+        private readonly int _moves;
         private readonly ushort _poly;
-        private readonly bool _refin;
-        private readonly bool _refout;
+        private readonly string _polyHex;
         private readonly ushort[] _table;
         private readonly ushort _xorout;
+        private readonly string _xoroutHex;
         private ushort _crc;
+        internal override string InitHex => _initHex;
+
+        internal override string PolyHex => _polyHex;
+
+        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout)
-            : base(algorithmName, checksumSize, false)
+        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool generateTable)
+            : base(algorithmName, checksumSize, refin, refout, generateTable)
         {
             if (checksumSize <= 0 || checksumSize > 16)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
             }
-            _checksumSize = checksumSize;
-            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
-            _move = 16 - checksumSize;
-            _refin = refin;
-            _refout = refout;
-            _poly = Parse(poly, _move, _refin);
-            _init = Parse(init, _move, _refin);
-            _xorout = xorout;
+            _moves = 16 - checksumSize;
+            _poly = TruncateLeft(poly, _moves);
+            _init = TruncateLeft(init, _moves);
+            _xorout = TruncateLeft(xorout, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Parse(_poly, _moves, _refin);
+            _init = Parse(_init, _moves, _refin);
+            _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = _init;
         }
 
-        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort[] table, ushort init, ushort xorout)
-            : base(algorithmName, checksumSize, true)
+        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout, ushort[] table)
+            : base(algorithmName, checksumSize, refin, refout, true)
         {
             if (checksumSize <= 0 || checksumSize > 16)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
             }
-            _checksumSize = checksumSize;
-            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
-            _move = 16 - checksumSize;
-            _refin = refin;
-            _refout = refout;
+            _moves = 16 - checksumSize;
+            _poly = TruncateLeft(poly, _moves);
+            _init = TruncateLeft(init, _moves);
+            _xorout = TruncateLeft(xorout, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Parse(_poly, _moves, _refin);
+            _init = Parse(_init, _moves, _refin);
             _table = table;
-            _init = init;
-            _xorout = xorout;
             _crc = _init;
         }
 
@@ -106,32 +111,12 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static ushort Parse(ushort input, int move, bool reverse)
-        {
-            if (move > 0)
-            {
-                input <<= move;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override string DoFinal()
         {
             Finish();
-            string result = Convert.ToString(_crc, 16).PadLeft(4, '0');
+            string result = GetString(_crc, _checksumHexLength);
             _crc = _init;
-            if (result.Length > _checksumStringLength)
-            {
-                return result.Substring(result.Length - _checksumStringLength, _checksumStringLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToUpperInvariant();
-            }
+            return result;
         }
 
         internal override byte[] DoFinal(bool littleEndian)
@@ -245,6 +230,32 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static string GetString(ushort input, int hexLength)
+        {
+            string result = Convert.ToString(input, 16).PadLeft(4, '0');
+            if (result.Length > hexLength)
+            {
+                return result.Substring(result.Length - hexLength, hexLength).ToUpperInvariant();
+            }
+            else
+            {
+                return result.ToUpperInvariant();
+            }
+        }
+
+        private static ushort Parse(ushort input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
+
         private static ushort Reverse(ushort input)
         {
             input = (ushort)((input & 0x5555) << 1 | (input >> 1) & 0x5555);
@@ -254,15 +265,22 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
+        private static ushort TruncateLeft(ushort input, int bits)
+        {
+            input <<= bits;
+            input >>= bits;
+            return input;
+        }
+
         private void Finish()
         {
             if (_refout ^ _refin)
             {
                 _crc = Reverse(_crc);
             }
-            if (_move > 0 && !_refout)
+            if (_moves > 0 && !_refout)
             {
-                _crc >>= _move;
+                _crc >>= _moves;
             }
             _crc ^= _xorout;
         }

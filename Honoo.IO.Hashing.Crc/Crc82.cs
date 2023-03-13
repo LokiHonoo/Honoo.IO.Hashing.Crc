@@ -5,11 +5,7 @@
     /// </summary>
     public sealed class Crc82Darc : Crc
     {
-        private static readonly uint[] _init = new uint[3];
-        private static readonly uint[] _poly = new uint[] { 0x308C, 0x01110114, 0x1440411 };
-        private static readonly uint[] _reversedPoly = new uint[] { 0x22080, 0x8A00A202, 0x2200C430 };
-
-        private static readonly uint[] _xorout = new uint[3];
+        private static readonly uint[] _reversedPoly = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
         private static uint[][] _table;
 
         /// <summary>
@@ -31,11 +27,11 @@
                 {
                     _table = CrcEngineX2.GenerateReversedTable(_reversedPoly);
                 }
-                return new CrcEngineX2(algorithmName, 82, true, true, _table, _init, _xorout);
+                return new CrcEngineX2(algorithmName, 82, true, true, "0x0308C0111011401440411", "0x000000000000000000000", "0x000000000000000000000", _table);
             }
             else
             {
-                return new CrcEngineX2(algorithmName, 82, true, true, _poly, _init, _xorout);
+                return new CrcEngineX2(algorithmName, 82, true, true, "0x0308C0111011401440411", "0x000000000000000000000", "0x000000000000000000000", false);
             }
         }
     }

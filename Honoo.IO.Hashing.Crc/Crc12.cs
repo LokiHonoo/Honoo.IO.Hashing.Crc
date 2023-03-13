@@ -27,11 +27,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0xF130);
                 }
-                return new CrcEngine16(algorithmName, 12, false, false, _table, 0xFFF0, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, false, 0xF13, 0xFFF, 0x000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 12, false, false, 0xF13, 0xFFF, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, false, 0xF13, 0xFFF, 0x000, false);
             }
         }
     }
@@ -66,11 +66,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x80F0);
                 }
-                return new CrcEngine16(algorithmName, 12, false, false, _table, 0x000, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, false, 0x80F, 0x000, 0x000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 12, false, false, 0x80F, 0x000, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, false, 0x80F, 0x000, 0x000, false);
             }
         }
     }
@@ -101,11 +101,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0xD310);
                 }
-                return new CrcEngine16(algorithmName, 12, false, false, _table, 0x000, 0xFFF);
+                return new CrcEngine16(algorithmName, 12, false, false, 0xD31, 0x000, 0xFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 12, false, false, 0xD31, 0x000, 0xFFF);
+                return new CrcEngine16(algorithmName, 12, false, false, 0xD31, 0x000, 0xFFF, false);
             }
         }
     }
@@ -140,11 +140,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x80F0);
                 }
-                return new CrcEngine16(algorithmName, 12, false, true, _table, 0x000, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, true, 0x80F, 0x000, 0x000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 12, false, true, 0x80F, 0x000, 0x000);
+                return new CrcEngine16(algorithmName, 12, false, true, 0x80F, 0x000, 0x000, false);
             }
         }
     }

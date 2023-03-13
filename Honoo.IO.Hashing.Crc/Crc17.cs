@@ -27,11 +27,11 @@
                 {
                     _table = CrcEngine32.GenerateTable(0xB42D8000);
                 }
-                return new CrcEngine32(algorithmName, 17, false, false, _table, 0x00000, 0x00000);
+                return new CrcEngine32(algorithmName, 17, false, false, 0x1685B, 0x00000, 0x00000, _table);
             }
             else
             {
-                return new CrcEngine32(algorithmName, 17, false, false, 0x1685B, 0x00000, 0x00000);
+                return new CrcEngine32(algorithmName, 17, false, false, 0x1685B, 0x00000, 0x00000, false);
             }
         }
     }

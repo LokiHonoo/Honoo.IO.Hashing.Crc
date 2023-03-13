@@ -126,62 +126,22 @@ namespace Honoo.IO.Hashing
 
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable)
         {
-            if (withTable)
-            {
-                poly = CrcEngine8.Parse(poly, 8 - checksumSize, refin);
-                init = CrcEngine8.Parse(init, 8 - checksumSize, refin);
-                byte[] table = refin ? CrcEngine8.GenerateReversedTable(poly) : CrcEngine8.GenerateTable(poly);
-                return new CrcEngine8($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xorout);
-            }
-            else
-            {
-                return new CrcEngine8($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout);
-            }
+            return new CrcEngine8($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout, withTable);
         }
 
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable)
         {
-            if (withTable)
-            {
-                poly = CrcEngine16.Parse(poly, 16 - checksumSize, refin);
-                init = CrcEngine16.Parse(init, 16 - checksumSize, refin);
-                ushort[] table = refin ? CrcEngine16.GenerateReversedTable(poly) : CrcEngine16.GenerateTable(poly);
-                return new CrcEngine16($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xorout);
-            }
-            else
-            {
-                return new CrcEngine16($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout);
-            }
+            return new CrcEngine16($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout, withTable);
         }
 
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable)
         {
-            if (withTable)
-            {
-                poly = CrcEngine32.Parse(poly, 32 - checksumSize, refin);
-                init = CrcEngine32.Parse(init, 32 - checksumSize, refin);
-                uint[] table = refin ? CrcEngine32.GenerateReversedTable(poly) : CrcEngine32.GenerateTable(poly);
-                return new CrcEngine32($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xorout);
-            }
-            else
-            {
-                return new CrcEngine32($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout);
-            }
+            return new CrcEngine32($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout, withTable);
         }
 
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable)
         {
-            if (withTable)
-            {
-                poly = CrcEngine64.Parse(poly, 64 - checksumSize, refin);
-                init = CrcEngine64.Parse(init, 64 - checksumSize, refin);
-                ulong[] table = refin ? CrcEngine64.GenerateReversedTable(poly) : CrcEngine64.GenerateTable(poly);
-                return new CrcEngine64($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xorout);
-            }
-            else
-            {
-                return new CrcEngine64($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout);
-            }
+            return new CrcEngine64($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout, withTable);
         }
 
         private static CrcEngine GetEngine(int checksumSize, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core)
@@ -213,14 +173,13 @@ namespace Honoo.IO.Hashing
                     core = CrcCore.Sharding32Table;
                 }
             }
-            int checksumLength = (int)Math.Ceiling(checksumSize / 8d);
             switch (core)
             {
                 case CrcCore.UInt8:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
+                        byte[] polyBytes = CrcUtilities.GetBytes(polyHex, checksumSize);
+                        byte[] initBytes = CrcUtilities.GetBytes(initHex, checksumSize);
+                        byte[] xoroutBytes = CrcUtilities.GetBytes(xoroutHex, checksumSize);
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
@@ -229,9 +188,9 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.UInt8Table:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
+                        byte[] polyBytes = CrcUtilities.GetBytes(polyHex, checksumSize);
+                        byte[] initBytes = CrcUtilities.GetBytes(initHex, checksumSize);
+                        byte[] xoroutBytes = CrcUtilities.GetBytes(xoroutHex, checksumSize);
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
@@ -240,112 +199,64 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.UInt16:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ushort poly = BEToUInt16(polyBytes);
-                        ushort init = BEToUInt16(initBytes);
-                        ushort xorout = BEToUInt16(xoroutBytes);
+                        ushort poly = BEToUInt16(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        ushort init = BEToUInt16(CrcUtilities.GetBytes(initHex, checksumSize));
+                        ushort xorout = BEToUInt16(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt16Table:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ushort poly = BEToUInt16(polyBytes);
-                        ushort init = BEToUInt16(initBytes);
-                        ushort xorout = BEToUInt16(xoroutBytes);
+                        ushort poly = BEToUInt16(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        ushort init = BEToUInt16(CrcUtilities.GetBytes(initHex, checksumSize));
+                        ushort xorout = BEToUInt16(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt32:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        uint poly = BEToUInt32(polyBytes);
-                        uint init = BEToUInt32(initBytes);
-                        uint xorout = BEToUInt32(xoroutBytes);
+                        uint poly = BEToUInt32(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        uint init = BEToUInt32(CrcUtilities.GetBytes(initHex, checksumSize));
+                        uint xorout = BEToUInt32(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt32Table:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        uint poly = BEToUInt32(polyBytes);
-                        uint init = BEToUInt32(initBytes);
-                        uint xorout = BEToUInt32(xoroutBytes);
+                        uint poly = BEToUInt32(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        uint init = BEToUInt32(CrcUtilities.GetBytes(initHex, checksumSize));
+                        uint xorout = BEToUInt32(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt64:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ulong poly = BEToUInt64(polyBytes);
-                        ulong init = BEToUInt64(initBytes);
-                        ulong xorout = BEToUInt64(xoroutBytes);
+                        ulong poly = BEToUInt64(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        ulong init = BEToUInt64(CrcUtilities.GetBytes(initHex, checksumSize));
+                        ulong xorout = BEToUInt64(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt64Table:
                     {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        ulong poly = BEToUInt64(polyBytes);
-                        ulong init = BEToUInt64(initBytes);
-                        ulong xorout = BEToUInt64(xoroutBytes);
+                        ulong poly = BEToUInt64(CrcUtilities.GetBytes(polyHex, checksumSize));
+                        ulong init = BEToUInt64(CrcUtilities.GetBytes(initHex, checksumSize));
+                        ulong xorout = BEToUInt64(CrcUtilities.GetBytes(xoroutHex, checksumSize));
                         return GetEngine(checksumSize, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding8:
-                    {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        return new CrcEngineX($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, polyBytes, initBytes, xoroutBytes);
-                    }
+                    return new CrcEngineX($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, polyHex, initHex, xoroutHex, false);
 
                 case CrcCore.Sharding8Table:
-                    {
-                        byte[] polyBytes = CrcEngineX.ParseS1(polyHex, checksumLength);
-                        byte[] initBytes = CrcEngineX.ParseS1(initHex, checksumLength);
-                        byte[] xoroutBytes = CrcEngineX.ParseS1(xoroutHex, checksumLength);
-                        int rem = checksumSize % 8;
-                        int move = rem > 0 ? 8 - rem : 0;
-                        byte[] poly = CrcEngineX.ParseS2(polyBytes, move, refin);
-                        byte[] init = CrcEngineX.ParseS2(initBytes, move, refin);
-                        byte[][] table = refin ? CrcEngineX.GenerateReversedTable(poly) : CrcEngineX.GenerateTable(poly);
-                        return new CrcEngineX($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xoroutBytes);
-                    }
+                    return new CrcEngineX($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, polyHex, initHex, xoroutHex, true);
 
                 case CrcCore.Sharding32:
-                    {
-                        uint[] poly = CrcEngineX2.ParseS1(polyHex, checksumLength);
-                        uint[] init = CrcEngineX2.ParseS1(initHex, checksumLength);
-                        uint[] xorout = CrcEngineX2.ParseS1(xoroutHex, checksumLength);
-                        return new CrcEngineX2($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, poly, init, xorout);
-                    }
+                    return new CrcEngineX2($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, polyHex, initHex, xoroutHex, false);
 
                 case CrcCore.Sharding32Table:
                 default:
-                    {
-                        uint[] poly = CrcEngineX2.ParseS1(polyHex, checksumLength);
-                        uint[] init = CrcEngineX2.ParseS1(initHex, checksumLength);
-                        uint[] xorout = CrcEngineX2.ParseS1(xoroutHex, checksumLength);
-                        int rem = checksumSize % 32;
-                        int move = rem > 0 ? 32 - rem : 0;
-                        poly = CrcEngineX2.ParseS2(poly, move, refin);
-                        init = CrcEngineX2.ParseS2(init, move, refin);
-                        uint[][] table = refin ? CrcEngineX2.GenerateReversedTable(poly) : CrcEngineX2.GenerateTable(poly);
-                        return new CrcEngineX2($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, table, init, xorout);
-                    }
+                    return new CrcEngineX2($"CRC-{checksumSize}/CUSTOM", checksumSize, refin, refout, polyHex, initHex, xoroutHex, true);
             }
         }
     }

@@ -183,7 +183,7 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom lengths and parameters are supported.
-    var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
+    var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex", false);
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
     int length = crc.DoFinal(littleEndian, checksum, 0);
@@ -201,6 +201,9 @@ private static void Demo4()
 |CRC-32|sharding 8 bits|true|100000|72 ms|
 |CRC-32|sharding 32 bits|false|100000|253 ms|
 |CRC-32|sharding 32 bits|true|100000|42 ms|
+
+|algorithm|core|table|times|elapsed|
+|:-------:|:--:|:---:|:---:|------:|
 |CRC-64/REDIS|64 bits|true|100000|28 ms|
 |CRC-64/REDIS|sharding 32 bits|true|100000|53 ms|
 

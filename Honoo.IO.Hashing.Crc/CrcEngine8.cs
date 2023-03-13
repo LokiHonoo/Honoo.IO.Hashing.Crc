@@ -6,51 +6,62 @@ namespace Honoo.IO.Hashing
     {
         #region Properties
 
-        private readonly int _checksumStringLength;
         private readonly byte _init;
-        private readonly int _move;
+        private readonly string _initHex;
+        private readonly int _moves;
         private readonly byte _poly;
-        private readonly bool _refin;
-        private readonly bool _refout;
+        private readonly string _polyHex;
         private readonly byte[] _table;
         private readonly byte _xorout;
+        private readonly string _xoroutHex;
         private byte _crc;
+        internal override string InitHex => _initHex;
+
+        internal override string PolyHex => _polyHex;
+
+        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout)
-            : base(algorithmName, checksumSize, false)
+        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, bool generateTable)
+            : base(algorithmName, checksumSize, refin, refout, generateTable)
         {
             if (checksumSize <= 0 || checksumSize > 8)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(checksumSize));
             }
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
-            _move = 8 - checksumSize;
-            _refin = refin;
-            _refout = refout;
-            _poly = Parse(poly, _move, _refin);
-            _init = Parse(init, _move, _refin);
-            _xorout = xorout;
+            _moves = 8 - checksumSize;
+            _poly = TruncateLeft(poly, _moves);
+            _init = TruncateLeft(init, _moves);
+            _xorout = TruncateLeft(xorout, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Parse(_poly, _moves, _refin);
+            _init = Parse(_init, _moves, _refin);
+            _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = _init;
         }
 
-        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte[] table, byte init, byte xorout)
-            : base(algorithmName, checksumSize, true)
+        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
+            : base(algorithmName, checksumSize, refin, refout, true)
         {
             if (checksumSize <= 0 || checksumSize > 8)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(checksumSize));
             }
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
-            _move = 8 - checksumSize;
-            _refin = refin;
-            _refout = refout;
+            _moves = 8 - checksumSize;
+            _poly = TruncateLeft(poly, _moves);
+            _init = TruncateLeft(init, _moves);
+            _xorout = TruncateLeft(xorout, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Parse(_poly, _moves, _refin);
+            _init = Parse(_init, _moves, _refin);
             _table = table;
-            _init = init;
-            _xorout = xorout;
             _crc = _init;
         }
 
@@ -100,32 +111,12 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static byte Parse(byte input, int move, bool reverse)
-        {
-            if (move > 0)
-            {
-                input <<= move;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override string DoFinal()
         {
             Finish();
-            string result = Convert.ToString(_crc, 16).PadLeft(2, '0');
+            string result = GetString(_crc, _checksumHexLength);
             _crc = _init;
-            if (result.Length > _checksumStringLength)
-            {
-                return result.Substring(result.Length - _checksumStringLength, _checksumStringLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToUpperInvariant();
-            }
+            return result;
         }
 
         internal override byte[] DoFinal(bool littleEndian)
@@ -226,11 +217,44 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static string GetString(byte input, int hexLength)
+        {
+            string result = Convert.ToString(input, 16).PadLeft(2, '0');
+            if (result.Length > hexLength)
+            {
+                return result.Substring(result.Length - hexLength, hexLength).ToUpperInvariant();
+            }
+            else
+            {
+                return result.ToUpperInvariant();
+            }
+        }
+
+        private static byte Parse(byte input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
+
         private static byte Reverse(byte input)
         {
             input = (byte)((input & 0x55) << 1 | (input >> 1) & 0x55);
             input = (byte)((input & 0x33) << 2 | (input >> 2) & 0x33);
             input = (byte)((input & 0x0F) << 4 | (input >> 4) & 0x0F);
+            return input;
+        }
+
+        private static byte TruncateLeft(byte input, int bits)
+        {
+            input <<= bits;
+            input >>= bits;
             return input;
         }
 
@@ -240,9 +264,9 @@ namespace Honoo.IO.Hashing
             {
                 _crc = Reverse(_crc);
             }
-            if (_move > 0 && !_refout)
+            if (_moves > 0 && !_refout)
             {
-                _crc >>= _move;
+                _crc >>= _moves;
             }
             _crc ^= _xorout;
         }

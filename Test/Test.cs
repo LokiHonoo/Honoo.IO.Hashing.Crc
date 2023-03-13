@@ -5,17 +5,17 @@ using System.Text;
 
 namespace Test
 {
-    internal static class Test2
+    internal static class Test
     {
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new();
         private static int _error = 0;
 
         internal static Alg[] GetAlgs()
         {
-            List<Alg> algs = new List<Alg>();
+            List<Alg> algs = new();
             Stream catalogue = Assembly.GetExecutingAssembly().GetManifestResourceStream("Test.catalogue.txt")!;
 
-            HtmlDocument document = new HtmlDocument();
+            HtmlDocument document = new();
             document.Load(catalogue);
             var nodes = document.DocumentNode.SelectNodes("/html/body/h3");
             foreach (var node in nodes)
@@ -24,8 +24,8 @@ namespace Test
                 if (code != null && code.Name == "p")
                 {
                     string txt = code.FirstChild.InnerText;
-                    Alg alg = new Alg();
-                    List<string> names = new List<string>();
+                    Alg alg = new();
+                    List<string> names = new();
 
                     int index1 = txt.IndexOf("width=");
                     int index2 = txt.IndexOf(" ", index1);
@@ -41,11 +41,11 @@ namespace Test
 
                     index1 = txt.IndexOf("refin=");
                     index2 = txt.IndexOf(" ", index1);
-                    alg.Refin = bool.Parse(txt.Substring(index1 + 6, index2 - index1 - 6));
+                    alg.Refin = bool.Parse(txt.AsSpan(index1 + 6, index2 - index1 - 6));
 
                     index1 = txt.IndexOf("refout=");
                     index2 = txt.IndexOf(" ", index1);
-                    alg.Refout = bool.Parse(txt.Substring(index1 + 7, index2 - index1 - 7));
+                    alg.Refout = bool.Parse(txt.AsSpan(index1 + 7, index2 - index1 - 7));
 
                     index1 = txt.IndexOf("xorout=");
                     index2 = txt.IndexOf(" ", index1);
@@ -60,7 +60,7 @@ namespace Test
                     {
                         if (item.InnerText.StartsWith("Alias:"))
                         {
-                            txt = item.InnerText.Substring("Alias:".Length, item.InnerText.Length - "Alias:".Length);
+                            txt = item.InnerText["Alias:".Length..];
                             string[] splits = txt.Split(',');
                             names.AddRange(splits);
                         }
@@ -70,10 +70,11 @@ namespace Test
                     algs.Add(alg);
                 }
             }
+            //
             return algs.ToArray();
         }
 
-        internal static void Test()
+        internal static void Test1()
         {
             _error = 0;
             Alg[] algs = GetAlgs();
@@ -85,12 +86,20 @@ namespace Test
             byte[] input = Encoding.UTF8.GetBytes(str);
             foreach (Alg alg in algs)
             {
+                bool error = false;
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
-
-                string t = Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto), input);
-                bool error = false;
+                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                ICrcParameters parameters = crc;
+                if (parameters.ChecksumSize != alg.Width) error = true;
+                if (parameters.Refin != alg.Refin) error = true;
+                if (parameters.Refout != alg.Refout) error = true;
+                if ("0x" + parameters.PolyHex != alg.Poly) error = true;
+                if ("0x" + parameters.InitHex != alg.Init) error = true;
+                if ("0x" + parameters.XoroutHex != alg.Xorout) error = true;
+                Console.WriteLine($"Width={parameters.ChecksumSize} Refin={parameters.Refin} Refout={parameters.Refout} Poly=0x{parameters.PolyHex} Init=0x{parameters.InitHex} Xorout=0x{parameters.XoroutHex}");
+                string t = Calc(crc, input);
                 foreach (var name in alg.Names)
                 {
                     if (Calc(Crc.Create(name), input) != t)
@@ -129,7 +138,20 @@ namespace Test
             }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Error {_error}");
+            Console.WriteLine($"Error={_error}");
+            Console.WriteLine();
+        }
+
+        internal static void Test2()
+        {
+            string str = "1111221ADV233334444555566677788000AAAABB";
+            byte[] input = Encoding.UTF8.GetBytes(str);
+            //
+            Calc(Crc.Create(5, false, false, 0xF2, 0x09, 0x00), input);
+            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding8), input);
+            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding8Table), input);
+            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding32), input);
+            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding32Table), input);
         }
 
         private static string Calc(Crc crc, byte[] input)
@@ -137,35 +159,51 @@ namespace Test
             crc.Update(input);
             byte[] checksum = crc.DoFinal(false);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
+            string h = CrcUtilities.ToHexString(false, checksum, 0, crc.ChecksumSize);
+            string h1 = Convert.ToString(CrcUtilities.ToByte(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
+            string h2 = Convert.ToString(CrcUtilities.ToUInt16(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
+            string h3 = Convert.ToString(CrcUtilities.ToUInt32(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
+            string h4 = Convert.ToString((long)CrcUtilities.ToUInt64(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
             crc.Update(input);
             string t = crc.DoFinal();
             crc.Update(input);
             crc.DoFinal(out byte b);
-            string bb = Convert.ToString(b, 16).ToUpperInvariant();
+            string t1 = Convert.ToString(b, 16).ToUpperInvariant();
             crc.Update(input);
             crc.DoFinal(out ushort s);
-            string ss = Convert.ToString(s, 16).ToUpperInvariant();
+            string t2 = Convert.ToString(s, 16).ToUpperInvariant();
             crc.Update(input);
             crc.DoFinal(out uint i);
-            string ii = Convert.ToString(i, 16).ToUpperInvariant();
+            string t3 = Convert.ToString(i, 16).ToUpperInvariant();
             crc.Update(input);
             bool truncated = crc.DoFinal(out ulong l);
-            string ll = Convert.ToString((long)l, 16).ToUpperInvariant();
+            string t4 = Convert.ToString((long)l, 16).ToUpperInvariant();
             Console.Write(crc.AlgorithmName.PadRight(20));
             Console.Write(crc.WithTable ? "TABLE   " : "        ");
             Console.Write(a + " ");
             Console.Write(t + " ");
-            Console.Write(bb + " ");
-            Console.Write(ss + " ");
-            Console.Write(ii + " ");
-            Console.Write(ll + " ");
+            Console.Write(t1 + " ");
+            Console.Write(t2 + " ");
+            Console.Write(t3 + " ");
+            Console.Write(t4 + " ");
             Console.WriteLine(truncated);
+            Console.Write(new string(' ', 28 + a.Length + 1));
+            Console.Write(h + " ");
+            Console.Write(h1 + " ");
+            Console.Write(h2 + " ");
+            Console.Write(h3 + " ");
+            Console.WriteLine(h4 + " ");
             bool error = false;
             if (!a.EndsWith(t)) error = true;
-            if (!t.EndsWith(bb.ToString())) error = true;
-            if (!t.EndsWith(ss.ToString())) error = true;
-            if (!t.EndsWith(ii.ToString())) error = true;
-            if (!t.EndsWith(ll.ToString())) error = true;
+            if (!t.EndsWith(t1.ToString())) error = true;
+            if (!t.EndsWith(t2.ToString())) error = true;
+            if (!t.EndsWith(t3.ToString())) error = true;
+            if (!t.EndsWith(t4.ToString())) error = true;
+            if (!t.EndsWith(h.ToString())) error = true;
+            if (!t.EndsWith(h1.ToString())) error = true;
+            if (!t.EndsWith(h2.ToString())) error = true;
+            if (!t.EndsWith(h3.ToString())) error = true;
+            if (!t.EndsWith(h4.ToString())) error = true;
             return error ? _random.NextDouble().ToString() : t;
         }
 

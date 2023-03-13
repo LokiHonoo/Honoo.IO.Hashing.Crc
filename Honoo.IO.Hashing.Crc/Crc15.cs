@@ -30,11 +30,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x8B32);
                 }
-                return new CrcEngine16(algorithmName, 15, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 15, false, false, 0x4599, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 15, false, false, 0x4599, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 15, false, false, 0x4599, 0x0000, 0x0000, false);
             }
         }
     }
@@ -65,11 +65,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0xD02A);
                 }
-                return new CrcEngine16(algorithmName, 15, false, false, _table, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 15, false, false, 0x6815, 0x0000, 0x0001, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 15, false, false, 0x6815, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 15, false, false, 0x6815, 0x0000, 0x0001, false);
             }
         }
     }

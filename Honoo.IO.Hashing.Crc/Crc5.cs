@@ -31,11 +31,11 @@
                 {
                     _table = CrcEngine8.GenerateTable(0x48);
                 }
-                return new CrcEngine8(algorithmName, 5, false, false, _table, 0x48, 0x00);
+                return new CrcEngine8(algorithmName, 5, false, false, 0x09, 0x09, 0x00, _table);
             }
             else
             {
-                return new CrcEngine8(algorithmName, 5, false, false, 0x09, 0x09, 0x00);
+                return new CrcEngine8(algorithmName, 5, false, false, 0x09, 0x09, 0x00, false);
             }
         }
     }
@@ -70,11 +70,11 @@
                 {
                     _table = CrcEngine8.GenerateReversedTable(0x15);
                 }
-                return new CrcEngine8(algorithmName, 5, true, true, _table, 0x00, 0x00);
+                return new CrcEngine8(algorithmName, 5, true, true, 0x15, 0x00, 0x00, _table);
             }
             else
             {
-                return new CrcEngine8(algorithmName, 5, true, true, 0x15, 0x00, 0x00);
+                return new CrcEngine8(algorithmName, 5, true, true, 0x15, 0x00, 0x00, false);
             }
         }
     }
@@ -106,11 +106,11 @@
                 {
                     _table = CrcEngine8.GenerateReversedTable(0x14);
                 }
-                return new CrcEngine8(algorithmName, 5, true, true, _table, 0x1F, 0x1F);
+                return new CrcEngine8(algorithmName, 5, true, true, 0x05, 0x1F, 0x1F, _table);
             }
             else
             {
-                return new CrcEngine8(algorithmName, 5, true, true, 0x05, 0x1F, 0x1F);
+                return new CrcEngine8(algorithmName, 5, true, true, 0x05, 0x1F, 0x1F, false);
             }
         }
     }

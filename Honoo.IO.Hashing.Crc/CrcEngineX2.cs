@@ -7,59 +7,64 @@ namespace Honoo.IO.Hashing
     {
         #region Properties
 
-        private readonly int _checksumByteLength;
-        private readonly int _checksumSize;
-        private readonly int _checksumStringLength;
         private readonly uint[] _init;
-        private readonly int _move;
+        private readonly string _initHex;
+        private readonly int _moves;
         private readonly uint[] _poly;
-        private readonly bool _refin;
-        private readonly bool _refout;
+        private readonly string _polyHex;
         private readonly uint[][] _table;
         private readonly uint[] _xorout;
+        private readonly string _xoroutHex;
         private uint[] _crc;
+        internal override string InitHex => _initHex;
+
+        internal override string PolyHex => _polyHex;
+
+        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout)
-            : base(algorithmName, checksumSize, false)
+        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, string poly, string init, string xorout, bool generateTable)
+            : base(algorithmName, checksumSize, refin, refout, generateTable)
         {
             if (checksumSize <= 0)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
             }
-            _checksumSize = checksumSize;
-            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             int rem = checksumSize % 32;
-            _move = rem > 0 ? 32 - rem : 0;
-            _refin = refin;
-            _refout = refout;
-            _poly = ParseS2(poly, _move, _refin);
-            _init = ParseS2(init, _move, _refin);
-            _xorout = xorout;
+            _moves = rem > 0 ? 32 - rem : 0;
+            _poly = Convent(poly, checksumSize, _moves);
+            _init = Convent(init, checksumSize, _moves);
+            _xorout = Convent(xorout, checksumSize, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            Parse(_poly, _moves, _refin);
+            Parse(_init, _moves, _refin);
+            _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = (uint[])_init.Clone();
         }
 
-        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, uint[][] table, uint[] init, uint[] xorout)
-            : base(algorithmName, checksumSize, true)
+        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, string poly, string init, string xorout, uint[][] table)
+            : base(algorithmName, checksumSize, refin, refout, true)
         {
             if (checksumSize <= 0)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
             }
-            _checksumSize = checksumSize;
-            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
-            _checksumStringLength = (int)Math.Ceiling(checksumSize / 4d);
             int rem = checksumSize % 32;
-            _move = rem > 0 ? 32 - rem : 0;
-            _refin = refin;
-            _refout = refout;
+            _moves = rem > 0 ? 32 - rem : 0;
+            _poly = Convent(poly, checksumSize, _moves);
+            _init = Convent(init, checksumSize, _moves);
+            _xorout = Convent(xorout, checksumSize, _moves);
+            _polyHex = GetString(_poly, _checksumHexLength);
+            _initHex = GetString(_init, _checksumHexLength);
+            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            Parse(_poly, _moves, _refin);
+            Parse(_init, _moves, _refin);
             _table = table;
-            _init = init;
-            _xorout = xorout;
             _crc = (uint[])_init.Clone();
         }
 
@@ -113,71 +118,12 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static uint[] ParseS1(string input, int checksumLength)
-        {
-            uint[] result = new uint[(int)Math.Ceiling(checksumLength / 4d)];
-            int stringLength = result.Length * 4 * 2;
-            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
-            {
-                input = input.Substring(2, input.Length - 2).Replace("_", null);
-            }
-            else
-            {
-                input = input.Replace("_", null).Replace("-", null);
-            }
-            if (input.Length > stringLength)
-            {
-                input = input.Substring(input.Length - stringLength, stringLength);
-            }
-            else if (input.Length < stringLength)
-            {
-                input = input.PadLeft(stringLength, '0');
-            }
-            int j = -1;
-            int m = 24;
-            for (int i = 0; i < input.Length - 1; i += 2)
-            {
-                if (i % 8 == 0)
-                {
-                    j++;
-                    m = 24;
-                }
-                result[j] |= Convert.ToUInt32(input.Substring(i, 2), 16) << m;
-                m -= 8;
-            }
-            return result;
-        }
-
-        internal static uint[] ParseS2(uint[] input, int move, bool reverse)
-        {
-            if (move > 0)
-            {
-                ShiftLeft(input, move);
-            }
-            if (reverse)
-            {
-                Reverse(input);
-            }
-            return input;
-        }
-
         internal override string DoFinal()
         {
             Finish();
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < _crc.Length; i++)
-            {
-                result.Append(Convert.ToString(_crc[i], 16).PadLeft(8, '0'));
-            }
+            string result = GetString(_crc, _checksumHexLength);
             _crc = (uint[])_init.Clone();
-            if (result.Length > _checksumStringLength)
-            {
-                return result.ToString(result.Length - _checksumStringLength, _checksumStringLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToString().ToUpperInvariant();
-            }
+            return result;
         }
 
         internal override byte[] DoFinal(bool littleEndian)
@@ -252,10 +198,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc[_crc.Length - 1];
-            if (_crc.Length > 1)
-            {
-                checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFFFFFUL) << 32;
-            }
+            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFFFFFUL) << 32;
             _crc = (uint[])_init.Clone();
             return _checksumSize > 64;
         }
@@ -325,6 +268,75 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static uint[] Convent(string input, int checksumSize, int truncates)
+        {
+            uint[] result = new uint[(int)Math.Ceiling(checksumSize / 32d)];
+            int hexLength = result.Length * 8;
+            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
+            {
+                input = input.Substring(2, input.Length - 2).Replace("_", null).Replace("-", null);
+            }
+            else
+            {
+                input = input.Replace("_", null).Replace("-", null);
+            }
+            if (input.Length > hexLength)
+            {
+                input = input.Substring(input.Length - hexLength, hexLength);
+            }
+            else if (input.Length < hexLength)
+            {
+                input = input.PadLeft(hexLength, '0');
+            }
+            int j = -1;
+            int m = 24;
+            for (int i = 0; i < input.Length; i += 2)
+            {
+                if (i % 8 == 0)
+                {
+                    j++;
+                    m = 24;
+                }
+                result[j] |= Convert.ToUInt32(input.Substring(i, 2), 16) << m;
+                m -= 8;
+            }
+            if (truncates > 0)
+            {
+                result[0] <<= truncates;
+                result[0] >>= truncates;
+            }
+            return result;
+        }
+
+        private static string GetString(uint[] input, int hexLength)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
+            {
+                result.Append(Convert.ToString(input[i], 16).PadLeft(8, '0'));
+            }
+            if (result.Length > hexLength)
+            {
+                return result.ToString(result.Length - hexLength, hexLength).ToUpperInvariant();
+            }
+            else
+            {
+                return result.ToString().ToUpperInvariant();
+            }
+        }
+
+        private static void Parse(uint[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                Reverse(input);
+            }
+        }
+
         private static uint Reverse(uint input)
         {
             input = (input & 0x55555555) << 1 | (input >> 1) & 0x55555555;
@@ -364,11 +376,11 @@ namespace Honoo.IO.Hashing
             input[0] >>= bits;
         }
 
-        private static void Xor(uint[] inputModified, uint[] input2)
+        private static void Xor(uint[] input, uint[] input2)
         {
-            for (int i = 0; i < inputModified.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
-                inputModified[i] ^= input2[i];
+                input[i] ^= input2[i];
             }
         }
 
@@ -378,9 +390,9 @@ namespace Honoo.IO.Hashing
             {
                 Reverse(_crc);
             }
-            if (_move > 0 && !_refout)
+            if (_moves > 0 && !_refout)
             {
-                ShiftRight(_crc, _move);
+                ShiftRight(_crc, _moves);
             }
             Xor(_crc, _xorout);
         }

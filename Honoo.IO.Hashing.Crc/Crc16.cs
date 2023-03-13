@@ -30,11 +30,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0x0000, false);
             }
         }
     }
@@ -69,11 +69,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x0000, 0x0000, false);
             }
         }
     }
@@ -109,11 +109,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -144,11 +144,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0xC867);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xC867, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0xC867, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xC867, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -179,11 +179,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x8005);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -214,11 +214,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x8005);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x800D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x800D, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x800D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x800D, 0x0000, false);
             }
         }
     }
@@ -253,11 +253,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x0589);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0001, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0001);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0001, false);
             }
         }
     }
@@ -292,11 +292,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x0589);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x0589, 0x0000, 0x0000, false);
             }
         }
     }
@@ -327,11 +327,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA6BC);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x3D65, 0x0000, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x3D65, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x3D65, 0x0000, 0xFFFF, false);
             }
         }
     }
@@ -362,11 +362,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x3D65);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x3D65, 0x0000, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x3D65, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x3D65, 0x0000, 0xFFFF, false);
             }
         }
     }
@@ -401,11 +401,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0xFFFF, 0xFFFF, false);
             }
         }
     }
@@ -436,11 +436,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0xFFFF, false);
             }
         }
     }
@@ -471,11 +471,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x6F63);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x6F63, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x6F63, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x6F63, 0x0000, 0x0000, false);
             }
         }
     }
@@ -506,11 +506,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x5935);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -545,11 +545,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0x0000, 0xFFFF, false);
             }
         }
     }
@@ -581,11 +581,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -621,11 +621,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -656,11 +656,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xD010);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x080B, 0xFFFF, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x080B, 0xFFFF, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x080B, 0xFFFF, 0x0000, false);
             }
         }
     }
@@ -695,11 +695,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x5935);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x5935, 0x0000, 0x0000, false);
             }
         }
     }
@@ -734,11 +734,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x755B);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x755B, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x755B, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x755B, 0x0000, 0x0000, false);
             }
         }
     }
@@ -773,11 +773,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1DCF);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1DCF, 0xFFFF, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1DCF, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1DCF, 0xFFFF, 0xFFFF, false);
             }
         }
     }
@@ -810,11 +810,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x554D, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xB2AA, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xB2AA, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xB2AA, 0x0000, false);
             }
         }
     }
@@ -849,11 +849,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x1D0F, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x1D0F, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x1D0F, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x1D0F, 0x0000, false);
             }
         }
     }
@@ -885,11 +885,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x8BB7);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8BB7, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x8BB7, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8BB7, 0x0000, 0x0000, false);
             }
         }
     }
@@ -920,11 +920,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0xA097);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xA097, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0xA097, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0xA097, 0x0000, 0x0000, false);
             }
         }
     }
@@ -957,11 +957,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x3791, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x89EC, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x89EC, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0x89EC, 0x0000, false);
             }
         }
     }
@@ -996,11 +996,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x8005);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x8005, 0x0000, 0x0000, false);
             }
         }
     }
@@ -1031,11 +1031,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0xA001);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8005, 0xFFFF, 0xFFFF, false);
             }
         }
     }
@@ -1071,11 +1071,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0xFFFF, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0xFFFF);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xFFFF, 0xFFFF, false);
             }
         }
     }
@@ -1110,11 +1110,11 @@
                 {
                     _table = CrcEngine16.GenerateTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, false, false, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, false, false, 0x1021, 0x0000, 0x0000, false);
             }
         }
     }
@@ -1146,11 +1146,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x1021);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8408, 0x0000, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x8408, 0x0000, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x8408, 0x0000, 0x0000, false);
             }
         }
     }
@@ -1187,11 +1187,11 @@
                 {
                     _table = CrcEngine16.GenerateReversedTable(0x8408);
                 }
-                return new CrcEngine16(algorithmName, 16, true, true, _table, 0x6363, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xC6C6, 0x0000, _table);
             }
             else
             {
-                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xC6C6, 0x0000);
+                return new CrcEngine16(algorithmName, 16, true, true, 0x1021, 0xC6C6, 0x0000, false);
             }
         }
     }

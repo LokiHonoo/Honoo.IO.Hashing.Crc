@@ -30,11 +30,11 @@
                 {
                     _table = CrcEngine64.GenerateTable(0x42F0E1EBA9EA3693);
                 }
-                return new CrcEngine64(algorithmName, 64, false, false, _table, 0x0000000000000000, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693, 0x0000000000000000, 0x0000000000000000, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693, 0x0000000000000000, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693, 0x0000000000000000, 0x0000000000000000, false);
             }
         }
     }
@@ -65,11 +65,11 @@
                 {
                     _table = CrcEngine64.GenerateReversedTable(0xD800000000000000);
                 }
-                return new CrcEngine64(algorithmName, 64, true, true, _table, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x000000000000001B, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, true, true, 0x000000000000001B, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x000000000000001B, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, false);
             }
         }
     }
@@ -100,11 +100,11 @@
                 {
                     _table = CrcEngine64.GenerateReversedTable(0x92C64265D32139A4);
                 }
-                return new CrcEngine64(algorithmName, 64, true, true, _table, 0xFFFFFFFFFFFFFFFF, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x259C84CBA6426349, 0xFFFFFFFFFFFFFFFF, 0x0000000000000000, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, true, true, 0x259C84CBA6426349, 0xFFFFFFFFFFFFFFFF, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x259C84CBA6426349, 0xFFFFFFFFFFFFFFFF, 0x0000000000000000, false);
             }
         }
     }
@@ -135,11 +135,11 @@
                 {
                     _table = CrcEngine64.GenerateReversedTable(0x95AC9329AC4BC9B5);
                 }
-                return new CrcEngine64(algorithmName, 64, true, true, _table, 0x0000000000000000, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, true, true, 0xAD93D23594C935A9, 0x0000000000000000, 0x0000000000000000, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, true, true, 0xAD93D23594C935A9, 0x0000000000000000, 0x0000000000000000);
+                return new CrcEngine64(algorithmName, 64, true, true, 0xAD93D23594C935A9, 0x0000000000000000, 0x0000000000000000, false);
             }
         }
     }
@@ -170,11 +170,11 @@
                 {
                     _table = CrcEngine64.GenerateTable(0x42F0E1EBA9EA3693UL);
                 }
-                return new CrcEngine64(algorithmName, 64, false, false, _table, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693UL, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693UL, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, false, false, 0x42F0E1EBA9EA3693UL, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, false);
             }
         }
     }
@@ -209,11 +209,11 @@
                 {
                     _table = CrcEngine64.GenerateReversedTable(0xC96C5795D7870F42);
                 }
-                return new CrcEngine64(algorithmName, 64, true, true, _table, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x42F0E1EBA9EA3693, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, _table);
             }
             else
             {
-                return new CrcEngine64(algorithmName, 64, true, true, 0x42F0E1EBA9EA3693, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+                return new CrcEngine64(algorithmName, 64, true, true, 0x42F0E1EBA9EA3693, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, false);
             }
         }
     }

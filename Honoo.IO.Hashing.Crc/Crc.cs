@@ -6,7 +6,7 @@ namespace Honoo.IO.Hashing
     /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
     /// <br/>Catalogue of parametrised CRC algorithms: https://reveng.sourceforge.io/crc-catalogue/all.htm .
     /// </summary>
-    public abstract class Crc
+    public abstract class Crc : ICrcParameters
     {
         #region Properties
 
@@ -32,6 +32,12 @@ namespace Honoo.IO.Hashing
         /// </summary>
         public bool WithTable => _engine.WithTable;
 
+
+         string ICrcParameters.InitHex => _engine.InitHex;
+         string ICrcParameters.PolyHex => _engine.PolyHex;
+         bool ICrcParameters.Refin => _engine.Refin;
+         bool ICrcParameters.Refout => _engine.Refout;
+         string ICrcParameters.XoroutHex => _engine.XoroutHex;
         #endregion Properties
 
         #region Construction
