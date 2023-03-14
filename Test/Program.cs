@@ -9,7 +9,7 @@
             Test.Test1();
             Console.WriteLine();
             Console.WriteLine();
-            Spped.Test();
+            Speed.Test();
             //
             //
             //

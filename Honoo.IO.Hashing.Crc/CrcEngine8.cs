@@ -7,58 +7,44 @@ namespace Honoo.IO.Hashing
         #region Properties
 
         private readonly byte _init;
-        private readonly string _initHex;
         private readonly int _moves;
         private readonly byte _poly;
-        private readonly string _polyHex;
         private readonly byte[] _table;
         private readonly byte _xorout;
-        private readonly string _xoroutHex;
         private byte _crc;
-        internal override string InitHex => _initHex;
-
-        internal override string PolyHex => _polyHex;
-
-        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, bool generateTable)
-            : base(algorithmName, checksumSize, refin, refout, generateTable)
+        internal CrcEngine8(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool generateTable)
+            : base(width, refin, refout, generateTable)
         {
-            if (checksumSize <= 0 || checksumSize > 8)
+            if (width <= 0 || width > 8)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(checksumSize));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
-            _moves = 8 - checksumSize;
+            _moves = 8 - width;
             _poly = TruncateLeft(poly, _moves);
             _init = TruncateLeft(init, _moves);
             _xorout = TruncateLeft(xorout, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
             _poly = Parse(_poly, _moves, _refin);
             _init = Parse(_init, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = _init;
         }
 
-        internal CrcEngine8(string algorithmName, int checksumSize, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
-            : base(algorithmName, checksumSize, refin, refout, true)
+        internal CrcEngine8(int width, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
+            : base(width, refin, refout, true)
         {
-            if (checksumSize <= 0 || checksumSize > 8)
+            if (width <= 0 || width > 8)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(checksumSize));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
-            _moves = 8 - checksumSize;
+            _moves = 8 - width;
             _poly = TruncateLeft(poly, _moves);
             _init = TruncateLeft(init, _moves);
             _xorout = TruncateLeft(xorout, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
             _poly = Parse(_poly, _moves, _refin);
             _init = Parse(_init, _moves, _refin);
             _table = table;

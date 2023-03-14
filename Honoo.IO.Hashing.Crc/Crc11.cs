@@ -1,42 +1,50 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-11, CRC-11/FLEXRAY.
     /// </summary>
     public sealed class Crc11 : Crc
     {
+        private const ushort INIT = 0x01A;
+        private const ushort POLY = 0x385;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 11;
+        private const ushort XOROUT = 0x000;
         private static ushort[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc11 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc11(bool withTable = true) : base(GetEngine("CRC-11", withTable))
+        public Crc11() : base("CRC-11", GetEngine())
         {
         }
 
-        internal Crc11(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc11(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-11", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x385; <<(16-11) = 0x70A0;
             // init = 0x01A; <<(16-11) = 0x0340;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0x70A0);
-                }
-                return new CrcEngine16(algorithmName, 11, false, false, 0x385, 0x01A, 0x000, _table);
+                _table = CrcEngine16.GenerateTable(0x70A0);
             }
-            else
-            {
-                return new CrcEngine16(algorithmName, 11, false, false, 0x385, 0x01A, 0x000, false);
-            }
+            return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -45,33 +53,36 @@
     /// </summary>
     public sealed class Crc11Umts : Crc
     {
+        private const ushort INIT = 0x000;
+        private const ushort POLY = 0x307;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 11;
+        private const ushort XOROUT = 0x000;
         private static ushort[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc11Umts class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc11Umts(bool withTable = true) : base(GetEngine("CRC-11/UMTS", withTable))
+        public Crc11Umts() : base("CRC-11/UMTS", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-11/UMTS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11Umts(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x307; <<(16-11) = 0x60E0;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0x60E0);
-                }
-                return new CrcEngine16(algorithmName, 11, false, false, 0x307, 0x000, 0x000, _table);
+                _table = CrcEngine16.GenerateTable(0x60E0);
             }
-            else
-            {
-                return new CrcEngine16(algorithmName, 11, false, false, 0x307, 0x000, 0x000, false);
-            }
+            return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

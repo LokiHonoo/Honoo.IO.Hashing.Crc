@@ -1,37 +1,40 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-13/BBC.
     /// </summary>
     public sealed class Crc13bbc : Crc
     {
+        private const ushort INIT = 0x0000;
+        private const ushort POLY = 0x1CF5;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 13;
+        private const ushort XOROUT = 0x0000;
         private static ushort[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc13bbc class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc13bbc(bool withTable = true) : base(GetEngine("CRC-13/BBC", withTable))
+        public Crc13bbc() : base("CRC-13/BBC", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-13/BBC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc13bbc(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x1CF5; <<(16-13) = 0xE7A8;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0xE7A8);
-                }
-                return new CrcEngine16(algorithmName, 13, false, false, 0x1CF5, 0x0000, 0x0000, _table);
+                _table = CrcEngine16.GenerateTable(0xE7A8);
             }
-            else
-            {
-                return new CrcEngine16(algorithmName, 13, false, false, 0x1CF5, 0x0000, 0x0000, false);
-            }
+            return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

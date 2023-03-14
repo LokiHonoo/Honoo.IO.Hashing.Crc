@@ -1,41 +1,49 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP.
     /// </summary>
     public sealed class Crc32 : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32(bool withTable = true) : base(GetEngine("CRC-32", withTable))
+        public Crc32() : base("CRC-32", GetEngine())
         {
         }
 
-        internal Crc32(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7; reverse = 0xEDB88320;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -44,33 +52,36 @@
     /// </summary>
     public sealed class Crc32Autosar : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0xF4ACFB13;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Autosar class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Autosar(bool withTable = true) : base(GetEngine("CRC-32/AUTOSAR", withTable))
+        public Crc32Autosar() : base("CRC-32/AUTOSAR", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/AUTOSAR", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Autosar(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0xF4ACFB13; reverse = 0xC8DF352F;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xC8DF352F);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0xF4ACFB13, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xC8DF352F);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0xF4ACFB13, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -79,37 +90,45 @@
     /// </summary>
     public sealed class Crc32Bzip2 : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Bzip2 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Bzip2(bool withTable = true) : base(GetEngine("CRC-32/BZIP2", withTable))
+        public Crc32Bzip2() : base("CRC-32/BZIP2", GetEngine())
         {
         }
 
-        internal Crc32Bzip2(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Bzip2(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/BZIP2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Bzip2(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Bzip2(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x04C11DB7);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateTable(0x04C11DB7);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -118,37 +137,45 @@
     /// </summary>
     public sealed class Crc32c : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x1EDC6F41;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32c class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32c(bool withTable = true) : base(GetEngine("CRC-32C", withTable))
+        public Crc32c() : base("CRC-32C", GetEngine())
         {
         }
 
-        internal Crc32c(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32c(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32C", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32c(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32c(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x1EDC6F41; reverse = 0x82F63B78;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0x82F63B78);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateReversedTable(0x82F63B78);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -157,33 +184,36 @@
     /// </summary>
     public sealed class Crc32CdromEdc : Crc
     {
+        private const uint INIT = 0x00000000;
+        private const uint POLY = 0x8001801B;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32CdromEdc class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32CdromEdc(bool withTable = true) : base(GetEngine("CRC-32/CD-ROM-EDC", withTable))
+        public Crc32CdromEdc() : base("CRC-32/CD-ROM-EDC", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/CD-ROM-EDC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32CdromEdc(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x8001801B; reverse = 0xD8018001;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xD8018001);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x8001801B, 0x00000000, 0x00000000, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xD8018001);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x8001801B, 0x00000000, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -192,37 +222,45 @@
     /// </summary>
     public sealed class Crc32Cksum : Crc
     {
+        private const uint INIT = 0x00000000;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Cksum class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Cksum(bool withTable = true) : base(GetEngine("CRC-32/CKSUM", withTable))
+        public Crc32Cksum() : base("CRC-32/CKSUM", GetEngine())
         {
         }
 
-        internal Crc32Cksum(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Cksum(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/CKSUM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Cksum(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Cksum(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x04C11DB7);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0x00000000, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateTable(0x04C11DB7);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0x00000000, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -231,37 +269,45 @@
     /// </summary>
     public sealed class Crc32d : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0xA833982B;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32d class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32d(bool withTable = true) : base(GetEngine("CRC-32D", withTable))
+        public Crc32d() : base("CRC-32D", GetEngine())
         {
         }
 
-        internal Crc32d(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32d(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32D", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32d(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32d(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0xA833982B; reverse = 0xD419CC15;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xD419CC15);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0xA833982B, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xD419CC15);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0xA833982B, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -270,37 +316,45 @@
     /// </summary>
     public sealed class Crc32JamCrc : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32JamCrc class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32JamCrc(bool withTable = true) : base(GetEngine("CRC-32/JAMCRC", withTable))
+        public Crc32JamCrc() : base("CRC-32/JAMCRC", GetEngine())
         {
         }
 
-        internal Crc32JamCrc(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32JamCrc(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/JAMCRC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32JamCrc(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32JamCrc(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7; reverse = 0xEDB88320;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -309,33 +363,36 @@
     /// </summary>
     public sealed class Crc32Koopman : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x741B8CD7;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0xFFFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Koopman class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Koopman(bool withTable = true) : base(GetEngine("CRC-32/KOOPMAN", withTable))
+        public Crc32Koopman() : base("CRC-32/KOOPMAN", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/KOOPMAN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Koopman(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x741B8CD7; reverse = 0xEB31D82E;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x741B8CD7, 0xFFFFFFFF, 0xFFFFFFFF, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x741B8CD7, 0xFFFFFFFF, 0xFFFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -344,33 +401,36 @@
     /// </summary>
     public sealed class Crc32Mef : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x741B8CD7;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Mef class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Mef(bool withTable = true) : base(GetEngine("CRC-32/MEF", withTable))
+        public Crc32Mef() : base("CRC-32/MEF", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/MEF", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Mef(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x741B8CD7; reverse = 0xEB31D82E;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
-                }
-                return new CrcEngine32(algorithmName, 32, true, true, 0x741B8CD7, 0xFFFFFFFF, 0x00000000, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, true, true, 0x741B8CD7, 0xFFFFFFFF, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -379,33 +439,36 @@
     /// </summary>
     public sealed class Crc32Mpeg2 : Crc
     {
+        private const uint INIT = 0xFFFFFFFF;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Mpeg2 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Mpeg2(bool withTable = true) : base(GetEngine("CRC-32/MPEG-2", withTable))
+        public Crc32Mpeg2() : base("CRC-32/MPEG-2", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/MPEG-2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Mpeg2(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x04C11DB7);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, _table);
+                _table = CrcEngine32.GenerateTable(0x04C11DB7);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -414,37 +477,45 @@
     /// </summary>
     public sealed class Crc32q : Crc
     {
+        private const uint INIT = 0x00000000;
+        private const uint POLY = 0x814141AB;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32q class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32q(bool withTable = true) : base(GetEngine("CRC-32Q", withTable))
+        public Crc32q() : base("CRC-32Q", GetEngine())
         {
         }
 
-        internal Crc32q(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32q(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32Q", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32q(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32q(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x814141AB;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x814141AB);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x814141AB, 0x00000000, 0x00000000, _table);
+                _table = CrcEngine32.GenerateTable(0x814141AB);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x814141AB, 0x00000000, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -453,33 +524,36 @@
     /// </summary>
     public sealed class Crc32Sata : Crc
     {
+        private const uint INIT = 0x52325032;
+        private const uint POLY = 0x04C11DB7;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Posix class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Sata(bool withTable = true) : base(GetEngine("CRC-32/SATA", withTable))
+        public Crc32Sata() : base("CRC-32/SATA", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/SATA", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Sata(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x04C11DB7;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x04C11DB7);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0x52325032, 0x00000000, _table);
+                _table = CrcEngine32.GenerateTable(0x04C11DB7);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x04C11DB7, 0x52325032, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -488,37 +562,45 @@
     /// </summary>
     public sealed class Crc32Xfer : Crc
     {
+        private const uint INIT = 0x00000000;
+        private const uint POLY = 0x000000AF;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 32;
+        private const uint XOROUT = 0x00000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc32Xfer class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc32Xfer(bool withTable = true) : base(GetEngine("CRC-32/XFER", withTable))
+        public Crc32Xfer() : base("CRC-32/XFER", GetEngine())
         {
         }
 
-        internal Crc32Xfer(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc32Xfer(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-32/XFER", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Xfer(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Xfer(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x000000AF;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x000000AF);
-                }
-                return new CrcEngine32(algorithmName, 32, false, false, 0x000000AF, 0x00000000, 0x00000000, _table);
+                _table = CrcEngine32.GenerateTable(0x000000AF);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 32, false, false, 0x000000AF, 0x00000000, 0x00000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

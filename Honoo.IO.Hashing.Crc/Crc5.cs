@@ -1,42 +1,50 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-5/EPC, CRC-5/EPC-C1G2.
     /// </summary>
     public sealed class Crc5Epc : Crc
     {
+        private const byte INIT = 0x09;
+        private const byte POLY = 0x09;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 5;
+        private const byte XOROUT = 0x00;
         private static byte[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Epc class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc5Epc(bool withTable = true) : base(GetEngine("CRC-5/EPC", withTable))
+        public Crc5Epc() : base("CRC-5/EPC", GetEngine())
         {
         }
 
-        internal Crc5Epc(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc5Epc(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-5/EPC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Epc(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Epc(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x09; <<(8-5) = 0x48;
             // init = 0x09; <<(8-5) = 0x48;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine8.GenerateTable(0x48);
-                }
-                return new CrcEngine8(algorithmName, 5, false, false, 0x09, 0x09, 0x00, _table);
+                _table = CrcEngine8.GenerateTable(0x48);
             }
-            else
-            {
-                return new CrcEngine8(algorithmName, 5, false, false, 0x09, 0x09, 0x00, false);
-            }
+            return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -45,37 +53,45 @@
     /// </summary>
     public sealed class Crc5Itu : Crc
     {
+        private const byte INIT = 0x00;
+        private const byte POLY = 0x15;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 5;
+        private const byte XOROUT = 0x00;
         private static byte[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Itu class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc5Itu(bool withTable = true) : base(GetEngine("CRC-5/ITU", withTable))
+        public Crc5Itu() : base("CRC-5/ITU", GetEngine())
         {
         }
 
-        internal Crc5Itu(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc5Itu(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-5/ITU", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Itu(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Itu(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x15; reverse >>(8-5) = 0x15;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine8.GenerateReversedTable(0x15);
-                }
-                return new CrcEngine8(algorithmName, 5, true, true, 0x15, 0x00, 0x00, _table);
+                _table = CrcEngine8.GenerateReversedTable(0x15);
             }
-            else
-            {
-                return new CrcEngine8(algorithmName, 5, true, true, 0x15, 0x00, 0x00, false);
-            }
+            return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -84,34 +100,37 @@
     /// </summary>
     public sealed class Crc5Usb : Crc
     {
+        private const byte INIT = 0x1F;
+        private const byte POLY = 0x05;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 5;
+        private const byte XOROUT = 0x1F;
         private static byte[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Usb class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc5Usb(bool withTable = true) : base(GetEngine("CRC-5/USB", withTable))
+        public Crc5Usb() : base("CRC-5/USB", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-5/USB", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Usb(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x05; reverse >>(8-5) = 0x14;
             // init = 0x1F; reverse >>(8-5) = 0x1F;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine8.GenerateReversedTable(0x14);
-                }
-                return new CrcEngine8(algorithmName, 5, true, true, 0x05, 0x1F, 0x1F, _table);
+                _table = CrcEngine8.GenerateReversedTable(0x14);
             }
-            else
-            {
-                return new CrcEngine8(algorithmName, 5, true, true, 0x05, 0x1F, 0x1F, false);
-            }
+            return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

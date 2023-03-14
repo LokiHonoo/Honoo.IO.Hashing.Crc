@@ -173,10 +173,10 @@ private static void Demo3()
 {
     var crc = Crc.Create("CRC-40/GSM");
     crc.Update(inputBytes);
-    // Checksum size is 40 bits, ulong is 64 bits, The truncated is "False".
+    // Width is 40 bits, ulong is 64 bits, The truncated is "False".
     bool truncated = crc.DoFinal(out ulong checksum);
     crc.Update(inputBytes);
-    // Checksum size is 40 bits, uint is 32 bits, The truncated is "True".
+    // Width is 40 bits, uint is 32 bits, The truncated is "True".
     bool truncated = crc.DoFinal(out uint checksum);
 }
 

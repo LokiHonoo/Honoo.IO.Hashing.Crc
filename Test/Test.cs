@@ -62,7 +62,10 @@ namespace Test
                         {
                             txt = item.InnerText["Alias:".Length..];
                             string[] splits = txt.Split(',');
-                            names.AddRange(splits);
+                            foreach (var split in splits)
+                            {
+                                names.Add(split.Trim());
+                            }
                         }
                     }
                     //
@@ -82,48 +85,57 @@ namespace Test
             //{
             //    Console.WriteLine(string.Join(',', alg.Names)+",");
             //}
-            string str = "1111221ADV233334444555566677788000AAAABB";
-            byte[] input = Encoding.UTF8.GetBytes(str);
+            byte[] input = Encoding.UTF8.GetBytes("1111221ADV233334444555566677788000AAAABB");
             foreach (Alg alg in algs)
             {
                 bool error = false;
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
+                //
                 Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
-                ICrcParameters parameters = crc;
-                if (parameters.ChecksumSize != alg.Width) error = true;
-                if (parameters.Refin != alg.Refin) error = true;
-                if (parameters.Refout != alg.Refout) error = true;
-                if ("0x" + parameters.PolyHex != alg.Poly) error = true;
-                if ("0x" + parameters.InitHex != alg.Init) error = true;
-                if ("0x" + parameters.XoroutHex != alg.Xorout) error = true;
-                Console.WriteLine($"Width={parameters.ChecksumSize} Refin={parameters.Refin} Refout={parameters.Refout} Poly=0x{parameters.PolyHex} Init=0x{parameters.InitHex} Xorout=0x{parameters.XoroutHex}");
                 string t = Calc(crc, input);
-                foreach (var name in alg.Names)
-                {
-                    if (Calc(Crc.Create(name, false), input) != t)
-                    {
-                        error = true;
-                    }
-                    if (Calc(Crc.Create(name), input) != t)
-                    {
-                        error = true;
-                    }
-                }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != t)
+                CrcCore noTable;
+                if (alg.Width <= 8) noTable = CrcCore.UInt8;
+                else if (alg.Width <= 16) noTable = CrcCore.UInt16;
+                else if (alg.Width <= 32) noTable = CrcCore.UInt32;
+                else if (alg.Width <= 64) noTable = CrcCore.UInt64;
+                else noTable = CrcCore.Sharding32;
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != t)
                 {
                     error = true;
+                }
+                foreach (var name in alg.Names)
+                {
+                    if (CrcName.TryGetAlgorithmName(name, out CrcName crcName))
+                    {
+                        if (crcName.Name != name)
+                        {
+                            error = true;
+                        }
+                        if (Calc(Crc.Create(crcName), input) != t)
+                        {
+                            error = true;
+                        }
+                    }
+                    else
+                    {
+                        error = true;
+                    }
                 }
                 if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != t)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != t)
                 {
                     error = true;
                 }
                 if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != t)
+                {
+                    error = true;
+                }
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != t)
                 {
                     error = true;
                 }
@@ -147,11 +159,11 @@ namespace Test
             crc.Update(input);
             byte[] checksum = crc.DoFinal(false);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
-            string h = CrcUtilities.ToHexString(false, checksum, 0, crc.ChecksumSize);
-            string h1 = Convert.ToString(CrcUtilities.ToByte(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
-            string h2 = Convert.ToString(CrcUtilities.ToUInt16(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
-            string h3 = Convert.ToString(CrcUtilities.ToUInt32(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
-            string h4 = Convert.ToString((long)CrcUtilities.ToUInt64(false, checksum, 0, crc.ChecksumSize), 16).ToUpperInvariant();
+            string h = CrcUtilities.ToHexString(false, checksum, 0, crc.Width);
+            string h1 = Convert.ToString(CrcUtilities.ToByte(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
+            string h2 = Convert.ToString(CrcUtilities.ToUInt16(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
+            string h3 = Convert.ToString(CrcUtilities.ToUInt32(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
+            string h4 = Convert.ToString((long)CrcUtilities.ToUInt64(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
             crc.Update(input);
             string t = crc.DoFinal();
             crc.Update(input);
@@ -166,7 +178,7 @@ namespace Test
             crc.Update(input);
             bool truncated = crc.DoFinal(out ulong l);
             string t4 = Convert.ToString((long)l, 16).ToUpperInvariant();
-            Console.Write(crc.AlgorithmName.PadRight(20));
+            Console.Write(crc.Name.PadRight(20));
             Console.Write(crc.WithTable ? "TABLE   " : "        ");
             Console.Write(a + " ");
             Console.Write(t + " ");

@@ -1,42 +1,50 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-24.
     /// </summary>
     public sealed class Crc24 : Crc
     {
+        private const uint INIT = 0xB704CE;
+        private const uint POLY = 0x864CFB;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24(bool withTable = true) : base(GetEngine("CRC-24", withTable))
+        public Crc24() : base("CRC-24", GetEngine())
         {
         }
 
-        internal Crc24(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc24(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x864CFB; <<(32-24) = 0x864CFB00;
             // init = 0xB704CE; <<(32-24) = 0xB704CE00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x864CFB00);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x864CFB, 0xB704CE, 0x000000, _table);
+                _table = CrcEngine32.GenerateTable(0x864CFB00);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x864CFB, 0xB704CE, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -45,34 +53,37 @@
     /// </summary>
     public sealed class Crc24Ble : Crc
     {
+        private const uint INIT = 0x555555;
+        private const uint POLY = 0x00065B;
+        private const bool REFIN = true;
+        private const bool REFOUT = true;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Ble class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24Ble(bool withTable = true) : base(GetEngine("CRC-24/BLE", withTable))
+        public Crc24Ble() : base("CRC-24/BLE", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/BLE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Ble(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x00065B; reverse >>(32-24) = 0xDA6000;
             // init = 0x555555; reverse >>(32-24) = 0xAAAAAA;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateReversedTable(0xDA6000);
-                }
-                return new CrcEngine32(algorithmName, 24, true, true, 0x00065B, 0x555555, 0x000000, _table);
+                _table = CrcEngine32.GenerateReversedTable(0xDA6000);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, true, true, 0x00065B, 0x555555, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -81,34 +92,37 @@
     /// </summary>
     public sealed class Crc24FlexrayA : Crc
     {
+        private const uint INIT = 0xFEDCBA;
+        private const uint POLY = 0x5D6DCB;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayA class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24FlexrayA(bool withTable = true) : base(GetEngine("CRC-24/FLEXRAY-A", withTable))
+        public Crc24FlexrayA() : base("CRC-24/FLEXRAY-A", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/FLEXRAY-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayA(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x5D6DCB;  <<(32-24) = 0x5D6DCB00;
             // init = 0xFEDCBA;  <<(32-24) = 0xFEDCBA00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x5D6DCB00);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x5D6DCB, 0xFEDCBA, 0x000000, _table);
+                _table = CrcEngine32.GenerateTable(0x5D6DCB00);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x5D6DCB, 0xFEDCBA, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -117,34 +131,37 @@
     /// </summary>
     public sealed class Crc24FlexrayB : Crc
     {
+        private const uint INIT = 0xABCDEF;
+        private const uint POLY = 0x5D6DCB;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayB class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24FlexrayB(bool withTable = true) : base(GetEngine("CRC-24/FLEXRAY-B", withTable))
+        public Crc24FlexrayB() : base("CRC-24/FLEXRAY-B", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/FLEXRAY-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayB(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x5D6DCB;  <<(32-24) = 0x5D6DCB00;
             // init = 0xABCDEF;  <<(32-24) = 0xABCDEF00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x5D6DCB00);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x5D6DCB, 0xABCDEF, 0x000000, _table);
+                _table = CrcEngine32.GenerateTable(0x5D6DCB00);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x5D6DCB, 0xABCDEF, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -153,34 +170,37 @@
     /// </summary>
     public sealed class Crc24Interlaken : Crc
     {
+        private const uint INIT = 0xFFFFFF;
+        private const uint POLY = 0x328B63;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0xFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Interlaken class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24Interlaken(bool withTable = true) : base(GetEngine("CRC-24/INTERLAKEN", withTable))
+        public Crc24Interlaken() : base("CRC-24/INTERLAKEN", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/INTERLAKEN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Interlaken(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x328B63;  <<(32-24) = 0x328B6300;
             // init = 0xFFFFFF;  <<(32-24) = 0xFFFFFF00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x328B6300);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x328B63, 0xFFFFFF, 0xFFFFFF, _table);
+                _table = CrcEngine32.GenerateTable(0x328B6300);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x328B63, 0xFFFFFF, 0xFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -189,33 +209,36 @@
     /// </summary>
     public sealed class Crc24LteA : Crc
     {
+        private const uint INIT = 0x000000;
+        private const uint POLY = 0x864CFB;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24LteA class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24LteA(bool withTable = true) : base(GetEngine("CRC-24/LTE-A", withTable))
+        public Crc24LteA() : base("CRC-24/LTE-A", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/LTE-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteA(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x864CFB; <<(32-24) = 0x864CFB00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x864CFB00);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x864CFB, 0x000000, 0x000000, _table);
+                _table = CrcEngine32.GenerateTable(0x864CFB00);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x864CFB, 0x000000, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -224,33 +247,36 @@
     /// </summary>
     public sealed class Crc24LteB : Crc
     {
+        private const uint INIT = 0x000000;
+        private const uint POLY = 0x800063;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0x000000;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24LteB class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24LteB(bool withTable = true) : base(GetEngine("CRC-24/LTE-B", withTable))
+        public Crc24LteB() : base("CRC-24/LTE-B", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/LTE-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteB(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x800063; <<(32-24) = 0x80006300;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x80006300);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x800063, 0x000000, 0x000000, _table);
+                _table = CrcEngine32.GenerateTable(0x80006300);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x800063, 0x000000, 0x000000, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -259,34 +285,37 @@
     /// </summary>
     public sealed class Crc24Os9 : Crc
     {
+        private const uint INIT = 0xFFFFFF;
+        private const uint POLY = 0x800063;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 24;
+        private const uint XOROUT = 0xFFFFFF;
         private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Os9 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc24Os9(bool withTable = true) : base(GetEngine("CRC-24/OS-9", withTable))
+        public Crc24Os9() : base("CRC-24/OS-9", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-24/OS-9", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Os9(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x800063; <<(32-24) = 0x80006300;
             // init = 0xFFFFFF; <<(32-24) = 0xFFFFFF00;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine32.GenerateTable(0x80006300);
-                }
-                return new CrcEngine32(algorithmName, 24, false, false, 0x800063, 0xFFFFFF, 0xFFFFFF, _table);
+                _table = CrcEngine32.GenerateTable(0x80006300);
             }
-            else
-            {
-                return new CrcEngine32(algorithmName, 24, false, false, 0x800063, 0xFFFFFF, 0xFFFFFF, false);
-            }
+            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

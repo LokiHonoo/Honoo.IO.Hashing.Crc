@@ -8,60 +8,46 @@ namespace Honoo.IO.Hashing
         #region Properties
 
         private readonly uint[] _init;
-        private readonly string _initHex;
         private readonly int _moves;
         private readonly uint[] _poly;
-        private readonly string _polyHex;
         private readonly uint[][] _table;
         private readonly uint[] _xorout;
-        private readonly string _xoroutHex;
         private uint[] _crc;
-        internal override string InitHex => _initHex;
-
-        internal override string PolyHex => _polyHex;
-
-        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, string poly, string init, string xorout, bool generateTable)
-            : base(algorithmName, checksumSize, refin, refout, generateTable)
+        internal CrcEngineX2(int width, bool refin, bool refout, string poly, string init, string xorout, bool generateTable)
+            : base(width, refin, refout, generateTable)
         {
-            if (checksumSize <= 0)
+            if (width <= 0)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
             }
-            int rem = checksumSize % 32;
+            int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = Convent(poly, checksumSize, _moves);
-            _init = Convent(init, checksumSize, _moves);
-            _xorout = Convent(xorout, checksumSize, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Convent(poly, width, _moves);
+            _init = Convent(init, width, _moves);
+            _xorout = Convent(xorout, width, _moves);
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = (uint[])_init.Clone();
         }
 
-        internal CrcEngineX2(string algorithmName, int checksumSize, bool refin, bool refout, string poly, string init, string xorout, uint[][] table)
-            : base(algorithmName, checksumSize, refin, refout, true)
+        internal CrcEngineX2(int width, bool refin, bool refout, string poly, string init, string xorout, uint[][] table)
+            : base(width, refin, refout, true)
         {
-            if (checksumSize <= 0)
+            if (width <= 0)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(checksumSize));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
             }
-            int rem = checksumSize % 32;
+            int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = Convent(poly, checksumSize, _moves);
-            _init = Convent(init, checksumSize, _moves);
-            _xorout = Convent(xorout, checksumSize, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
+            _poly = Convent(poly, width, _moves);
+            _init = Convent(init, width, _moves);
+            _xorout = Convent(xorout, width, _moves);
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = table;
@@ -175,7 +161,7 @@ namespace Honoo.IO.Hashing
             Finish();
             checksum = (byte)_crc[_crc.Length - 1];
             _crc = (uint[])_init.Clone();
-            return _checksumSize > 8;
+            return _width > 8;
         }
 
         internal override bool DoFinal(out ushort checksum)
@@ -183,7 +169,7 @@ namespace Honoo.IO.Hashing
             Finish();
             checksum = (ushort)_crc[_crc.Length - 1];
             _crc = (uint[])_init.Clone();
-            return _checksumSize > 16;
+            return _width > 16;
         }
 
         internal override bool DoFinal(out uint checksum)
@@ -191,7 +177,7 @@ namespace Honoo.IO.Hashing
             Finish();
             checksum = _crc[_crc.Length - 1];
             _crc = (uint[])_init.Clone();
-            return _checksumSize > 32;
+            return _width > 32;
         }
 
         internal override bool DoFinal(out ulong checksum)
@@ -200,7 +186,7 @@ namespace Honoo.IO.Hashing
             checksum = _crc[_crc.Length - 1];
             if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFFFFFUL) << 32;
             _crc = (uint[])_init.Clone();
-            return _checksumSize > 64;
+            return _width > 64;
         }
 
         internal override void Reset()
@@ -268,9 +254,9 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static uint[] Convent(string input, int checksumSize, int truncates)
+        private static uint[] Convent(string input, int width, int truncates)
         {
-            uint[] result = new uint[(int)Math.Ceiling(checksumSize / 32d)];
+            uint[] result = new uint[(int)Math.Ceiling(width / 32d)];
             int hexLength = result.Length * 8;
             if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
             {

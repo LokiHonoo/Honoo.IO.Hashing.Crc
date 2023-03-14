@@ -1,41 +1,49 @@
-﻿namespace Honoo.IO.Hashing
+namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// CRC-15, CRC-15/CAN.
     /// </summary>
     public sealed class Crc15 : Crc
     {
+        private const ushort INIT = 0x0000;
+        private const ushort POLY = 0x4599;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 15;
+        private const ushort XOROUT = 0x0000;
         private static ushort[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc15 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc15(bool withTable = true) : base(GetEngine("CRC-15", withTable))
+        public Crc15() : base("CRC-15", GetEngine())
         {
         }
 
-        internal Crc15(string alias, bool withTable = true) : base(GetEngine(alias, withTable))
+        internal Crc15(string alias) : base(alias, GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-15", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc15(); });
+        }
+
+        internal static CrcName GetAlgorithmName(string alias)
+        {
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc15(alias); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x4599; <<(16-15) = 0x8B32;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0x8B32);
-                }
-                return new CrcEngine16(algorithmName, 15, false, false, 0x4599, 0x0000, 0x0000, _table);
+                _table = CrcEngine16.GenerateTable(0x8B32);
             }
-            else
-            {
-                return new CrcEngine16(algorithmName, 15, false, false, 0x4599, 0x0000, 0x0000, false);
-            }
+            return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -44,33 +52,36 @@
     /// </summary>
     public sealed class Crc15Mpt1327 : Crc
     {
+        private const ushort INIT = 0x0000;
+        private const ushort POLY = 0x6815;
+        private const bool REFIN = false;
+        private const bool REFOUT = false;
+        private const int WIDTH = 15;
+        private const ushort XOROUT = 0x0001;
         private static ushort[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc15Mpt1327 class.
         /// </summary>
-        /// <param name="withTable">Calculations with the table.</param>
-        public Crc15Mpt1327(bool withTable = true) : base(GetEngine("CRC-15/MPT1327", withTable))
+        public Crc15Mpt1327() : base("CRC-15/MPT1327", GetEngine())
         {
         }
 
-        private static CrcEngine GetEngine(string algorithmName, bool withTable)
+        internal static CrcName GetAlgorithmName()
+        {
+            return new CrcName("CRC-15/MPT1327", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc15Mpt1327(); });
+        }
+
+        private static CrcEngine GetEngine()
         {
             //
             // poly = 0x6815; <<(16-15) = 0xD02A;
             //
-            if (withTable)
+            if (_table == null)
             {
-                if (_table == null)
-                {
-                    _table = CrcEngine16.GenerateTable(0xD02A);
-                }
-                return new CrcEngine16(algorithmName, 15, false, false, 0x6815, 0x0000, 0x0001, _table);
+                _table = CrcEngine16.GenerateTable(0xD02A);
             }
-            else
-            {
-                return new CrcEngine16(algorithmName, 15, false, false, 0x6815, 0x0000, 0x0001, false);
-            }
+            return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

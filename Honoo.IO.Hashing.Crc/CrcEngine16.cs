@@ -7,58 +7,44 @@ namespace Honoo.IO.Hashing
         #region Properties
 
         private readonly ushort _init;
-        private readonly string _initHex;
         private readonly int _moves;
         private readonly ushort _poly;
-        private readonly string _polyHex;
         private readonly ushort[] _table;
         private readonly ushort _xorout;
-        private readonly string _xoroutHex;
         private ushort _crc;
-        internal override string InitHex => _initHex;
-
-        internal override string PolyHex => _polyHex;
-
-        internal override string XoroutHex => _xoroutHex;
 
         #endregion Properties
 
         #region Construction
 
-        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool generateTable)
-            : base(algorithmName, checksumSize, refin, refout, generateTable)
+        internal CrcEngine16(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool generateTable)
+            : base(width, refin, refout, generateTable)
         {
-            if (checksumSize <= 0 || checksumSize > 16)
+            if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
             }
-            _moves = 16 - checksumSize;
+            _moves = 16 - width;
             _poly = TruncateLeft(poly, _moves);
             _init = TruncateLeft(init, _moves);
             _xorout = TruncateLeft(xorout, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
             _poly = Parse(_poly, _moves, _refin);
             _init = Parse(_init, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = _init;
         }
 
-        internal CrcEngine16(string algorithmName, int checksumSize, bool refin, bool refout, ushort poly, ushort init, ushort xorout, ushort[] table)
-            : base(algorithmName, checksumSize, refin, refout, true)
+        internal CrcEngine16(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, ushort[] table)
+            : base(width, refin, refout, true)
         {
-            if (checksumSize <= 0 || checksumSize > 16)
+            if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 16.", nameof(checksumSize));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
             }
-            _moves = 16 - checksumSize;
+            _moves = 16 - width;
             _poly = TruncateLeft(poly, _moves);
             _init = TruncateLeft(init, _moves);
             _xorout = TruncateLeft(xorout, _moves);
-            _polyHex = GetString(_poly, _checksumHexLength);
-            _initHex = GetString(_init, _checksumHexLength);
-            _xoroutHex = GetString(_xorout, _checksumHexLength);
             _poly = Parse(_poly, _moves, _refin);
             _init = Parse(_init, _moves, _refin);
             _table = table;
@@ -152,7 +138,7 @@ namespace Honoo.IO.Hashing
             Finish();
             checksum = (byte)_crc;
             _crc = _init;
-            return _checksumSize > 8;
+            return _width > 8;
         }
 
         internal override bool DoFinal(out ushort checksum)

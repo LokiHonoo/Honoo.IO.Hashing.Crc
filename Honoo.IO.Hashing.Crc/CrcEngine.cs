@@ -8,31 +8,25 @@ namespace Honoo.IO.Hashing
 
         protected readonly int _checksumByteLength;
         protected readonly int _checksumHexLength;
-        protected readonly int _checksumSize;
         protected readonly bool _refin;
         protected readonly bool _refout;
+        protected readonly int _width;
         protected readonly bool _withTable;
-        private readonly string _algorithmName;
-        internal string AlgorithmName => _algorithmName;
         internal int ChecksumLength => _checksumByteLength;
-        internal int ChecksumSize => _checksumSize;
-        internal abstract string InitHex { get; }
-        internal abstract string PolyHex { get; }
         internal bool Refin => _refin;
         internal bool Refout => _refout;
+        internal int Width => _width;
         internal bool WithTable => _withTable;
-        internal abstract string XoroutHex { get; }
 
         #endregion Properties
 
         #region Construction
 
-        protected CrcEngine(string algorithmName, int checksumSize, bool refin, bool refout, bool useTable)
+        protected CrcEngine(int width, bool refin, bool refout, bool useTable)
         {
-            _algorithmName = algorithmName ?? throw new ArgumentNullException(nameof(algorithmName));
-            _checksumSize = checksumSize;
-            _checksumByteLength = (int)Math.Ceiling(checksumSize / 8d);
-            _checksumHexLength = (int)Math.Ceiling(checksumSize / 4d);
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
             _withTable = useTable;
