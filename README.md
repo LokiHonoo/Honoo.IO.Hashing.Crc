@@ -15,7 +15,7 @@ CRC implemenations.
 
 CRC name of catalogue(112) are supported.
 
-Custom lengths and parameters are supported.
+Custom width and parameters are supported.
 
 Catalogue of parametrised CRC algorithms: <https://reveng.sourceforge.io/crc-catalogue/all.htm> .
 

@@ -7,7 +7,6 @@
         private static void Main()
         {
             Test.Test1();
-            Test.Test2();
             Console.WriteLine();
             Console.WriteLine();
             Spped.Test();

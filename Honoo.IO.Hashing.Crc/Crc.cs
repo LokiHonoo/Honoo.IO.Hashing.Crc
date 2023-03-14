@@ -27,17 +27,21 @@ namespace Honoo.IO.Hashing
         /// </summary>
         public int ChecksumSize => _engine.ChecksumSize;
 
+        string ICrcParameters.InitHex => _engine.InitHex;
+
+        string ICrcParameters.PolyHex => _engine.PolyHex;
+
+        bool ICrcParameters.Refin => _engine.Refin;
+
+        bool ICrcParameters.Refout => _engine.Refout;
+
         /// <summary>
         /// Gets a value indicating whether the calculations with the table.
         /// </summary>
         public bool WithTable => _engine.WithTable;
 
+        string ICrcParameters.XoroutHex => _engine.XoroutHex;
 
-         string ICrcParameters.InitHex => _engine.InitHex;
-         string ICrcParameters.PolyHex => _engine.PolyHex;
-         bool ICrcParameters.Refin => _engine.Refin;
-         bool ICrcParameters.Refout => _engine.Refout;
-         string ICrcParameters.XoroutHex => _engine.XoroutHex;
         #endregion Properties
 
         #region Construction

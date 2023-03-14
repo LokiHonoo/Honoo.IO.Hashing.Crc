@@ -75,6 +75,10 @@ namespace Test
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|sharding 32 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
+            Console.WriteLine();
+            Console.WriteLine("|algorithm|core|table|times|elapsed|");
+            Console.WriteLine("|:-------:|:--:|:---:|:---:|------:|");
+
             crc = new Crc64Redis();
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)

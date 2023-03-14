@@ -9,13 +9,13 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<Authors>Loki Honoo</Authors>
-		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Custom lengths and parameters are supported.</Description>
+		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Custom width and parameters are supported.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
 		<PackageTags>Honoo Hashing Crc Crc3 Crc4 Crc5 Crc6 Crc7 Crc8 Crc12 Crc16 Crc24 Crc32 Crc40 Crc64 Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 

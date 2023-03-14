@@ -102,11 +102,11 @@ namespace Test
                 string t = Calc(crc, input);
                 foreach (var name in alg.Names)
                 {
-                    if (Calc(Crc.Create(name), input) != t)
+                    if (Calc(Crc.Create(name, false), input) != t)
                     {
                         error = true;
                     }
-                    if (Calc(Crc.Create(name, false), input) != t)
+                    if (Calc(Crc.Create(name), input) != t)
                     {
                         error = true;
                     }
@@ -140,18 +140,6 @@ namespace Test
             Console.WriteLine();
             Console.WriteLine($"Error={_error}");
             Console.WriteLine();
-        }
-
-        internal static void Test2()
-        {
-            string str = "1111221ADV233334444555566677788000AAAABB";
-            byte[] input = Encoding.UTF8.GetBytes(str);
-            //
-            Calc(Crc.Create(5, false, false, 0xF2, 0x09, 0x00), input);
-            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding8), input);
-            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding8Table), input);
-            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding32), input);
-            Calc(Crc.Create(5, false, false, "0xF2", "0x09", "0x00", CrcCore.Sharding32Table), input);
         }
 
         private static string Calc(Crc crc, byte[] input)
