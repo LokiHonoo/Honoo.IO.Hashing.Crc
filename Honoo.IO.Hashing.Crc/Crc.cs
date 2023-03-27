@@ -27,6 +27,7 @@ namespace Honoo.IO.Hashing
         /// Gets algorithm width bits.
         /// </summary>
         public int Width => _engine.Width;
+
         /// <summary>
         /// Gets a value indicating whether the calculations with the table.
         /// </summary>
@@ -135,84 +136,154 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator. The return value is "Hex String".
+        /// Computes checksum and reset the calculator. The return value is "Hex String".
         /// </summary>
         /// <returns></returns>
-        public string DoFinal()
+        public string ComputeFinal()
         {
-            return _engine.DoFinal();
+            return _engine.ComputeFinal();
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <returns></returns>
+        public string ComputeFinal(byte[] input)
+        {
+            Update(input);
+            return ComputeFinal();
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="offset">Read start offset from buffer.</param>
+        /// <param name="length">Read length from buffer.</param>
+        /// <returns></returns>
+        public string ComputeFinal(byte[] inputBuffer, int offset, int length)
+        {
+            Update(inputBuffer, offset, length);
+            return ComputeFinal();
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
         /// </summary>
         /// <param name="littleEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
-        public byte[] DoFinal(bool littleEndian)
+        public byte[] ComputeFinal(bool littleEndian)
         {
-            return _engine.DoFinal(littleEndian);
+            byte[] result = new byte[_engine.ChecksumLength];
+            ComputeFinal(littleEndian, result, 0);
+            return result;
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="input">Input.</param>
+        /// <returns></returns>
+        public byte[] ComputeFinal(bool littleEndian, byte[] input)
+        {
+            Update(input);
+            return ComputeFinal(littleEndian);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="offset">Read start offset from buffer.</param>
+        /// <param name="length">Read length from buffer.</param>
+        /// <returns></returns>
+        public byte[] ComputeFinal(bool littleEndian, byte[] inputBuffer, int offset, int length)
+        {
+            Update(inputBuffer, offset, length);
+            return ComputeFinal(littleEndian);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
         /// <br/>Write to output buffer and return checksum byte length.
         /// </summary>
         /// <param name="littleEndian">Specifies the type of endian for output.</param>
-        /// <param name="output">Output buffer.</param>
+        /// <param name="outputBuffer">Output buffer.</param>
         /// <param name="offset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public int DoFinal(bool littleEndian, byte[] output, int offset)
+        public int ComputeFinal(bool littleEndian, byte[] outputBuffer, int offset)
         {
-            return _engine.DoFinal(littleEndian, output, offset);
+            return _engine.ComputeFinal(littleEndian, outputBuffer, offset);
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
-        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a value indicating whether the checksum is truncated.
+        /// Computes checksum and reset the calculator.
+        /// <br/>Write to output buffer and return checksum byte length.
         /// </summary>
-        /// <param name="checksum">Checksum value.</param>
+        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="outputBuffer">Output buffer.</param>
+        /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
-        public bool DoFinal(out byte checksum)
+        /// <exception cref="Exception"></exception>
+        public int ComputeFinal(bool littleEndian, byte[] inputBuffer, int inputOffset, int inputLength, byte[] outputBuffer, int outputOffset)
         {
-            return _engine.DoFinal(out checksum);
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(littleEndian, outputBuffer, outputOffset);
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
+        /// Computes checksum and reset the calculator.
         /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a value indicating whether the checksum is truncated.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
         /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
-        public bool DoFinal(out ushort checksum)
+        public bool ComputeFinal(out byte checksum)
         {
-            return _engine.DoFinal(out checksum);
+            return _engine.ComputeFinal(out checksum);
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
+        /// Computes checksum and reset the calculator.
         /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a value indicating whether the checksum is truncated.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
         /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
-        public bool DoFinal(out uint checksum)
+        public bool ComputeFinal(out ushort checksum)
         {
-            return _engine.DoFinal(out checksum);
+            return _engine.ComputeFinal(out checksum);
         }
 
         /// <summary>
-        /// Calculates checksum and reset the calculator.
+        /// Computes checksum and reset the calculator.
         /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a value indicating whether the checksum is truncated.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
         /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
-        public bool DoFinal(out ulong checksum)
+        public bool ComputeFinal(out uint checksum)
         {
-            return _engine.DoFinal(out checksum);
+            return _engine.ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(out ulong checksum)
+        {
+            return _engine.ComputeFinal(out checksum);
         }
 
         /// <summary>
@@ -246,19 +317,19 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Update input.
         /// </summary>
-        /// <param name="buffer">Input buffer.</param>
+        /// <param name="inputBuffer">Input buffer.</param>
         /// <param name="offset">Read start offset from buffer.</param>
         /// <param name="length">Read length from buffer.</param>
         /// <exception cref="Exception"></exception>
-        public void Update(byte[] buffer, int offset, int length)
+        public void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (buffer == null)
+            if (inputBuffer == null)
             {
-                throw new ArgumentNullException(nameof(buffer));
+                throw new ArgumentNullException(nameof(inputBuffer));
             }
             for (int i = offset; i < offset + length; i++)
             {
-                Update(buffer[i]);
+                Update(inputBuffer[i]);
             }
         }
     }

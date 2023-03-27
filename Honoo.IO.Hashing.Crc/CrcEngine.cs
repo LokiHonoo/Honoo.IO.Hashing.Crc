@@ -34,19 +34,17 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        internal abstract string DoFinal();
+        internal abstract string ComputeFinal();
 
-        internal abstract byte[] DoFinal(bool littleEndian);
+        internal abstract int ComputeFinal(bool littleEndian, byte[] output, int offset);
 
-        internal abstract int DoFinal(bool littleEndian, byte[] output, int offset);
+        internal abstract bool ComputeFinal(out byte checksum);
 
-        internal abstract bool DoFinal(out byte checksum);
+        internal abstract bool ComputeFinal(out ushort checksum);
 
-        internal abstract bool DoFinal(out ushort checksum);
+        internal abstract bool ComputeFinal(out uint checksum);
 
-        internal abstract bool DoFinal(out uint checksum);
-
-        internal abstract bool DoFinal(out ulong checksum);
+        internal abstract bool ComputeFinal(out ulong checksum);
 
         internal abstract void Reset();
 

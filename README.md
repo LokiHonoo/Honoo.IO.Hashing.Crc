@@ -195,17 +195,17 @@ private static void Demo4()
 
 |algorithm|core|table|times|elapsed|
 |:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits|false|100000|81 ms|
-|CRC-32|32 bits|true|100000|26 ms|
-|CRC-32|sharding 8 bits|false|100000|400 ms|
-|CRC-32|sharding 8 bits|true|100000|72 ms|
-|CRC-32|sharding 32 bits|false|100000|253 ms|
-|CRC-32|sharding 32 bits|true|100000|42 ms|
+|CRC-32|32 bits||100000|81 ms|
+|CRC-32|32 bits|table|100000|26 ms|
+|CRC-32|sharding 8 bits||100000|400 ms|
+|CRC-32|sharding 8 bits|table|100000|72 ms|
+|CRC-32|sharding 32 bits||100000|253 ms|
+|CRC-32|sharding 32 bits|table|100000|42 ms|
 
 |algorithm|core|table|times|elapsed|
 |:-------:|:--:|:---:|:---:|------:|
-|CRC-64/REDIS|64 bits|true|100000|28 ms|
-|CRC-64/REDIS|sharding 32 bits|true|100000|53 ms|
+|CRC-64/REDIS|64 bits|table|100000|28 ms|
+|CRC-64/REDIS|sharding 32 bits|table|100000|53 ms|
 
 ## License
 

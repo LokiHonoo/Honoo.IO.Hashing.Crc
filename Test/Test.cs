@@ -1,6 +1,7 @@
 ﻿using Honoo.IO.Hashing;
 using HtmlAgilityPack;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Test
@@ -93,7 +94,7 @@ namespace Test
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
                 //
-                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);                
                 string t = Calc(crc, input);
                 CrcCore noTable;
                 if (alg.Width <= 8) noTable = CrcCore.UInt8;
@@ -157,7 +158,7 @@ namespace Test
         private static string Calc(Crc crc, byte[] input)
         {
             crc.Update(input);
-            byte[] checksum = crc.DoFinal(false);
+            byte[] checksum = crc.ComputeFinal(false);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
             string h = CrcUtilities.ToHexString(false, checksum, 0, crc.Width);
             string h1 = Convert.ToString(CrcUtilities.ToByte(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
@@ -165,18 +166,18 @@ namespace Test
             string h3 = Convert.ToString(CrcUtilities.ToUInt32(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
             string h4 = Convert.ToString((long)CrcUtilities.ToUInt64(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
             crc.Update(input);
-            string t = crc.DoFinal();
+            string t = crc.ComputeFinal();
             crc.Update(input);
-            crc.DoFinal(out byte b);
+            crc.ComputeFinal(out byte b);
             string t1 = Convert.ToString(b, 16).ToUpperInvariant();
             crc.Update(input);
-            crc.DoFinal(out ushort s);
+            crc.ComputeFinal(out ushort s);
             string t2 = Convert.ToString(s, 16).ToUpperInvariant();
             crc.Update(input);
-            crc.DoFinal(out uint i);
+            crc.ComputeFinal(out uint i);
             string t3 = Convert.ToString(i, 16).ToUpperInvariant();
             crc.Update(input);
-            bool truncated = crc.DoFinal(out ulong l);
+            bool truncated = crc.ComputeFinal(out ulong l);
             string t4 = Convert.ToString((long)l, 16).ToUpperInvariant();
             Console.Write(crc.Name.PadRight(20));
             Console.Write(crc.WithTable ? "TABLE   " : "        ");
@@ -186,7 +187,7 @@ namespace Test
             Console.Write(t2 + " ");
             Console.Write(t3 + " ");
             Console.Write(t4 + " ");
-            Console.WriteLine(truncated);
+            Console.WriteLine(truncated ? "truncated" : string.Empty);
             Console.Write(new string(' ', 28 + a.Length + 1));
             Console.Write(h + " ");
             Console.Write(h1 + " ");

@@ -26,20 +26,20 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|32 bits|false|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|32 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new Crc32();
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|32 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new CrcCustom(CrcName.CRC32.Width,
                                 CrcName.CRC32.Refin,
@@ -52,10 +52,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|sharding 8 bits|false|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|sharding 8 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new CrcCustom(CrcName.CRC32.Width,
                                 CrcName.CRC32.Refin,
@@ -68,10 +68,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|sharding 8 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|sharding 8 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new CrcCustom(CrcName.CRC32.Width,
                                 CrcName.CRC32.Refin,
@@ -84,10 +84,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|sharding 32 bits|false|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|sharding 32 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new CrcCustom(CrcName.CRC32.Width,
                                 CrcName.CRC32.Refin,
@@ -100,10 +100,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-32|sharding 32 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-32|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             Console.WriteLine();
             Console.WriteLine("|algorithm|core|table|times|elapsed|");
@@ -114,10 +114,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-64/REDIS|64 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-64/REDIS|64 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
 
             crc = new CrcCustom(CrcName.CRC64_REDIS.Width,
                                 CrcName.CRC64_REDIS.Refin,
@@ -130,10 +130,10 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.DoFinal();
+                crc.ComputeFinal();
             }
             stopwatch.Stop();
-            Console.WriteLine("|CRC-64/REDIS|sharding 32 bits|true|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-64/REDIS|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
         }
     }
 }

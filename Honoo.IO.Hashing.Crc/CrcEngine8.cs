@@ -97,7 +97,7 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string DoFinal()
+        internal override string ComputeFinal()
         {
             Finish();
             string result = GetString(_crc, _checksumHexLength);
@@ -105,14 +105,7 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override byte[] DoFinal(bool littleEndian)
-        {
-            byte[] result = new byte[1];
-            DoFinal(littleEndian, result, 0);
-            return result;
-        }
-
-        internal override int DoFinal(bool littleEndian, byte[] output, int offset)
+        internal override int ComputeFinal(bool littleEndian, byte[] output, int offset)
         {
             Finish();
             output[offset] = _crc;
@@ -120,7 +113,7 @@ namespace Honoo.IO.Hashing
             return 1;
         }
 
-        internal override bool DoFinal(out byte checksum)
+        internal override bool ComputeFinal(out byte checksum)
         {
             Finish();
             checksum = _crc;
@@ -128,7 +121,7 @@ namespace Honoo.IO.Hashing
             return false;
         }
 
-        internal override bool DoFinal(out ushort checksum)
+        internal override bool ComputeFinal(out ushort checksum)
         {
             Finish();
             checksum = _crc;
@@ -136,7 +129,7 @@ namespace Honoo.IO.Hashing
             return false;
         }
 
-        internal override bool DoFinal(out uint checksum)
+        internal override bool ComputeFinal(out uint checksum)
         {
             Finish();
             checksum = _crc;
@@ -144,7 +137,7 @@ namespace Honoo.IO.Hashing
             return false;
         }
 
-        internal override bool DoFinal(out ulong checksum)
+        internal override bool ComputeFinal(out ulong checksum)
         {
             Finish();
             checksum = _crc;
