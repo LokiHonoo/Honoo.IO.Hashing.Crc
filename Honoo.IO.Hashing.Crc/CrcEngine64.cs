@@ -113,14 +113,14 @@ namespace Honoo.IO.Hashing
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[i] = (byte)(_crc >> (i * 8));
+                    output[i + offset] = (byte)(_crc >> (i * 8));
                 }
             }
             else
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[_checksumByteLength - 1 - i] = (byte)(_crc >> (i * 8));
+                    output[_checksumByteLength - 1 - i + offset] = (byte)(_crc >> (i * 8));
                 }
             }
             _crc = _init;

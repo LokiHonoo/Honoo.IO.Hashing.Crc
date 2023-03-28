@@ -21,7 +21,7 @@
 			Crc13 Crc14 Crc15 Crc16 Crc17 Crc21 Crc24 Crc30 Crc31 Crc32 Crc40 Crc64 Crc82
 		</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<Version>1.0.6</Version>
+		<Version>1.0.7</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
