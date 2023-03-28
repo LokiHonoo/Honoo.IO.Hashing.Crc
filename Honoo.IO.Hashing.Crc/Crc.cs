@@ -14,7 +14,7 @@ namespace Honoo.IO.Hashing
         private readonly string _name;
 
         /// <summary>
-        /// Gets iyrput checksum byte length.
+        /// Gets output checksum byte length.
         /// </summary>
         public int ChecksumLength => _engine.ChecksumLength;
 

@@ -6,7 +6,7 @@ namespace Honoo.IO.Hashing
     /// <summary>
     /// CRC Parameter.
     /// </summary>
-    public sealed class CrcParameter
+    public sealed class CrcParameter : IEquatable<CrcParameter>
     {
         #region Enum
 

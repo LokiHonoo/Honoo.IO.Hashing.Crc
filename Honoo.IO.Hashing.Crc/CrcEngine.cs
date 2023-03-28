@@ -13,8 +13,6 @@ namespace Honoo.IO.Hashing
         protected readonly int _width;
         protected readonly bool _withTable;
         internal int ChecksumLength => _checksumByteLength;
-        internal bool Refin => _refin;
-        internal bool Refout => _refout;
         internal int Width => _width;
         internal bool WithTable => _withTable;
 

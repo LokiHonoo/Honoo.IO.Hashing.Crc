@@ -1,6 +1,4 @@
-﻿using Honoo.IO.Hashing;
-
-namespace Test
+﻿namespace Test
 {
     internal class Program
     {

@@ -1,13 +1,21 @@
 # Honoo.IO.Hashing.Crc
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
 - [Honoo.IO.Hashing.Crc](#honooiohashingcrc)
   - [Introduction](#introduction)
-  - [Usage](#usage)
+  - [Project](#project)
+    - [Github](#github)
     - [NuGet](#nuget)
+  - [Usage](#usage)
     - [Namespace](#namespace)
     - [Demo](#demo)
     - [Speed](#speed)
   - [License](#license)
+
+<!-- /code_chunk_output -->
 
 ## Introduction
 
@@ -134,11 +142,17 @@ CRC-64/WE,
 CRC-64/XZ, CRC-64/GO-ECMA,
 CRC-82/DARC,
 
-## Usage
+## Project
+
+### Github
+
+<https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc>
 
 ### NuGet
 
 <https://www.nuget.org/packages/Honoo.IO.Hashing.Crc/>
+
+## Usage
 
 ### Namespace
 
@@ -171,7 +185,7 @@ private static void Demo2()
 
 private static void Demo3()
 {
-    var crc = Crc.Create("CRC-40/GSM");
+    var crc = Crc.Create(CrcName.CRC40_GSM);
     crc.Update(inputBytes);
     // Width is 40 bits, ulong is 64 bits, The truncated is "False".
     bool truncated = crc.DoFinal(out ulong checksum);
@@ -183,7 +197,7 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom lengths and parameters are supported.
-    var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex", false);
+    var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
     int length = crc.DoFinal(littleEndian, checksum, 0);
@@ -195,18 +209,16 @@ private static void Demo4()
 
 |algorithm|core|table|times|elapsed|
 |:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits||100000|81 ms|
-|CRC-32|32 bits|table|100000|26 ms|
-|CRC-32|sharding 8 bits||100000|400 ms|
-|CRC-32|sharding 8 bits|table|100000|72 ms|
-|CRC-32|sharding 32 bits||100000|253 ms|
-|CRC-32|sharding 32 bits|table|100000|42 ms|
-
-|algorithm|core|table|times|elapsed|
-|:-------:|:--:|:---:|:---:|------:|
-|CRC-64/REDIS|64 bits|table|100000|28 ms|
-|CRC-64/REDIS|sharding 32 bits|table|100000|53 ms|
+|CRC-32|32 bits||100000|84 ms|
+|CRC-32|32 bits|table|100000|27 ms|
+|CRC-32|sharding 8 bits||100000|430 ms|
+|CRC-32|sharding 8 bits|table|100000|68 ms|
+|CRC-32|sharding 32 bits||100000|275 ms|
+|CRC-32|sharding 32 bits|table|100000|46 ms|
+|CRC-64/REDIS|64 bits|table|100000|31 ms|
+|CRC-64/REDIS|sharding 32 bits|table|100000|55 ms|
+|CUSTUM CRC-217|sharding 32 bits|table|100000|129 ms|
 
 ## License
 
-The project is based on MIT licence.
+This project based on [MIT](LICENSE) license.
