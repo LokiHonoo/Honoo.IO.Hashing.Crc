@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Honoo.IO.Hashing
 {
@@ -124,6 +125,49 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
+        /// <summary>
+        /// Convert checksum/poly/init/xorout hex string to the bytes, Truncate bits form header if the input length is greater than width bits.
+        /// </summary>
+        /// <param name="inputHex">Input hex string.</param>
+        /// <param name="width">Width bits.</param>
+        /// <returns></returns>
+        private static byte[] GetBytes(string inputHex, int width)
+        {
+            int rem = width % 8;
+            int truncates = rem > 0 ? 8 - rem : 0;
+            byte[] result = new byte[(int)Math.Ceiling(width / 8d)];
+            StringBuilder bin = new StringBuilder();
+            if (inputHex.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || inputHex.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
+            {
+                inputHex = inputHex.Substring(2, inputHex.Length - 2).Replace("_", null).Replace("-", null);
+            }
+            else
+            {
+                inputHex = inputHex.Replace("_", null).Replace("-", null);
+            }
+            for (int i = 0; i < inputHex.Length; i++)
+            {
+                bin.Append(Convert.ToString(Convert.ToByte(inputHex[i].ToString(), 16), 2).PadLeft(4, '0'));
+            }
+            if (bin.Length > width)
+            {
+                bin.Remove(0, bin.Length - width);
+            }
+            else if (bin.Length < width)
+            {
+                bin.Insert(0, "0", width - bin.Length);
+            }
+            if (truncates > 0)
+            {
+                bin.Insert(0, "0", truncates);
+            }
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToByte(bin.ToString(i * 8, 8), 2);
+            }
+            return result;
+        }
+
         private static CrcEngine GetEngine(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable)
         {
             return new CrcEngine8(width, refin, refout, poly, init, xorout, withTable);
@@ -146,13 +190,13 @@ namespace Honoo.IO.Hashing
 
         private static CrcEngine GetEngine(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core)
         {
+            if (width <= 0)
+            {
+                throw new ArgumentException("Invalid checkcum width. The allowed values are more than 0.", nameof(width));
+            }
             if (core == CrcCore.Auto)
             {
-                if (width <= 0)
-                {
-                    throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
-                }
-                else if (width <= 8)
+                if (width <= 8)
                 {
                     core = CrcCore.UInt8Table;
                 }
@@ -177,9 +221,9 @@ namespace Honoo.IO.Hashing
             {
                 case CrcCore.UInt8:
                     {
-                        byte[] polyBytes = CrcUtilities.GetBytes(polyHex, width);
-                        byte[] initBytes = CrcUtilities.GetBytes(initHex, width);
-                        byte[] xoroutBytes = CrcUtilities.GetBytes(xoroutHex, width);
+                        byte[] polyBytes = GetBytes(polyHex, width);
+                        byte[] initBytes = GetBytes(initHex, width);
+                        byte[] xoroutBytes = GetBytes(xoroutHex, width);
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
@@ -188,9 +232,9 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.UInt8Table:
                     {
-                        byte[] polyBytes = CrcUtilities.GetBytes(polyHex, width);
-                        byte[] initBytes = CrcUtilities.GetBytes(initHex, width);
-                        byte[] xoroutBytes = CrcUtilities.GetBytes(xoroutHex, width);
+                        byte[] polyBytes = GetBytes(polyHex, width);
+                        byte[] initBytes = GetBytes(initHex, width);
+                        byte[] xoroutBytes = GetBytes(xoroutHex, width);
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
@@ -199,49 +243,49 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.UInt16:
                     {
-                        ushort poly = BEToUInt16(CrcUtilities.GetBytes(polyHex, width));
-                        ushort init = BEToUInt16(CrcUtilities.GetBytes(initHex, width));
-                        ushort xorout = BEToUInt16(CrcUtilities.GetBytes(xoroutHex, width));
+                        ushort poly = BEToUInt16(GetBytes(polyHex, width));
+                        ushort init = BEToUInt16(GetBytes(initHex, width));
+                        ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt16Table:
                     {
-                        ushort poly = BEToUInt16(CrcUtilities.GetBytes(polyHex, width));
-                        ushort init = BEToUInt16(CrcUtilities.GetBytes(initHex, width));
-                        ushort xorout = BEToUInt16(CrcUtilities.GetBytes(xoroutHex, width));
+                        ushort poly = BEToUInt16(GetBytes(polyHex, width));
+                        ushort init = BEToUInt16(GetBytes(initHex, width));
+                        ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt32:
                     {
-                        uint poly = BEToUInt32(CrcUtilities.GetBytes(polyHex, width));
-                        uint init = BEToUInt32(CrcUtilities.GetBytes(initHex, width));
-                        uint xorout = BEToUInt32(CrcUtilities.GetBytes(xoroutHex, width));
+                        uint poly = BEToUInt32(GetBytes(polyHex, width));
+                        uint init = BEToUInt32(GetBytes(initHex, width));
+                        uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt32Table:
                     {
-                        uint poly = BEToUInt32(CrcUtilities.GetBytes(polyHex, width));
-                        uint init = BEToUInt32(CrcUtilities.GetBytes(initHex, width));
-                        uint xorout = BEToUInt32(CrcUtilities.GetBytes(xoroutHex, width));
+                        uint poly = BEToUInt32(GetBytes(polyHex, width));
+                        uint init = BEToUInt32(GetBytes(initHex, width));
+                        uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt64:
                     {
-                        ulong poly = BEToUInt64(CrcUtilities.GetBytes(polyHex, width));
-                        ulong init = BEToUInt64(CrcUtilities.GetBytes(initHex, width));
-                        ulong xorout = BEToUInt64(CrcUtilities.GetBytes(xoroutHex, width));
+                        ulong poly = BEToUInt64(GetBytes(polyHex, width));
+                        ulong init = BEToUInt64(GetBytes(initHex, width));
+                        ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt64Table:
                     {
-                        ulong poly = BEToUInt64(CrcUtilities.GetBytes(polyHex, width));
-                        ulong init = BEToUInt64(CrcUtilities.GetBytes(initHex, width));
-                        ulong xorout = BEToUInt64(CrcUtilities.GetBytes(xoroutHex, width));
+                        ulong poly = BEToUInt64(GetBytes(polyHex, width));
+                        ulong init = BEToUInt64(GetBytes(initHex, width));
+                        ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
                         return GetEngine(width, refin, refout, poly, init, xorout, true);
                     }
 

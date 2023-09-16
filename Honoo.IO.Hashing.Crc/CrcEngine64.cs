@@ -13,7 +13,6 @@ namespace Honoo.IO.Hashing
         private readonly ulong _xorout;
         private ulong _crc;
 
-
         #endregion Properties
 
         #region Construction

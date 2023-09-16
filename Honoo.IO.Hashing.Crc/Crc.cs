@@ -147,30 +147,6 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Computes checksum and reset the calculator.
         /// </summary>
-        /// <param name="input">Input.</param>
-        /// <returns></returns>
-        public string ComputeFinal(byte[] input)
-        {
-            Update(input);
-            return ComputeFinal();
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// </summary>
-        /// <param name="inputBuffer">Input buffer.</param>
-        /// <param name="offset">Read start offset from buffer.</param>
-        /// <param name="length">Read length from buffer.</param>
-        /// <returns></returns>
-        public string ComputeFinal(byte[] inputBuffer, int offset, int length)
-        {
-            Update(inputBuffer, offset, length);
-            return ComputeFinal();
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// </summary>
         /// <param name="littleEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         public byte[] ComputeFinal(bool littleEndian)
@@ -178,32 +154,6 @@ namespace Honoo.IO.Hashing
             byte[] result = new byte[_engine.ChecksumLength];
             ComputeFinal(littleEndian, result, 0);
             return result;
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// </summary>
-        /// <param name="littleEndian">Specifies the type of endian for output.</param>
-        /// <param name="input">Input.</param>
-        /// <returns></returns>
-        public byte[] ComputeFinal(bool littleEndian, byte[] input)
-        {
-            Update(input);
-            return ComputeFinal(littleEndian);
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// </summary>
-        /// <param name="littleEndian">Specifies the type of endian for output.</param>
-        /// <param name="inputBuffer">Input buffer.</param>
-        /// <param name="offset">Read start offset from buffer.</param>
-        /// <param name="length">Read length from buffer.</param>
-        /// <returns></returns>
-        public byte[] ComputeFinal(bool littleEndian, byte[] inputBuffer, int offset, int length)
-        {
-            Update(inputBuffer, offset, length);
-            return ComputeFinal(littleEndian);
         }
 
         /// <summary>
@@ -218,24 +168,6 @@ namespace Honoo.IO.Hashing
         public int ComputeFinal(bool littleEndian, byte[] outputBuffer, int offset)
         {
             return _engine.ComputeFinal(littleEndian, outputBuffer, offset);
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// <br/>Write to output buffer and return checksum byte length.
-        /// </summary>
-        /// <param name="littleEndian">Specifies the type of endian for output.</param>
-        /// <param name="inputBuffer">Input buffer.</param>
-        /// <param name="inputOffset">Read start offset from buffer.</param>
-        /// <param name="inputLength">Read length from buffer.</param>
-        /// <param name="outputBuffer">Output buffer.</param>
-        /// <param name="outputOffset">Write start offset from buffer.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public int ComputeFinal(bool littleEndian, byte[] inputBuffer, int inputOffset, int inputLength, byte[] outputBuffer, int outputOffset)
-        {
-            Update(inputBuffer, inputOffset, inputLength);
-            return ComputeFinal(littleEndian, outputBuffer, outputOffset);
         }
 
         /// <summary>

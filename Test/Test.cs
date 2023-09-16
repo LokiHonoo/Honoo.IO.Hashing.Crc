@@ -1,14 +1,12 @@
 ﻿using Honoo.IO.Hashing;
 using HtmlAgilityPack;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Test
 {
     internal static class Test
     {
-        private static readonly Random _random = new();
         private static int _error = 0;
 
         internal static Alg[] GetAlgs()
@@ -94,15 +92,15 @@ namespace Test
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
                 //
-                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);                
-                string t = Calc(crc, input);
+                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                string h = Calc(crc, input);
                 CrcCore noTable;
                 if (alg.Width <= 8) noTable = CrcCore.UInt8;
                 else if (alg.Width <= 16) noTable = CrcCore.UInt16;
                 else if (alg.Width <= 32) noTable = CrcCore.UInt32;
                 else if (alg.Width <= 64) noTable = CrcCore.UInt64;
                 else noTable = CrcCore.Sharding32;
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
                 {
                     error = true;
                 }
@@ -114,7 +112,7 @@ namespace Test
                         {
                             error = true;
                         }
-                        if (Calc(Crc.Create(crcName), input) != t)
+                        if (Calc(Crc.Create(crcName), input) != h)
                         {
                             error = true;
                         }
@@ -124,19 +122,19 @@ namespace Test
                         error = true;
                     }
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != t)
+                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
                 {
                     error = true;
                 }
@@ -160,52 +158,36 @@ namespace Test
             crc.Update(input);
             byte[] checksum = crc.ComputeFinal(false);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
-            string h = CrcUtilities.ToHexString(false, checksum, 0, crc.Width);
-            string h1 = Convert.ToString(CrcUtilities.ToByte(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
-            string h2 = Convert.ToString(CrcUtilities.ToUInt16(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
-            string h3 = Convert.ToString(CrcUtilities.ToUInt32(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
-            string h4 = Convert.ToString((long)CrcUtilities.ToUInt64(false, checksum, 0, crc.Width), 16).ToUpperInvariant();
             crc.Update(input);
-            string t = crc.ComputeFinal();
+            string h = crc.ComputeFinal();
             crc.Update(input);
             crc.ComputeFinal(out byte b);
-            string t1 = Convert.ToString(b, 16).ToUpperInvariant();
+            string h1 = Convert.ToString(b, 16).ToUpperInvariant();
             crc.Update(input);
             crc.ComputeFinal(out ushort s);
-            string t2 = Convert.ToString(s, 16).ToUpperInvariant();
+            string h2 = Convert.ToString(s, 16).ToUpperInvariant();
             crc.Update(input);
             crc.ComputeFinal(out uint i);
-            string t3 = Convert.ToString(i, 16).ToUpperInvariant();
+            string h3 = Convert.ToString(i, 16).ToUpperInvariant();
             crc.Update(input);
             bool truncated = crc.ComputeFinal(out ulong l);
-            string t4 = Convert.ToString((long)l, 16).ToUpperInvariant();
+            string h4 = Convert.ToString((long)l, 16).ToUpperInvariant();
             Console.Write(crc.Name.PadRight(20));
             Console.Write(crc.WithTable ? "TABLE   " : "        ");
             Console.Write(a + " ");
-            Console.Write(t + " ");
-            Console.Write(t1 + " ");
-            Console.Write(t2 + " ");
-            Console.Write(t3 + " ");
-            Console.Write(t4 + " ");
-            Console.WriteLine(truncated ? "truncated" : string.Empty);
-            Console.Write(new string(' ', 28 + a.Length + 1));
             Console.Write(h + " ");
             Console.Write(h1 + " ");
             Console.Write(h2 + " ");
             Console.Write(h3 + " ");
-            Console.WriteLine(h4 + " ");
+            Console.Write(h4 + " ");
+            Console.WriteLine(truncated ? "truncated" : string.Empty);
             bool error = false;
-            if (!a.EndsWith(t)) error = true;
-            if (!t.EndsWith(t1.ToString())) error = true;
-            if (!t.EndsWith(t2.ToString())) error = true;
-            if (!t.EndsWith(t3.ToString())) error = true;
-            if (!t.EndsWith(t4.ToString())) error = true;
-            if (!t.EndsWith(h.ToString())) error = true;
-            if (!t.EndsWith(h1.ToString())) error = true;
-            if (!t.EndsWith(h2.ToString())) error = true;
-            if (!t.EndsWith(h3.ToString())) error = true;
-            if (!t.EndsWith(h4.ToString())) error = true;
-            return error ? _random.NextDouble().ToString() : t;
+            if (!a.EndsWith(h)) error = true;
+            if (!a.EndsWith(h1)) error = true;
+            if (!a.EndsWith(h2)) error = true;
+            if (!a.EndsWith(h3)) error = true;
+            if (!a.EndsWith(h4)) error = true;
+            return error ? "X" : h;
         }
 
         internal struct Alg

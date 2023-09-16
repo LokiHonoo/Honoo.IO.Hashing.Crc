@@ -172,7 +172,7 @@ private static void Demo1()
     // Update input data.
     crc.Update(inputBytes);
     // The return value is "Hex String".
-    string checksum = crc.DoFinal();
+    string checksum = crc.ComputeFinal();
 }
 
 private static void Demo2()
@@ -180,7 +180,7 @@ private static void Demo2()
     var crc = new Crc16Modbus();
     crc.Update(inputBytes);
     // The return value length is crc.ChecksumLength.
-    byte[] checksum = crc.DoFinal(littleEndian);
+    byte[] checksum = crc.ComputeFinal(littleEndian);
 }
 
 private static void Demo3()
@@ -188,10 +188,10 @@ private static void Demo3()
     var crc = Crc.Create(CrcName.CRC40_GSM);
     crc.Update(inputBytes);
     // Width is 40 bits, ulong is 64 bits, The truncated is "False".
-    bool truncated = crc.DoFinal(out ulong checksum);
+    bool truncated = crc.ComputeFinal(out ulong checksum);
     crc.Update(inputBytes);
     // Width is 40 bits, uint is 32 bits, The truncated is "True".
-    bool truncated = crc.DoFinal(out uint checksum);
+    bool truncated = crc.ComputeFinal(out uint checksum);
 }
 
 private static void Demo4()
@@ -200,7 +200,7 @@ private static void Demo4()
     var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
-    int length = crc.DoFinal(littleEndian, checksum, 0);
+    int length = crc.ComputeFinal(littleEndian, checksum, 0);
 }
 
 ```
