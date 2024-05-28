@@ -199,14 +199,7 @@ namespace Honoo.IO.Hashing
         private static string GetString(byte input, int hexLength)
         {
             string result = Convert.ToString(input, 16).PadLeft(2, '0');
-            if (result.Length > hexLength)
-            {
-                return result.Substring(result.Length - hexLength, hexLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToUpperInvariant();
-            }
+            return result.Length > hexLength ? result.Substring(result.Length - hexLength, hexLength) : result;
         }
 
         private static byte Parse(byte input, int moves, bool reverse)

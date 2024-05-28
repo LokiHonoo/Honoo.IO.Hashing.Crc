@@ -72,10 +72,10 @@ namespace Honoo.IO.Hashing
         {
             switch (_valueType)
             {
-                case ValueType.UInt8: return Convert.ToString((byte)_value, 16).ToUpperInvariant();
-                case ValueType.UInt16: return Convert.ToString((ushort)_value, 16).ToUpperInvariant();
-                case ValueType.UInt32: return Convert.ToString((uint)_value, 16).ToUpperInvariant();
-                case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 16).ToUpperInvariant();
+                case ValueType.UInt8: return Convert.ToString((byte)_value, 16);
+                case ValueType.UInt16: return Convert.ToString((ushort)_value, 16);
+                case ValueType.UInt32: return Convert.ToString((uint)_value, 16);
+                case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 16);
                 case ValueType.HexString: return (string)_value;
                 default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
             }

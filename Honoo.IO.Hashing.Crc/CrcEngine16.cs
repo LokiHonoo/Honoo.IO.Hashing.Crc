@@ -212,14 +212,7 @@ namespace Honoo.IO.Hashing
         private static string GetString(ushort input, int hexLength)
         {
             string result = Convert.ToString(input, 16).PadLeft(4, '0');
-            if (result.Length > hexLength)
-            {
-                return result.Substring(result.Length - hexLength, hexLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToUpperInvariant();
-            }
+            return result.Length > hexLength ? result.Substring(result.Length - hexLength, hexLength) : result;
         }
 
         private static ushort Parse(ushort input, int moves, bool reverse)

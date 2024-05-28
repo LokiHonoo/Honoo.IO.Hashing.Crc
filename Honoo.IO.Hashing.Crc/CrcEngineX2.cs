@@ -294,14 +294,7 @@ namespace Honoo.IO.Hashing
             {
                 result.Append(Convert.ToString(input[i], 16).PadLeft(8, '0'));
             }
-            if (result.Length > hexLength)
-            {
-                return result.ToString(result.Length - hexLength, hexLength).ToUpperInvariant();
-            }
-            else
-            {
-                return result.ToString().ToUpperInvariant();
-            }
+            return result.Length > hexLength ? result.ToString(result.Length - hexLength, hexLength) : result.ToString();
         }
 
         private static void Parse(uint[] input, int moves, bool reverse)
