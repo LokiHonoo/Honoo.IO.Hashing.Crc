@@ -16,8 +16,10 @@
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
 		<PackageTags>Honoo;Hashing;Crc;Crc3;Crc4;Crc5;Crc6;Crc7;Crc8;Crc10;Crc11;Crc12;Crc13;Crc14;Crc15;Crc16;Crc17;Crc21;Crc24;Crc30;Crc31;Crc32;Crc40;Crc64;Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReadmeFile>README-NuGet.md</PackageReadmeFile>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,17 +40,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\README.md">
+		<None Include="..\README-NuGet.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 </Project>

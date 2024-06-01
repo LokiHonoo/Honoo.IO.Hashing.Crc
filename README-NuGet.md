@@ -7,7 +7,7 @@
 - [Honoo.IO.Hashing.Crc](#honooiohashingcrc)
   - [INTRODUCTION](#introduction)
   - [USAGE](#usage)
-    - [NuGet](#nuget)
+    - [Github](#github)
   - [DEMO](#demo)
   - [SPEED](#speed)
   - [LICENSE](#license)
@@ -141,9 +141,9 @@ CRC-82/DARC,
 
 ## USAGE
 
-### NuGet
+### Github
 
-<https://www.nuget.org/packages/Honoo.IO.Hashing.Crc/>
+<https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc>
 
 ## DEMO
 
