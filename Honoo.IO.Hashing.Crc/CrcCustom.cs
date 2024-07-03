@@ -22,7 +22,7 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, poly, init, xorout, withTable))
+            : base($"CRC-{width}/CUSTOM", new CrcEngine8(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
@@ -38,7 +38,7 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, poly, init, xorout, withTable))
+            : base($"CRC-{width}/CUSTOM", new CrcEngine16(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
@@ -54,7 +54,7 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, poly, init, xorout, withTable))
+            : base($"CRC-{width}/CUSTOM", new CrcEngine32(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
@@ -70,7 +70,7 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, poly, init, xorout, withTable))
+            : base($"CRC-{width}/CUSTOM", new CrcEngine64(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
@@ -168,26 +168,6 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static CrcEngine GetEngine(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable)
-        {
-            return new CrcEngine8(width, refin, refout, poly, init, xorout, withTable);
-        }
-
-        private static CrcEngine GetEngine(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable)
-        {
-            return new CrcEngine16(width, refin, refout, poly, init, xorout, withTable);
-        }
-
-        private static CrcEngine GetEngine(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable)
-        {
-            return new CrcEngine32(width, refin, refout, poly, init, xorout, withTable);
-        }
-
-        private static CrcEngine GetEngine(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable)
-        {
-            return new CrcEngine64(width, refin, refout, poly, init, xorout, withTable);
-        }
-
         private static CrcEngine GetEngine(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core)
         {
             if (width <= 0)
@@ -198,19 +178,19 @@ namespace Honoo.IO.Hashing
             {
                 if (width <= 8)
                 {
-                    core = CrcCore.UInt8Table;
+                    core = CrcCore.U8Table;
                 }
                 else if (width <= 16)
                 {
-                    core = CrcCore.UInt16Table;
+                    core = CrcCore.U16Table;
                 }
                 else if (width <= 32)
                 {
-                    core = CrcCore.UInt32Table;
+                    core = CrcCore.U32Table;
                 }
                 else if (width <= 64)
                 {
-                    core = CrcCore.UInt64Table;
+                    core = CrcCore.U64Table;
                 }
                 else
                 {
@@ -219,7 +199,7 @@ namespace Honoo.IO.Hashing
             }
             switch (core)
             {
-                case CrcCore.UInt8:
+                case CrcCore.U8:
                     {
                         byte[] polyBytes = GetBytes(polyHex, width);
                         byte[] initBytes = GetBytes(initHex, width);
@@ -227,10 +207,10 @@ namespace Honoo.IO.Hashing
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
-                        return GetEngine(width, refin, refout, poly, init, xorout, false);
+                        return new CrcEngine8(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.UInt8Table:
+                case CrcCore.U8Table:
                     {
                         byte[] polyBytes = GetBytes(polyHex, width);
                         byte[] initBytes = GetBytes(initHex, width);
@@ -238,55 +218,55 @@ namespace Honoo.IO.Hashing
                         byte poly = polyBytes[polyBytes.Length - 1];
                         byte init = initBytes[initBytes.Length - 1];
                         byte xorout = xoroutBytes[xoroutBytes.Length - 1];
-                        return GetEngine(width, refin, refout, poly, init, xorout, true);
+                        return new CrcEngine8(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.UInt16:
+                case CrcCore.U16:
                     {
                         ushort poly = BEToUInt16(GetBytes(polyHex, width));
                         ushort init = BEToUInt16(GetBytes(initHex, width));
                         ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, false);
+                        return new CrcEngine16(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.UInt16Table:
+                case CrcCore.U16Table:
                     {
                         ushort poly = BEToUInt16(GetBytes(polyHex, width));
                         ushort init = BEToUInt16(GetBytes(initHex, width));
                         ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, true);
+                        return new CrcEngine16(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.UInt32:
+                case CrcCore.U32:
                     {
                         uint poly = BEToUInt32(GetBytes(polyHex, width));
                         uint init = BEToUInt32(GetBytes(initHex, width));
                         uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, false);
+                        return new CrcEngine32(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.UInt32Table:
+                case CrcCore.U32Table:
                     {
                         uint poly = BEToUInt32(GetBytes(polyHex, width));
                         uint init = BEToUInt32(GetBytes(initHex, width));
                         uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, true);
+                        return new CrcEngine32(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.UInt64:
+                case CrcCore.U64:
                     {
                         ulong poly = BEToUInt64(GetBytes(polyHex, width));
                         ulong init = BEToUInt64(GetBytes(initHex, width));
                         ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, false);
+                        return new CrcEngine64(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.UInt64Table:
+                case CrcCore.U64Table:
                     {
                         ulong poly = BEToUInt64(GetBytes(polyHex, width));
                         ulong init = BEToUInt64(GetBytes(initHex, width));
                         ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
-                        return GetEngine(width, refin, refout, poly, init, xorout, true);
+                        return new CrcEngine64(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding8:

@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-4/INTERLAKEN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc4Interlaken(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x3; <<(8-4) = 0x30;
@@ -73,7 +73,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc4Itu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x3; reverse >>(8-4) = 0xC;

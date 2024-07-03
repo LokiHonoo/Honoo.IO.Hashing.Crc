@@ -112,21 +112,21 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override int ComputeFinal(bool littleEndian, byte[] output, int offset)
+        internal override int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             Finish();
-            if (littleEndian)
+            if (outputEndian == Endian.LittleEndian)
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[_checksumByteLength - 1 - i + offset] = _crc[i];
+                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = _crc[i];
                 }
             }
             else
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[i + offset] = _crc[i];
+                    outputBuffer[i + outputOffset] = _crc[i];
                 }
             }
             _crc = (byte[])_init.Clone();

@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc7(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x09; <<(8-7) = 0x12;
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-7/ROHC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc7Rohc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x4F; reverse (8-7) = 0x79;
@@ -111,7 +111,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-7/UMTS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc7Umts(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x45; <<(8-7) = 0x8A;

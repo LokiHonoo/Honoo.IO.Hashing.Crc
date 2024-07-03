@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-6/CDMA2000-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Cdma2000A(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x27; <<(8-6) = 0x9C;
@@ -64,7 +64,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-6/CDMA2000-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Cdma2000B(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x07; <<(8-6) = 0x1C;
@@ -103,7 +103,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-6/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Darc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x19; reverse >>(8-6) = 0x26;
@@ -141,7 +141,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-6/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Gsm(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x2F; <<(8-6) = 0xBC;
@@ -188,7 +188,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Itu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x03; reverse >>(8-6) = 0x30;

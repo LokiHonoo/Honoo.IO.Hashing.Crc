@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-31/PHILIPS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc31Philips(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x04C11DB7; <<(32-31) = 0x09823B6E;

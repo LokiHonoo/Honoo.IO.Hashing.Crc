@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005; reverse = 0xA001;
@@ -81,7 +81,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Ccitt(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;
@@ -128,7 +128,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16CcittFalse(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -166,7 +166,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/CDMA2000", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Cdma2000(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0xC867;
@@ -204,7 +204,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/CMS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Cms(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005;
@@ -242,7 +242,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/DDS-110", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Dds110(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005;
@@ -289,7 +289,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16DectR(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x0589;
@@ -336,7 +336,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16DectX(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x0589;
@@ -374,7 +374,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/DNP", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Dnp(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x3D65; reverse = 0xA6BC;
@@ -412,7 +412,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/EN-13757", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16En13757(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x3D65;
@@ -459,7 +459,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Genibus(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -497,7 +497,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Gsm(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -535,7 +535,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/LJ1200", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Lj1200(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x6F63;
@@ -573,7 +573,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/M17", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16M17(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x5935;
@@ -620,7 +620,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Maxim(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005; reverse = 0xA001;
@@ -658,7 +658,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/MCRF4XX", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Mcrf4XX(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;
@@ -705,7 +705,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Modbus(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005; reverse = 0xA001;
@@ -743,7 +743,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/NRSC-5", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Nrsc5(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x080B; reverse = 0xD010;
@@ -785,7 +785,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/OPENSAFETY-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16OpensafetyA(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x5935;
@@ -827,7 +827,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/OPENSAFETY-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16OpensafetyB(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x755B;
@@ -874,7 +874,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Profibus(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1DCF;
@@ -912,7 +912,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/RIELLO", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Riello(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;
@@ -960,7 +960,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16SpiFujitsu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -998,7 +998,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/T10-DIF", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16T10Dif(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8BB7;
@@ -1036,7 +1036,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/TELEDISK", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Teledisk(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0xA097;
@@ -1074,7 +1074,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/TMS37157", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Tms37157(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;
@@ -1122,7 +1122,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Umts(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -1160,7 +1160,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/USB", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Usb(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8005; reverse = 0xA001;
@@ -1207,7 +1207,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16X25(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;
@@ -1254,7 +1254,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Xmodem(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021;
@@ -1292,7 +1292,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-16/XMODEM2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc16Xmodem2(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x8408; reverse = 0x1021;
@@ -1339,7 +1339,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new CrcA(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1021; reverse = 0x8408;

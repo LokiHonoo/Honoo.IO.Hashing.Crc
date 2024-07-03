@@ -13,6 +13,8 @@ namespace Honoo.IO.Hashing
 
         #endregion Delegate
 
+#pragma warning disable CA1707 // 标识符不应包含下划线
+
         #region CRC3
 
         /// <summary></summary>
@@ -671,21 +673,18 @@ namespace Honoo.IO.Hashing
 
         #endregion CRC82
 
+#pragma warning restore CA1707 // 标识符不应包含下划线
+
         #region Properties
 
-        private readonly int _width;
         private readonly GetAlgorithmCallback _getAlgorithm;
         private readonly CrcParameter _init;
         private readonly string _name;
         private readonly CrcParameter _poly;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly int _width;
         private readonly CrcParameter _xorout;
-
-        /// <summary>
-        /// Gets width bits.
-        /// </summary>
-        public int Width => _width;
 
         /// <summary>
         /// Gets init value.
@@ -721,6 +720,11 @@ namespace Honoo.IO.Hashing
         /// Gets refout value.
         /// </summary>
         public bool Refout => _refout;
+
+        /// <summary>
+        /// Gets width bits.
+        /// </summary>
+        public int Width => _width;
 
         /// <summary>
         /// Gets xorout value.
@@ -1212,7 +1216,26 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool Equals(CrcName other)
         {
-            return other._name.Equals(_name);
+            return other != null && string.Equals(_name, other._name, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return obj is CrcName other && Equals(other);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         /// <summary>

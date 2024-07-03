@@ -26,7 +26,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-82/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc82Darc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngineX2 GetEngine()
         {
             //
             // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430; (CrcEngineX 88-82, (CrcEngineX2 96-82))

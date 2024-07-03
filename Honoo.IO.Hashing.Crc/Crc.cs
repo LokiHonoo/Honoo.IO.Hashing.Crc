@@ -52,6 +52,10 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public static Crc Create(CrcName algorithmName)
         {
+            if (algorithmName == null)
+            {
+                throw new ArgumentNullException(nameof(algorithmName));
+            }
             return algorithmName.GetAlgorithm();
         }
 
@@ -66,7 +70,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
+        public static Crc CreateBy(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
         {
             return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
         }
@@ -82,7 +86,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
+        public static Crc CreateBy(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
         {
             return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
         }
@@ -98,7 +102,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
+        public static Crc CreateBy(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
         {
             return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
         }
@@ -114,7 +118,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
+        public static Crc CreateBy(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
         {
             return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
         }
@@ -130,7 +134,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xoroutHex">Output xor value hex string.</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core = CrcCore.Auto)
+        public static Crc CreateBy(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core = CrcCore.Auto)
         {
             return new CrcCustom(width, refin, refout, polyHex, initHex, xoroutHex, core);
         }
@@ -145,29 +149,125 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Computes checksum and reset the calculator. The return value is "Hex String".
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <returns></returns>
+        public string ComputeFinal(byte[] input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal();
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator. The return value is "Hex String".
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <returns></returns>
+        public string ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal();
+        }
+
+        /// <summary>
         /// Computes checksum and reset the calculator.
         /// </summary>
-        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
-        public byte[] ComputeFinal(bool littleEndian)
+        public byte[] ComputeFinal(Endian outputEndian)
         {
             byte[] result = new byte[_engine.ChecksumLength];
-            ComputeFinal(littleEndian, result, 0);
+            ComputeFinal(outputEndian, result, 0);
             return result;
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
+        /// <returns></returns>
+        public byte[] ComputeFinal(byte[] input, Endian outputEndian)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(outputEndian);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
+        /// <returns></returns>
+        public byte[] ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, Endian outputEndian)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(outputEndian);
         }
 
         /// <summary>
         /// Computes checksum and reset the calculator.
         /// <br/>Write to output buffer and return checksum byte length.
         /// </summary>
-        /// <param name="littleEndian">Specifies the type of endian for output.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <param name="outputBuffer">Output buffer.</param>
-        /// <param name="offset">Write start offset from buffer.</param>
+        /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public int ComputeFinal(bool littleEndian, byte[] outputBuffer, int offset)
+        public int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
-            return _engine.ComputeFinal(littleEndian, outputBuffer, offset);
+            return _engine.ComputeFinal(outputEndian, outputBuffer, outputOffset);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Write to output buffer and return checksum byte length.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
+        /// <param name="outputBuffer">Output buffer.</param>
+        /// <param name="outputOffset">Write start offset from buffer.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public int ComputeFinal(byte[] input, Endian outputEndian, byte[] outputBuffer, int outputOffset)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(outputEndian, outputBuffer, outputOffset);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Write to output buffer and return checksum byte length.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="outputEndian">Specifies the type of endian for output.</param>
+        /// <param name="outputBuffer">Output buffer.</param>
+        /// <param name="outputOffset">Write start offset from buffer.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public int ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, Endian outputEndian, byte[] outputBuffer, int outputOffset)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(outputEndian, outputBuffer, outputOffset);
         }
 
         /// <summary>
@@ -187,11 +287,79 @@ namespace Honoo.IO.Hashing
         /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] input, out byte checksum)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, out byte checksum)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
         /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
         public bool ComputeFinal(out ushort checksum)
         {
             return _engine.ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] input, out ushort checksum)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, out ushort checksum)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(out checksum);
         }
 
         /// <summary>
@@ -211,11 +379,79 @@ namespace Honoo.IO.Hashing
         /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
         /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] input, out uint checksum)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, out uint checksum)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
         /// <param name="checksum">Checksum value.</param>
         /// <returns></returns>
         public bool ComputeFinal(out ulong checksum)
         {
             return _engine.ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] input, out ulong checksum)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            Update(input, 0, input.Length);
+            return ComputeFinal(out checksum);
+        }
+
+        /// <summary>
+        /// Computes checksum and reset the calculator.
+        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
+        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
+        /// </summary>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="inputOffset">Read start offset from buffer.</param>
+        /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="checksum">Checksum value.</param>
+        /// <returns></returns>
+        public bool ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, out ulong checksum)
+        {
+            Update(inputBuffer, inputOffset, inputLength);
+            return ComputeFinal(out checksum);
         }
 
         /// <summary>
@@ -243,6 +479,10 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void Update(byte[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
             Update(input, 0, input.Length);
         }
 

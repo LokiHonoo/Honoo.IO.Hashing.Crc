@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x42F0E1EBA9EA3693;
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-64/GO-ISO", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64GoIso(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x000000000000001B; reverse = 0xD800000000000000;
@@ -110,7 +110,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-64/MS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Ms(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x259C84CBA6426349; reverse = 0x92C64265D32139A4;
@@ -148,7 +148,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-64/REDIS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Redis(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0xAD93D23594C935A9 ; reverse = 0x95AC9329AC4BC9B5;
@@ -186,7 +186,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-64/WE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64We(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x42F0E1EBA9EA3693;
@@ -233,7 +233,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Xz(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x42F0E1EBA9EA3693; reverse = 0xC96C5795D7870F42;

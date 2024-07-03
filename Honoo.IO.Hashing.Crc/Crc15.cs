@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc15(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x4599; <<(16-15) = 0x8B32;
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-15/MPT1327", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc15Mpt1327(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x6815; <<(16-15) = 0xD02A;

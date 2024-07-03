@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Epc(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x09; <<(8-5) = 0x48;
@@ -82,7 +82,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Itu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x15; reverse >>(8-5) = 0x15;
@@ -120,7 +120,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-5/USB", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Usb(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x05; reverse >>(8-5) = 0x14;

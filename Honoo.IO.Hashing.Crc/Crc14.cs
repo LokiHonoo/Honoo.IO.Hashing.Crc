@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-14/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc14Darc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x0805; reverse >>(16-14) = 0x2804;
@@ -63,7 +63,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-14/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc14Gsm(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x202D; <<(16-14) = 0x80B4;

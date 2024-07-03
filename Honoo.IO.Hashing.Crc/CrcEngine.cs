@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
 
         internal abstract string ComputeFinal();
 
-        internal abstract int ComputeFinal(bool littleEndian, byte[] output, int offset);
+        internal abstract int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset);
 
         internal abstract bool ComputeFinal(out byte checksum);
 

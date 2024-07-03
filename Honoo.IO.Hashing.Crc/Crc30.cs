@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-30/CDMA", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc30Cdma(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x2030B9C7; <<(32-30) = 0x80C2E71C;

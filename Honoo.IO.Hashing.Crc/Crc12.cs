@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-12/CDMA2000", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Cdma2000(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0xF13; <<(16-12) = 0xF130;
@@ -73,7 +73,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Dect(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x80F; <<(16-12) = 0x80F0;
@@ -111,7 +111,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-12/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Gsm(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0xD31; <<(16-12) = 0xD310;
@@ -158,7 +158,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Umts(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x80F; <<(16-12) = 0x80F0;

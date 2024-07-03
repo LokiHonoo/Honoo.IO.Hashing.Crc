@@ -112,10 +112,10 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override int ComputeFinal(bool littleEndian, byte[] output, int offset)
+        internal override int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             Finish();
-            if (littleEndian)
+            if (outputEndian == Endian.LittleEndian)
             {
                 int j = -1;
                 int m = 24;
@@ -126,7 +126,7 @@ namespace Honoo.IO.Hashing
                         j++;
                         m = 24;
                     }
-                    output[i + offset] = (byte)(_crc[j] << m);
+                    outputBuffer[i + outputOffset] = (byte)(_crc[j] << m);
                     m -= 8;
                 }
             }
@@ -141,7 +141,7 @@ namespace Honoo.IO.Hashing
                         j--;
                         m = 0;
                     }
-                    output[_checksumByteLength - 1 - i + offset] = (byte)(_crc[j] >> m);
+                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = (byte)(_crc[j] >> m);
                     m += 8;
                 }
             }

@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-13/BBC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc13bbc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine16 GetEngine()
         {
             //
             // poly = 0x1CF5; <<(16-13) = 0xE7A8;

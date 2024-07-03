@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x07;
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/AUTOSAR", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Autosar(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x2F;
@@ -110,7 +110,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/BLUETOOTH", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Bluetooth(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0xA7; reverse = 0xE5;
@@ -148,7 +148,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/CDMA2000", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Cdma2000(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x9B;
@@ -186,7 +186,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Darc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x39; reverse = 0x9C;
@@ -224,7 +224,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/DVB-S2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8DvbS2(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0xD5;
@@ -271,7 +271,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Ebu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D; reverse = 0xB8;
@@ -309,7 +309,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/GSM-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8GsmA(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D;
@@ -347,7 +347,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/GSM-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8GsmB(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x49;
@@ -385,7 +385,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/HITAG", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Hitag(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D;
@@ -423,7 +423,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/I-CODE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8ICode(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D;
@@ -470,7 +470,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Itu(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x07;
@@ -508,7 +508,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/LTE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Lte(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x9B;
@@ -555,7 +555,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Maxim(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x31; reverse = 0x8C;
@@ -593,7 +593,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/MIFARE-MAD", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8MifareMad(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D;
@@ -631,7 +631,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/NRSC-5", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Nrsc5(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x31;
@@ -669,7 +669,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/OPENSAFETY", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Opensafety(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x2F;
@@ -707,7 +707,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/ROHC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Rohc(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x07; reverse = 0xE0;
@@ -745,7 +745,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/SAE-J1850", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8SaeJ1850(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x1D;
@@ -783,7 +783,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-8/WCDMA", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc8Wcdma(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine8 GetEngine()
         {
             //
             // poly = 0x9B; reverse = 0xD9;

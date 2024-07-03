@@ -105,21 +105,21 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override int ComputeFinal(bool littleEndian, byte[] output, int offset)
+        internal override int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             Finish();
-            if (littleEndian)
+            if (outputEndian == Endian.LittleEndian)
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[i + offset] = (byte)(_crc >> (i * 8));
+                    outputBuffer[i + outputOffset] = (byte)(_crc >> (i * 8));
                 }
             }
             else
             {
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    output[_checksumByteLength - 1 - i + offset] = (byte)(_crc >> (i * 8));
+                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = (byte)(_crc >> (i * 8));
                 }
             }
             _crc = _init;
@@ -213,7 +213,6 @@ namespace Honoo.IO.Hashing
         {
             string result = Convert.ToString(input, 16).PadLeft(8, '0');
             return result.Length > hexLength ? result.Substring(result.Length - hexLength, hexLength) : result;
-
         }
 
         private static uint Parse(uint input, int moves, bool reverse)

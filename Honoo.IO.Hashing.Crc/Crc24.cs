@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24(alias); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x864CFB; <<(32-24) = 0x864CFB00;
@@ -73,7 +73,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/BLE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Ble(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x00065B; reverse >>(32-24) = 0xDA6000;
@@ -112,7 +112,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/FLEXRAY-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayA(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x5D6DCB;  <<(32-24) = 0x5D6DCB00;
@@ -151,7 +151,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/FLEXRAY-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayB(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x5D6DCB;  <<(32-24) = 0x5D6DCB00;
@@ -190,7 +190,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/INTERLAKEN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Interlaken(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x328B63;  <<(32-24) = 0x328B6300;
@@ -229,7 +229,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/LTE-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteA(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x864CFB; <<(32-24) = 0x864CFB00;
@@ -267,7 +267,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/LTE-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteB(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x800063; <<(32-24) = 0x80006300;
@@ -305,7 +305,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-24/OS-9", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Os9(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x800063; <<(32-24) = 0x80006300;

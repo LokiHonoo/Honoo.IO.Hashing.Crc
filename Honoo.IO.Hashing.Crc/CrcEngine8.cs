@@ -105,10 +105,10 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override int ComputeFinal(bool littleEndian, byte[] output, int offset)
+        internal override int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             Finish();
-            output[offset] = _crc;
+            outputBuffer[outputOffset] = _crc;
             _crc = _init;
             return 1;
         }

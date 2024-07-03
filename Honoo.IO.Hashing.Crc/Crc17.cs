@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-17/CAN-FD", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc17CanFd(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine32 GetEngine()
         {
             //
             // poly = 0x1685B; <<(32-17) = 0xB42D8000;

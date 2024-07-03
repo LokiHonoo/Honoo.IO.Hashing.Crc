@@ -9,7 +9,7 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<Authors>Loki Honoo</Authors>
-		<VersionPrefix>1.0.10</VersionPrefix>
+		<VersionPrefix>1.0.11</VersionPrefix>
 		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Custom width and parameters are supported.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
@@ -20,6 +20,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest-all</AnalysisLevel>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

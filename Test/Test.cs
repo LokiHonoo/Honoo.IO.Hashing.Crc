@@ -92,15 +92,15 @@ namespace Test
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
                 //
-                Crc crc = Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                Crc crc = Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
                 string h = Calc(crc, input);
                 CrcCore noTable;
-                if (alg.Width <= 8) noTable = CrcCore.UInt8;
-                else if (alg.Width <= 16) noTable = CrcCore.UInt16;
-                else if (alg.Width <= 32) noTable = CrcCore.UInt32;
-                else if (alg.Width <= 64) noTable = CrcCore.UInt64;
+                if (alg.Width <= 8) noTable = CrcCore.U8;
+                else if (alg.Width <= 16) noTable = CrcCore.U16;
+                else if (alg.Width <= 32) noTable = CrcCore.U32;
+                else if (alg.Width <= 64) noTable = CrcCore.U64;
                 else noTable = CrcCore.Sharding32;
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
+                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
                 {
                     error = true;
                 }
@@ -122,19 +122,19 @@ namespace Test
                         error = true;
                     }
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
+                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
+                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
+                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.Create(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
+                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
                 {
                     error = true;
                 }
@@ -156,7 +156,7 @@ namespace Test
         private static string Calc(Crc crc, byte[] input)
         {
             crc.Update(input);
-            byte[] checksum = crc.ComputeFinal(false);
+            byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
             crc.Update(input);
             string h = crc.ComputeFinal();

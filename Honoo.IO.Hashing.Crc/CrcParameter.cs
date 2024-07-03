@@ -46,7 +46,26 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool Equals(CrcParameter other)
         {
-            return _valueType == other._valueType & _value == other._value;
+            return other != null && _valueType == other._valueType && _value == other._value;
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return obj is CrcParameter other && Equals(other);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         /// <summary>
@@ -59,8 +78,8 @@ namespace Honoo.IO.Hashing
             switch (_valueType)
             {
                 case ValueType.UInt8: return (byte)_value;
-                case ValueType.HexString: return byte.Parse((string)_value, NumberStyles.HexNumber);
-                default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
+                case ValueType.HexString: return byte.Parse((string)_value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
@@ -77,7 +96,7 @@ namespace Honoo.IO.Hashing
                 case ValueType.UInt32: return Convert.ToString((uint)_value, 16);
                 case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 16);
                 case ValueType.HexString: return (string)_value;
-                default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
+                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
@@ -100,8 +119,8 @@ namespace Honoo.IO.Hashing
             switch (_valueType)
             {
                 case ValueType.UInt16: return (ushort)_value;
-                case ValueType.HexString: return ushort.Parse((string)_value, NumberStyles.HexNumber);
-                default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
+                case ValueType.HexString: return ushort.Parse((string)_value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
@@ -115,8 +134,8 @@ namespace Honoo.IO.Hashing
             switch (_valueType)
             {
                 case ValueType.UInt32: return (uint)_value;
-                case ValueType.HexString: return uint.Parse((string)_value, NumberStyles.HexNumber);
-                default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
+                case ValueType.HexString: return uint.Parse((string)_value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
@@ -130,8 +149,8 @@ namespace Honoo.IO.Hashing
             switch (_valueType)
             {
                 case ValueType.UInt64: return (ulong)_value;
-                case ValueType.HexString: return ulong.Parse((string)_value, NumberStyles.HexNumber);
-                default: throw new Exception($"CRC parameter's type is {_value.GetType()}.");
+                case ValueType.HexString: return ulong.Parse((string)_value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
     }

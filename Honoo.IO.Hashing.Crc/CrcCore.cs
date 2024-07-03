@@ -13,42 +13,42 @@
         /// <summary>
         /// Use 8 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 8.
         /// </summary>
-        UInt8,
+        U8,
 
         /// <summary>
         /// Use 8 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 8.
         /// </summary>
-        UInt8Table,
+        U8Table,
 
         /// <summary>
         /// Use 16 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 16.
         /// </summary>
-        UInt16,
+        U16,
 
         /// <summary>
         /// Use 16 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 16.
         /// </summary>
-        UInt16Table,
+        U16Table,
 
         /// <summary>
         /// Use 32 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 32.
         /// </summary>
-        UInt32,
+        U32,
 
         /// <summary>
         /// Use 32 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 32.
         /// </summary>
-        UInt32Table,
+        U32Table,
 
         /// <summary>
         /// Use 64 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 64.
         /// </summary>
-        UInt64,
+        U64,
 
         /// <summary>
         /// Use 64 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 64.
         /// </summary>
-        UInt64Table,
+        U64Table,
 
         /// <summary>
         /// Use 8 bit shardings <see langword="WITHOUT"></see> calculation core. The allowed width bits are more than 0.

@@ -25,7 +25,7 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-40/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc40Gsm(); });
         }
 
-        private static CrcEngine GetEngine()
+        private static CrcEngine64 GetEngine()
         {
             //
             // poly = 0x0004820009; <<(64-40) = 0x4820009000000;
