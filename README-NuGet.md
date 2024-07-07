@@ -7,7 +7,7 @@
 - [Honoo.IO.Hashing.Crc](#honooiohashingcrc)
   - [INTRODUCTION](#introduction)
   - [USAGE](#usage)
-    - [Github](#github)
+    - [GitHub](#github)
   - [DEMO](#demo)
   - [SPEED](#speed)
   - [LICENSE](#license)
@@ -141,7 +141,7 @@ CRC-82/DARC,
 
 ## USAGE
 
-### Github
+### GitHub
 
 <https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc>
 
