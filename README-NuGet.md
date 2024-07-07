@@ -169,7 +169,7 @@ private static void Demo2()
     var crc = new Crc16Modbus();
     crc.Update(inputBytes);
     // The return value length is crc.ChecksumLength.
-    byte[] checksum = crc.ComputeFinal(littleEndian);
+    byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
 }
 
 private static void Demo3()
@@ -189,7 +189,7 @@ private static void Demo4()
     var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
-    int length = crc.ComputeFinal(littleEndian, checksum, 0);
+    int length = crc.ComputeFinal(Endian.BigEndian, checksum, 0);
 }
 
 ```
