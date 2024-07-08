@@ -16,7 +16,6 @@ namespace Test
             //
             //
             //
-            Stopwatch stopwatch = Stopwatch.StartNew();
             Crc crc = Crc.CreateBy(CrcName.CRC32.Width,
                                  CrcName.CRC32.Refin,
                                  CrcName.CRC32.Refout,
@@ -24,7 +23,7 @@ namespace Test
                                  CrcName.CRC32.Init.ToUInt32(),
                                  CrcName.CRC32.Xorout.ToUInt32(),
                                  false);
-            stopwatch.Restart();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
