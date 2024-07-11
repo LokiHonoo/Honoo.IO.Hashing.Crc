@@ -17,17 +17,17 @@ namespace Test
             //
             //
             Crc crc = Crc.CreateBy(CrcName.CRC32.Width,
-                                 CrcName.CRC32.Refin,
-                                 CrcName.CRC32.Refout,
-                                 CrcName.CRC32.Poly.ToUInt32(),
-                                 CrcName.CRC32.Init.ToUInt32(),
-                                 CrcName.CRC32.Xorout.ToUInt32(),
-                                 false);
+                                   CrcName.CRC32.Refin,
+                                   CrcName.CRC32.Refout,
+                                   CrcName.CRC32.Poly.ToUInt32(),
+                                   CrcName.CRC32.Init.ToUInt32(),
+                                   CrcName.CRC32.Xorout.ToUInt32(),
+                                   false);
             Stopwatch stopwatch = Stopwatch.StartNew();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|32 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -39,7 +39,7 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -47,17 +47,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(CrcName.CRC32.Width,
-                             CrcName.CRC32.Refin,
-                             CrcName.CRC32.Refout,
-                             CrcName.CRC32.Poly.ToHexString(),
-                             CrcName.CRC32.Init.ToHexString(),
-                             CrcName.CRC32.Xorout.ToHexString(),
-                             CrcCore.Sharding8);
+                               CrcName.CRC32.Refin,
+                               CrcName.CRC32.Refout,
+                               CrcName.CRC32.Poly.ToHexString(),
+                               CrcName.CRC32.Init.ToHexString(),
+                               CrcName.CRC32.Xorout.ToHexString(),
+                               CrcCore.Sharding8);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|sharding 8 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -65,17 +65,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(CrcName.CRC32.Width,
-                             CrcName.CRC32.Refin,
-                             CrcName.CRC32.Refout,
-                             CrcName.CRC32.Poly.ToHexString(),
-                             CrcName.CRC32.Init.ToHexString(),
-                             CrcName.CRC32.Xorout.ToHexString(),
-                             CrcCore.Sharding8Table);
+                               CrcName.CRC32.Refin,
+                               CrcName.CRC32.Refout,
+                               CrcName.CRC32.Poly.ToHexString(),
+                               CrcName.CRC32.Init.ToHexString(),
+                               CrcName.CRC32.Xorout.ToHexString(),
+                               CrcCore.Sharding8Table);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|sharding 8 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -83,17 +83,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(CrcName.CRC32.Width,
-                             CrcName.CRC32.Refin,
-                             CrcName.CRC32.Refout,
-                             CrcName.CRC32.Poly.ToHexString(),
-                             CrcName.CRC32.Init.ToHexString(),
-                             CrcName.CRC32.Xorout.ToHexString(),
-                             CrcCore.Sharding32);
+                               CrcName.CRC32.Refin,
+                               CrcName.CRC32.Refout,
+                               CrcName.CRC32.Poly.ToHexString(),
+                               CrcName.CRC32.Init.ToHexString(),
+                               CrcName.CRC32.Xorout.ToHexString(),
+                               CrcCore.Sharding32);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|sharding 32 bits||100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -101,17 +101,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(CrcName.CRC32.Width,
-                             CrcName.CRC32.Refin,
-                             CrcName.CRC32.Refout,
-                             CrcName.CRC32.Poly.ToHexString(),
-                             CrcName.CRC32.Init.ToHexString(),
-                             CrcName.CRC32.Xorout.ToHexString(),
-                             CrcCore.Sharding32Table);
+                               CrcName.CRC32.Refin,
+                               CrcName.CRC32.Refout,
+                               CrcName.CRC32.Poly.ToHexString(),
+                               CrcName.CRC32.Init.ToHexString(),
+                               CrcName.CRC32.Xorout.ToHexString(),
+                               CrcCore.Sharding32Table);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-32|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -123,7 +123,7 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-64/REDIS|64 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -131,17 +131,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(CrcName.CRC64_REDIS.Width,
-                             CrcName.CRC64_REDIS.Refin,
-                             CrcName.CRC64_REDIS.Refin,
-                             CrcName.CRC64_REDIS.Poly.ToString(),
-                             CrcName.CRC64_REDIS.Init.ToString(),
-                             CrcName.CRC64_REDIS.Xorout.ToString(),
-                             CrcCore.Sharding32Table);
+                               CrcName.CRC64_REDIS.Refin,
+                               CrcName.CRC64_REDIS.Refin,
+                               CrcName.CRC64_REDIS.Poly.ToString(),
+                               CrcName.CRC64_REDIS.Init.ToString(),
+                               CrcName.CRC64_REDIS.Xorout.ToString(),
+                               CrcCore.Sharding32Table);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(out ulong _);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-64/REDIS|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
@@ -149,17 +149,17 @@ namespace Test
             //
             //
             crc = Crc.CreateBy(217,
-                             true,
-                             true,
-                             "0x7204CA357EDF00742A12C562157732D9",
-                             "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                             "0x00000000000000000000000000000000",
-                             CrcCore.Sharding32Table);
+                               true,
+                               true,
+                               "0x7204CA357EDF00742A12C562157732D9",
+                               "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+                               "0x00000000000000000000000000000000",
+                               CrcCore.Sharding32Table);
             stopwatch.Restart();
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal();
+                crc.ComputeFinal(StringFormat.Hex);
             }
             stopwatch.Stop();
             Console.WriteLine("|CUSTUM CRC-217|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");

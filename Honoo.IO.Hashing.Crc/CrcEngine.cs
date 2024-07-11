@@ -12,7 +12,7 @@ namespace Honoo.IO.Hashing
         protected readonly bool _refout;
         protected readonly int _width;
         protected readonly bool _withTable;
-        internal int ChecksumLength => _checksumByteLength;
+        internal int ChecksumByteLength => _checksumByteLength;
         internal int Width => _width;
         internal bool WithTable => _withTable;
 
@@ -32,7 +32,7 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        internal abstract string ComputeFinal();
+        internal abstract string ComputeFinal(StringFormat outputFormat);
 
         internal abstract int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset);
 

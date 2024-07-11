@@ -91,14 +91,17 @@ namespace Test
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
+
                 //
                 Crc crc = Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                string bin = crc.ComputeFinal(input, StringFormat.Binary);
+                Console.WriteLine(bin);
                 string h = Calc(crc, input);
                 CrcCore noTable;
-                if (alg.Width <= 8) noTable = CrcCore.U8;
-                else if (alg.Width <= 16) noTable = CrcCore.U16;
-                else if (alg.Width <= 32) noTable = CrcCore.U32;
-                else if (alg.Width <= 64) noTable = CrcCore.U64;
+                if (alg.Width <= 8) noTable = CrcCore.UInt8;
+                else if (alg.Width <= 16) noTable = CrcCore.UInt16;
+                else if (alg.Width <= 32) noTable = CrcCore.UInt32;
+                else if (alg.Width <= 64) noTable = CrcCore.UInt64;
                 else noTable = CrcCore.Sharding32;
                 if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
                 {
@@ -159,7 +162,7 @@ namespace Test
             byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
             crc.Update(input);
-            string h = crc.ComputeFinal();
+            string h = crc.ComputeFinal(StringFormat.Hex);
             crc.Update(input);
             crc.ComputeFinal(out byte b);
             string h1 = Convert.ToString(b, 16);

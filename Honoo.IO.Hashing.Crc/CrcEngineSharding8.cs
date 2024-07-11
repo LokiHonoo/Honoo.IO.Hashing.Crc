@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngineX : CrcEngine
+    internal sealed class CrcEngineSharding8 : CrcEngine
     {
         #region Properties
 
@@ -18,7 +18,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineX(int width, bool refin, bool refout, string poly, string init, string xorout, bool generateTable)
+        internal CrcEngineSharding8(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout, bool generateTable)
             : base(width, refin, refout, generateTable)
         {
             if (width <= 0)
@@ -27,16 +27,16 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 8;
             _moves = rem > 0 ? 8 - rem : 0;
-            _poly = Convent(poly, width, _moves);
-            _init = Convent(init, width, _moves);
-            _xorout = Convent(xorout, width, _moves);
+            _poly = poly;
+            _init = init;
+            _xorout = xorout;
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = (byte[])_init.Clone();
         }
 
-        internal CrcEngineX(int width, bool refin, bool refout, string poly, string init, string xorout, byte[][] table)
+        internal CrcEngineSharding8(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout, byte[][] table)
             : base(width, refin, refout, true)
         {
             if (width <= 0)
@@ -45,9 +45,9 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 8;
             _moves = rem > 0 ? 8 - rem : 0;
-            _poly = Convent(poly, width, _moves);
-            _init = Convent(init, width, _moves);
-            _xorout = Convent(xorout, width, _moves);
+            _poly = poly;
+            _init = init;
+            _xorout = xorout;
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = table;
@@ -104,10 +104,10 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string ComputeFinal()
+        internal override string ComputeFinal(StringFormat outputFormat)
         {
             Finish();
-            string result = GetString(_crc, _checksumHexLength);
+            string result = outputFormat == StringFormat.Hex ? GetHexString(_crc, _checksumHexLength) : GetBinaryString(_crc, _width);
             _crc = (byte[])_init.Clone();
             return result;
         }
@@ -241,39 +241,17 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static byte[] Convent(string input, int width, int truncates)
+        private static string GetBinaryString(byte[] input, int width)
         {
-            byte[] result = new byte[(int)Math.Ceiling(width / 8d)];
-            int hexLength = result.Length * 2;
-            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
             {
-                input = input.Substring(2, input.Length - 2).Replace("_", null).Replace("-", null);
+                result.Append(Convert.ToString(input[i], 2).PadLeft(8, '0'));
             }
-            else
-            {
-                input = input.Replace("_", null).Replace("-", null);
-            }
-            if (input.Length > hexLength)
-            {
-                input = input.Substring(input.Length - hexLength, hexLength);
-            }
-            else if (input.Length < hexLength)
-            {
-                input = input.PadLeft(hexLength, '0');
-            }
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Convert.ToByte(input.Substring(i * 2, 2), 16);
-            }
-            if (truncates > 0)
-            {
-                result[0] <<= truncates;
-                result[0] >>= truncates;
-            }
-            return result;
+            return result.Length > width ? result.ToString(result.Length - width, width) : result.ToString();
         }
 
-        private static string GetString(byte[] input, int hexLength)
+        private static string GetHexString(byte[] input, int hexLength)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)

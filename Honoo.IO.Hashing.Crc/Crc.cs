@@ -14,9 +14,9 @@ namespace Honoo.IO.Hashing
         private readonly string _name;
 
         /// <summary>
-        /// Gets output checksum byte length.
+        /// Gets output checksum bytes length.
         /// </summary>
-        public int ChecksumLength => _engine.ChecksumLength;
+        public int ChecksumByteLength => _engine.ChecksumByteLength;
 
         /// <summary>
         /// Gets algorithm name.
@@ -142,25 +142,23 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Computes checksum and reset the calculator. The return value is "Hex String".
         /// </summary>
+        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal()
+        public string ComputeFinal(StringFormat outputFormat)
         {
-            return _engine.ComputeFinal();
+            return _engine.ComputeFinal(outputFormat);
         }
 
         /// <summary>
         /// Computes checksum and reset the calculator. The return value is "Hex String".
         /// </summary>
         /// <param name="input">Input.</param>
+        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(byte[] input)
+        public string ComputeFinal(byte[] input, StringFormat outputFormat)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
-            return ComputeFinal();
+            Update(input);
+            return ComputeFinal(outputFormat);
         }
 
         /// <summary>
@@ -169,11 +167,12 @@ namespace Honoo.IO.Hashing
         /// <param name="inputBuffer">Input buffer.</param>
         /// <param name="inputOffset">Read start offset from buffer.</param>
         /// <param name="inputLength">Read length from buffer.</param>
+        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength)
+        public string ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, StringFormat outputFormat)
         {
             Update(inputBuffer, inputOffset, inputLength);
-            return ComputeFinal();
+            return ComputeFinal(outputFormat);
         }
 
         /// <summary>
@@ -183,7 +182,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public byte[] ComputeFinal(Endian outputEndian)
         {
-            byte[] result = new byte[_engine.ChecksumLength];
+            byte[] result = new byte[_engine.ChecksumByteLength];
             ComputeFinal(outputEndian, result, 0);
             return result;
         }
@@ -196,11 +195,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public byte[] ComputeFinal(byte[] input, Endian outputEndian)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(outputEndian);
         }
 
@@ -244,11 +239,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public int ComputeFinal(byte[] input, Endian outputEndian, byte[] outputBuffer, int outputOffset)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(outputEndian, outputBuffer, outputOffset);
         }
 
@@ -292,11 +283,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool ComputeFinal(byte[] input, out byte checksum)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(out checksum);
         }
 
@@ -338,11 +325,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool ComputeFinal(byte[] input, out ushort checksum)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(out checksum);
         }
 
@@ -384,11 +367,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool ComputeFinal(byte[] input, out uint checksum)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(out checksum);
         }
 
@@ -430,11 +409,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool ComputeFinal(byte[] input, out ulong checksum)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            Update(input, 0, input.Length);
+            Update(input);
             return ComputeFinal(out checksum);
         }
 

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngineX2 : CrcEngine
+    internal sealed class CrcEngineSharding32 : CrcEngine
     {
         #region Properties
 
@@ -18,7 +18,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineX2(int width, bool refin, bool refout, string poly, string init, string xorout, bool generateTable)
+        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, bool generateTable)
             : base(width, refin, refout, generateTable)
         {
             if (width <= 0)
@@ -27,16 +27,16 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = Convent(poly, width, _moves);
-            _init = Convent(init, width, _moves);
-            _xorout = Convent(xorout, width, _moves);
+            _poly = poly;
+            _init = init;
+            _xorout = xorout;
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
             _crc = (uint[])_init.Clone();
         }
 
-        internal CrcEngineX2(int width, bool refin, bool refout, string poly, string init, string xorout, uint[][] table)
+        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, uint[][] table)
             : base(width, refin, refout, true)
         {
             if (width <= 0)
@@ -45,9 +45,9 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = Convent(poly, width, _moves);
-            _init = Convent(init, width, _moves);
-            _xorout = Convent(xorout, width, _moves);
+            _poly = poly;
+            _init = init;
+            _xorout = xorout;
             Parse(_poly, _moves, _refin);
             Parse(_init, _moves, _refin);
             _table = table;
@@ -104,10 +104,10 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string ComputeFinal()
+        internal override string ComputeFinal(StringFormat outputFormat)
         {
             Finish();
-            string result = GetString(_crc, _checksumHexLength);
+            string result = outputFormat == StringFormat.Hex ? GetHexString(_crc, _checksumHexLength) : GetBinaryString(_crc, _width);
             _crc = (uint[])_init.Clone();
             return result;
         }
@@ -247,47 +247,17 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static uint[] Convent(string input, int width, int truncates)
+        private static string GetBinaryString(uint[] input, int width)
         {
-            uint[] result = new uint[(int)Math.Ceiling(width / 32d)];
-            int hexLength = result.Length * 8;
-            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
             {
-                input = input.Substring(2, input.Length - 2).Replace("_", null).Replace("-", null);
+                result.Append(Convert.ToString(input[i], 2).PadLeft(32, '0'));
             }
-            else
-            {
-                input = input.Replace("_", null).Replace("-", null);
-            }
-            if (input.Length > hexLength)
-            {
-                input = input.Substring(input.Length - hexLength, hexLength);
-            }
-            else if (input.Length < hexLength)
-            {
-                input = input.PadLeft(hexLength, '0');
-            }
-            int j = -1;
-            int m = 24;
-            for (int i = 0; i < input.Length; i += 2)
-            {
-                if (i % 8 == 0)
-                {
-                    j++;
-                    m = 24;
-                }
-                result[j] |= Convert.ToUInt32(input.Substring(i, 2), 16) << m;
-                m -= 8;
-            }
-            if (truncates > 0)
-            {
-                result[0] <<= truncates;
-                result[0] >>= truncates;
-            }
-            return result;
+            return result.Length > width ? result.ToString(result.Length - width, width) : result.ToString();
         }
 
-        private static string GetString(uint[] input, int hexLength)
+        private static string GetHexString(uint[] input, int hexLength)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)

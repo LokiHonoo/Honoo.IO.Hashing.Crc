@@ -5,12 +5,12 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc82Darc : Crc
     {
-        private const string INIT = "000000000000000000000";
-        private const string POLY = "0308C0111011401440411";
+        private const string INIT = "0x000000000000000000000";
+        private const string POLY = "0x0308C0111011401440411";
         private const bool REFIN = true;
         private const bool REFOUT = true;
         private const int WIDTH = 82;
-        private const string XOROUT = "000000000000000000000";
+        private const string XOROUT = "0x000000000000000000000";
         private static readonly uint[] REVERSED_POLY = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
         private static uint[][] _table;
 
@@ -26,16 +26,22 @@ namespace Honoo.IO.Hashing
             return new CrcName("CRC-82/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc82Darc(); });
         }
 
-        private static CrcEngineX2 GetEngine()
+        private static CrcEngineSharding32 GetEngine()
         {
             //
             // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430; (CrcEngineX 88-82, (CrcEngineX2 96-82))
             //
             if (_table == null)
             {
-                _table = CrcEngineX2.GenerateReversedTable(REVERSED_POLY);
+                _table = CrcEngineSharding32.GenerateReversedTable(REVERSED_POLY);
             }
-            return new CrcEngineX2(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+            return new CrcEngineSharding32(WIDTH,
+                                           REFIN,
+                                           REFOUT,
+                                           CrcConverter.GenerateSharding32Value(POLY),
+                                           CrcConverter.GenerateSharding32Value(INIT),
+                                           CrcConverter.GenerateSharding32Value(XOROUT),
+                                           _table);
         }
     }
 }

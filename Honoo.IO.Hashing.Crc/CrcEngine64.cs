@@ -97,10 +97,10 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string ComputeFinal()
+        internal override string ComputeFinal(StringFormat outputFormat)
         {
             Finish();
-            string result = GetString(_crc, _checksumHexLength);
+            string result = outputFormat == StringFormat.Hex ? GetHexString(_crc, _checksumHexLength) : GetBinaryString(_crc, _width);
             _crc = _init;
             return result;
         }
@@ -209,7 +209,13 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static string GetString(ulong input, int hexLength)
+        private static string GetBinaryString(ulong input, int width)
+        {
+            string result = Convert.ToString((long)input, 2).PadLeft(64, '0');
+            return result.Length > width ? result.Substring(result.Length - width, width) : result;
+        }
+
+        private static string GetHexString(ulong input, int hexLength)
         {
             string result = Convert.ToString((long)input, 16).PadLeft(16, '0');
             return result.Length > hexLength ? result.Substring(result.Length - hexLength, hexLength) : result;

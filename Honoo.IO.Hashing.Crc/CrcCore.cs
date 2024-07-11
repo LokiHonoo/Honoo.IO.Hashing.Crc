@@ -3,6 +3,7 @@
     /// <summary>
     /// Use the specified CRC calculation core.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1720:标识符包含类型名称", Justification = "<挂起>")]
     public enum CrcCore
     {
         /// <summary>
@@ -13,42 +14,42 @@
         /// <summary>
         /// Use 8 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 8.
         /// </summary>
-        U8,
+        UInt8,
 
         /// <summary>
         /// Use 8 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 8.
         /// </summary>
-        U8Table,
+        UInt8Table,
 
         /// <summary>
         /// Use 16 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 16.
         /// </summary>
-        U16,
+        UInt16,
 
         /// <summary>
         /// Use 16 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 16.
         /// </summary>
-        U16Table,
+        UInt16Table,
 
         /// <summary>
         /// Use 32 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 32.
         /// </summary>
-        U32,
+        UInt32,
 
         /// <summary>
         /// Use 32 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 32.
         /// </summary>
-        U32Table,
+        UInt32Table,
 
         /// <summary>
         /// Use 64 bit <see langword="WITHOUT"></see> table calculation core. The allowed width bits are between 0 - 64.
         /// </summary>
-        U64,
+        UInt64,
 
         /// <summary>
         /// Use 64 bit <see langword="WITH"></see> table calculation core. The allowed width bits are between 0 - 64.
         /// </summary>
-        U64Table,
+        UInt64Table,
 
         /// <summary>
         /// Use 8 bit shardings <see langword="WITHOUT"></see> calculation core. The allowed width bits are more than 0.

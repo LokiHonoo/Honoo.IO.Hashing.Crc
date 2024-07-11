@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Honoo.IO.Hashing
 {
@@ -92,82 +91,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        private static ushort BEToUInt16(byte[] input)
-        {
-            ushort result = 0;
-            int length = Math.Min(input.Length, 2);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (ushort)((input[input.Length - 1 - i] & 0xFF) << (8 * i));
-            }
-            return result;
-        }
-
-        private static uint BEToUInt32(byte[] input)
-        {
-            uint result = 0;
-            int length = Math.Min(input.Length, 4);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (input[input.Length - 1 - i] & 0xFFU) << (8 * i);
-            }
-            return result;
-        }
-
-        private static ulong BEToUInt64(byte[] input)
-        {
-            ulong result = 0;
-            int length = Math.Min(input.Length, 8);
-            for (int i = 0; i < length; i++)
-            {
-                result |= (input[input.Length - 1 - i] & 0xFFUL) << (8 * i);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Convert checksum/poly/init/xorout hex string to the bytes, Truncate bits form header if the input length is greater than width bits.
-        /// </summary>
-        /// <param name="inputHex">Input hex string.</param>
-        /// <param name="width">Width bits.</param>
-        /// <returns></returns>
-        private static byte[] GetBytes(string inputHex, int width)
-        {
-            int rem = width % 8;
-            int truncates = rem > 0 ? 8 - rem : 0;
-            byte[] result = new byte[(int)Math.Ceiling(width / 8d)];
-            StringBuilder bin = new StringBuilder();
-            if (inputHex.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || inputHex.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
-            {
-                inputHex = inputHex.Substring(2, inputHex.Length - 2).Replace("_", null).Replace("-", null);
-            }
-            else
-            {
-                inputHex = inputHex.Replace("_", null).Replace("-", null);
-            }
-            for (int i = 0; i < inputHex.Length; i++)
-            {
-                bin.Append(Convert.ToString(Convert.ToByte(inputHex[i].ToString(), 16), 2).PadLeft(4, '0'));
-            }
-            if (bin.Length > width)
-            {
-                bin.Remove(0, bin.Length - width);
-            }
-            else if (bin.Length < width)
-            {
-                bin.Insert(0, "0", width - bin.Length);
-            }
-            if (truncates > 0)
-            {
-                bin.Insert(0, "0", truncates);
-            }
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Convert.ToByte(bin.ToString(i * 8, 8), 2);
-            }
-            return result;
-        }
-
         private static CrcEngine GetEngine(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core)
         {
             if (width <= 0)
@@ -178,19 +101,19 @@ namespace Honoo.IO.Hashing
             {
                 if (width <= 8)
                 {
-                    core = CrcCore.U8Table;
+                    core = CrcCore.UInt8Table;
                 }
                 else if (width <= 16)
                 {
-                    core = CrcCore.U16Table;
+                    core = CrcCore.UInt16Table;
                 }
                 else if (width <= 32)
                 {
-                    core = CrcCore.U32Table;
+                    core = CrcCore.UInt32Table;
                 }
                 else if (width <= 64)
                 {
-                    core = CrcCore.U64Table;
+                    core = CrcCore.UInt64Table;
                 }
                 else
                 {
@@ -199,88 +122,102 @@ namespace Honoo.IO.Hashing
             }
             switch (core)
             {
-                case CrcCore.U8:
+                case CrcCore.UInt8:
                     {
-                        byte[] polyBytes = GetBytes(polyHex, width);
-                        byte[] initBytes = GetBytes(initHex, width);
-                        byte[] xoroutBytes = GetBytes(xoroutHex, width);
-                        byte poly = polyBytes[polyBytes.Length - 1];
-                        byte init = initBytes[initBytes.Length - 1];
-                        byte xorout = xoroutBytes[xoroutBytes.Length - 1];
+                        byte poly = CrcConverter.ToUInt8(polyHex, width);
+                        byte init = CrcConverter.ToUInt8(initHex, width);
+                        byte xorout = CrcConverter.ToUInt8(xoroutHex, width);
                         return new CrcEngine8(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.U8Table:
+                case CrcCore.UInt8Table:
                     {
-                        byte[] polyBytes = GetBytes(polyHex, width);
-                        byte[] initBytes = GetBytes(initHex, width);
-                        byte[] xoroutBytes = GetBytes(xoroutHex, width);
-                        byte poly = polyBytes[polyBytes.Length - 1];
-                        byte init = initBytes[initBytes.Length - 1];
-                        byte xorout = xoroutBytes[xoroutBytes.Length - 1];
+                        byte poly = CrcConverter.ToUInt8(polyHex, width);
+                        byte init = CrcConverter.ToUInt8(initHex, width);
+                        byte xorout = CrcConverter.ToUInt8(xoroutHex, width);
                         return new CrcEngine8(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.U16:
+                case CrcCore.UInt16:
                     {
-                        ushort poly = BEToUInt16(GetBytes(polyHex, width));
-                        ushort init = BEToUInt16(GetBytes(initHex, width));
-                        ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
+                        ushort poly = CrcConverter.ToUInt16(polyHex, width);
+                        ushort init = CrcConverter.ToUInt16(initHex, width);
+                        ushort xorout = CrcConverter.ToUInt16(xoroutHex, width);
                         return new CrcEngine16(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.U16Table:
+                case CrcCore.UInt16Table:
                     {
-                        ushort poly = BEToUInt16(GetBytes(polyHex, width));
-                        ushort init = BEToUInt16(GetBytes(initHex, width));
-                        ushort xorout = BEToUInt16(GetBytes(xoroutHex, width));
+                        ushort poly = CrcConverter.ToUInt16(polyHex, width);
+                        ushort init = CrcConverter.ToUInt16(initHex, width);
+                        ushort xorout = CrcConverter.ToUInt16(xoroutHex, width);
                         return new CrcEngine16(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.U32:
+                case CrcCore.UInt32:
                     {
-                        uint poly = BEToUInt32(GetBytes(polyHex, width));
-                        uint init = BEToUInt32(GetBytes(initHex, width));
-                        uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
+                        uint poly = CrcConverter.ToUInt32(polyHex, width);
+                        uint init = CrcConverter.ToUInt32(initHex, width);
+                        uint xorout = CrcConverter.ToUInt32(xoroutHex, width);
                         return new CrcEngine32(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.U32Table:
+                case CrcCore.UInt32Table:
                     {
-                        uint poly = BEToUInt32(GetBytes(polyHex, width));
-                        uint init = BEToUInt32(GetBytes(initHex, width));
-                        uint xorout = BEToUInt32(GetBytes(xoroutHex, width));
+                        uint poly = CrcConverter.ToUInt32(polyHex, width);
+                        uint init = CrcConverter.ToUInt32(initHex, width);
+                        uint xorout = CrcConverter.ToUInt32(xoroutHex, width);
                         return new CrcEngine32(width, refin, refout, poly, init, xorout, true);
                     }
 
-                case CrcCore.U64:
+                case CrcCore.UInt64:
                     {
-                        ulong poly = BEToUInt64(GetBytes(polyHex, width));
-                        ulong init = BEToUInt64(GetBytes(initHex, width));
-                        ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
+                        ulong poly = CrcConverter.ToUInt64(polyHex, width);
+                        ulong init = CrcConverter.ToUInt64(initHex, width);
+                        ulong xorout = CrcConverter.ToUInt64(xoroutHex, width);
                         return new CrcEngine64(width, refin, refout, poly, init, xorout, false);
                     }
 
-                case CrcCore.U64Table:
+                case CrcCore.UInt64Table:
                     {
-                        ulong poly = BEToUInt64(GetBytes(polyHex, width));
-                        ulong init = BEToUInt64(GetBytes(initHex, width));
-                        ulong xorout = BEToUInt64(GetBytes(xoroutHex, width));
+                        ulong poly = CrcConverter.ToUInt64(polyHex, width);
+                        ulong init = CrcConverter.ToUInt64(initHex, width);
+                        ulong xorout = CrcConverter.ToUInt64(xoroutHex, width);
                         return new CrcEngine64(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding8:
-                    return new CrcEngineX(width, refin, refout, polyHex, initHex, xoroutHex, false);
+                    {
+                        byte[] poly = CrcConverter.GenerateSharding8Value(polyHex, width);
+                        byte[] init = CrcConverter.GenerateSharding8Value(initHex, width);
+                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutHex, width);
+                        return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, false);
+                    }
 
                 case CrcCore.Sharding8Table:
-                    return new CrcEngineX(width, refin, refout, polyHex, initHex, xoroutHex, true);
+                    {
+                        byte[] poly = CrcConverter.GenerateSharding8Value(polyHex, width);
+                        byte[] init = CrcConverter.GenerateSharding8Value(initHex, width);
+                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutHex, width);
+                        return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, true);
+                    }
 
                 case CrcCore.Sharding32:
-                    return new CrcEngineX2(width, refin, refout, polyHex, initHex, xoroutHex, false);
+                    {
+                        uint[] poly = CrcConverter.GenerateSharding32Value(polyHex, width);
+                        uint[] init = CrcConverter.GenerateSharding32Value(initHex, width);
+                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutHex, width);
+                        return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, false);
+                    }
 
                 case CrcCore.Sharding32Table:
                 default:
-                    return new CrcEngineX2(width, refin, refout, polyHex, initHex, xoroutHex, true);
+                    {
+                        uint[] poly = CrcConverter.GenerateSharding32Value(polyHex, width);
+                        uint[] init = CrcConverter.GenerateSharding32Value(initHex, width);
+                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutHex, width);
+                        return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, true);
+                    }
             }
         }
     }
