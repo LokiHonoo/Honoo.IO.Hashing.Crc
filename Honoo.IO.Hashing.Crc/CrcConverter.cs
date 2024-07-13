@@ -9,47 +9,6 @@ namespace Honoo.IO.Hashing
     public sealed class CrcConverter
     {
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFFFF) to the specified format,
-        /// </summary>
-        /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
-        /// <returns></returns>
-        public static string ToBinary(string input, int? truncateToWidth = null)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
-            }
-            if (truncateToWidth <= 0)
-            {
-                throw new ArgumentException("Invalid checkcum width. The allowed values are more than 0.", nameof(truncateToWidth));
-            }
-            input = input.Trim();
-            StringBuilder bin = new StringBuilder();
-            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
-            {
-                for (int i = 2; i < input.Length; i++)
-                {
-                    bin.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
-                }
-            }
-            else if (input.StartsWith("0b", StringComparison.InvariantCultureIgnoreCase))
-            {
-                bin.Append(input, 2, input.Length - 2);
-            }
-            int width = truncateToWidth > 0 ? truncateToWidth.Value : bin.Length;
-            if (bin.Length > width)
-            {
-                bin.Remove(0, bin.Length - width);
-            }
-            else if (bin.Length < width)
-            {
-                bin.Insert(0, "0", width - bin.Length);
-            }
-            return bin.ToString();
-        }
-
-        /// <summary>
         /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
         /// </summary>
         /// <param name="input">Input string.</param>
@@ -57,7 +16,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public static byte[] ToBytes(string input, int? truncateToWidth = null)
         {
-            string bin = ToBinary(input, truncateToWidth);
+            string bin = ToBinary(input, false, truncateToWidth);
             int rem = bin.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
@@ -76,17 +35,20 @@ namespace Honoo.IO.Hashing
         /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFFFF) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
+        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
         /// <returns></returns>
-        public static string ToHex(string input, int? truncateToWidth = null)
+        /// <exception cref="Exception"></exception>
+        public static string ToString(string input, StringFormat outputFormat, int? truncateToWidth = null)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
+            switch (outputFormat)
             {
-                result.Append(Convert.ToString(bytes[i], 16).PadLeft(2, '0'));
+                case StringFormat.Binary: return ToBinary(input, false, truncateToWidth);
+                case StringFormat.BinaryWithPrefix: return ToBinary(input, true, truncateToWidth);
+                case StringFormat.Hex: return ToHex(input, false, truncateToWidth);
+                case StringFormat.HexWithPrefix: return ToHex(input, true, truncateToWidth);
+                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
             }
-            return result.ToString();
         }
 
         /// <summary>
@@ -139,7 +101,7 @@ namespace Honoo.IO.Hashing
 
         internal static uint[] GenerateSharding32Value(string input, int? truncateToWidth = null)
         {
-            string bin = ToBinary(input, truncateToWidth);
+            string bin = ToBinary(input, false, truncateToWidth);
             int rem = bin.Length % 32;
             int truncates = rem > 0 ? 32 - rem : 0;
             if (truncates > 0)
@@ -195,6 +157,52 @@ namespace Honoo.IO.Hashing
         private static byte BEToUInt8(byte[] input)
         {
             return input[input.Length - 1];
+        }
+
+        private static string ToBinary(string input, bool withPrefix, int? truncateToWidth)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
+            }
+            if (truncateToWidth <= 0)
+            {
+                throw new ArgumentException("Invalid checkcum width. The allowed values are more than 0.", nameof(truncateToWidth));
+            }
+            input = input.Trim();
+            StringBuilder bin = new StringBuilder();
+            if (input.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) || input.StartsWith("&h", StringComparison.InvariantCultureIgnoreCase))
+            {
+                for (int i = 2; i < input.Length; i++)
+                {
+                    bin.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
+                }
+            }
+            else if (input.StartsWith("0b", StringComparison.InvariantCultureIgnoreCase))
+            {
+                bin.Append(input, 2, input.Length - 2);
+            }
+            int width = truncateToWidth > 0 ? truncateToWidth.Value : bin.Length;
+            if (bin.Length > width)
+            {
+                bin.Remove(0, bin.Length - width);
+            }
+            else if (bin.Length < width)
+            {
+                bin.Insert(0, "0", width - bin.Length);
+            }
+            return withPrefix ? "0b" + bin.ToString() : bin.ToString();
+        }
+
+        private static string ToHex(string input, bool withPrefix, int? truncateToWidth)
+        {
+            byte[] bytes = ToBytes(input, truncateToWidth);
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                result.Append(Convert.ToString(bytes[i], 16).PadLeft(2, '0'));
+            }
+            return withPrefix ? "0x" + result.ToString() : result.ToString();
         }
     }
 }

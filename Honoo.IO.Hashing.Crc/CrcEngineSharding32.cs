@@ -107,7 +107,15 @@ namespace Honoo.IO.Hashing
         internal override string ComputeFinal(StringFormat outputFormat)
         {
             Finish();
-            string result = outputFormat == StringFormat.Hex ? GetHexString(_crc, _checksumHexLength) : GetBinaryString(_crc, _width);
+            string result;
+            switch (outputFormat)
+            {
+                case StringFormat.Binary: result = GetBinaryString(_crc, false, _width); break;
+                case StringFormat.BinaryWithPrefix: result = GetBinaryString(_crc, true, _width); break;
+                case StringFormat.Hex: result = GetHexString(_crc, false, _checksumHexLength); break;
+                case StringFormat.HexWithPrefix: result = GetHexString(_crc, true, _checksumHexLength); break;
+                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
+            }
             _crc = (uint[])_init.Clone();
             return result;
         }
@@ -247,24 +255,32 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static string GetBinaryString(uint[] input, int width)
+        private static string GetBinaryString(uint[] input, bool withPrefix, int width)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
             {
                 result.Append(Convert.ToString(input[i], 2).PadLeft(32, '0'));
             }
-            return result.Length > width ? result.ToString(result.Length - width, width) : result.ToString();
+            if (result.Length > width)
+            {
+                result.Remove(0, result.Length - width);
+            }
+            return withPrefix ? "0b" + result.ToString() : result.ToString();
         }
 
-        private static string GetHexString(uint[] input, int hexLength)
+        private static string GetHexString(uint[] input, bool withPrefix, int hexLength)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
             {
                 result.Append(Convert.ToString(input[i], 16).PadLeft(8, '0'));
             }
-            return result.Length > hexLength ? result.ToString(result.Length - hexLength, hexLength) : result.ToString();
+            if (result.Length > hexLength)
+            {
+                result.Remove(0, result.Length - hexLength);
+            }
+            return withPrefix ? "0x" + result.ToString() : result.ToString();
         }
 
         private static void Parse(uint[] input, int moves, bool reverse)

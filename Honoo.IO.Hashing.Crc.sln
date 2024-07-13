@@ -9,7 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{15EFBB7F-5B0E-4DC9-BF47-808D7D538C4C}"
 	ProjectSection(SolutionItems) = preProject
-		README-NuGet.md = README-NuGet.md
 		README.md = README.md
 	EndProjectSection
 EndProject

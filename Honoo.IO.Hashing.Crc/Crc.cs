@@ -140,7 +140,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Computes checksum and reset the calculator. The return value is "Hex String".
+        /// Computes checksum and reset the calculator. The return value is "Binary String" or "Hex String".
         /// </summary>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
@@ -150,7 +150,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Computes checksum and reset the calculator. The return value is "Hex String".
+        /// Computes checksum and reset the calculator. The return value is "Binary String" or "Hex String".
         /// </summary>
         /// <param name="input">Input.</param>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
@@ -162,7 +162,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Computes checksum and reset the calculator. The return value is "Hex String".
+        /// Computes checksum and reset the calculator. The return value is "Binary String" or "Hex String".
         /// </summary>
         /// <param name="inputBuffer">Input buffer.</param>
         /// <param name="inputOffset">Read start offset from buffer.</param>

@@ -94,7 +94,7 @@ namespace Test
 
                 //
                 Crc crc = Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
-                string bin = crc.ComputeFinal(input, StringFormat.Binary);
+                string bin = crc.ComputeFinal(input, StringFormat.BinaryWithPrefix);
                 Console.WriteLine(bin);
                 string h = Calc(crc, input);
                 CrcCore noTable;

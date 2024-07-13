@@ -100,7 +100,15 @@ namespace Honoo.IO.Hashing
         internal override string ComputeFinal(StringFormat outputFormat)
         {
             Finish();
-            string result = outputFormat == StringFormat.Hex ? GetHexString(_crc, _checksumHexLength) : GetBinaryString(_crc, _width);
+            string result;
+            switch (outputFormat)
+            {
+                case StringFormat.Binary: result = GetBinaryString(_crc, false, _width); break;
+                case StringFormat.BinaryWithPrefix: result = GetBinaryString(_crc, true, _width); break;
+                case StringFormat.Hex: result = GetHexString(_crc, false, _checksumHexLength); break;
+                case StringFormat.HexWithPrefix: result = GetHexString(_crc, true, _checksumHexLength); break;
+                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
+            }
             _crc = _init;
             return result;
         }
@@ -196,16 +204,24 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static string GetBinaryString(byte input, int width)
+        private static string GetBinaryString(byte input, bool withPrefix, int width)
         {
             string result = Convert.ToString(input, 2).PadLeft(8, '0');
-            return result.Length > width ? result.Substring(result.Length - width, width) : result;
+            if (result.Length > width)
+            {
+                result = result.Substring(result.Length - width, width);
+            }
+            return withPrefix ? "0b" + result : result;
         }
 
-        private static string GetHexString(byte input, int hexLength)
+        private static string GetHexString(byte input, bool withPrefix, int hexLength)
         {
             string result = Convert.ToString(input, 16).PadLeft(2, '0');
-            return result.Length > hexLength ? result.Substring(result.Length - hexLength, hexLength) : result;
+            if (result.Length > hexLength)
+            {
+                result = result.Substring(result.Length - hexLength, hexLength);
+            }
+            return withPrefix ? "0x" + result : result;
         }
 
         private static byte Parse(byte input, int moves, bool reverse)
