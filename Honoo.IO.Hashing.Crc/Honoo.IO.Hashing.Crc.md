@@ -6,9 +6,9 @@
 
 - [Honoo.IO.Hashing.Crc](#honooiohashingcrc)
   - [INTRODUCTION](#introduction)
-  - [USAGE](#usage)
+  - [GUIDE](#guide)
     - [GitHub](#github)
-  - [DEMO](#demo)
+  - [USAGE](#usage)
   - [SPEED](#speed)
   - [LICENSE](#license)
 
@@ -139,13 +139,13 @@ CRC-64/WE,
 CRC-64/XZ, CRC-64/GO-ECMA,
 CRC-82/DARC,
 
-## USAGE
+## GUIDE
 
 ### GitHub
 
 <https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc>
 
-## DEMO
+## USAGE
 
 ```c#
 

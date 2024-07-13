@@ -162,7 +162,7 @@ namespace Test
                 crc.ComputeFinal(StringFormat.Hex);
             }
             stopwatch.Stop();
-            Console.WriteLine("|CUSTUM CRC-217|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
+            Console.WriteLine("|CRC-217/CUSTUM|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");
         }
     }
 }
