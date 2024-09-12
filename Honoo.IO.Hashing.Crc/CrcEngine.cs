@@ -4,7 +4,7 @@ namespace Honoo.IO.Hashing
 {
     internal abstract class CrcEngine
     {
-        #region Properties
+        #region Members
 
         protected readonly int _checksumByteLength;
         protected readonly int _checksumHexLength;
@@ -16,7 +16,7 @@ namespace Honoo.IO.Hashing
         internal int Width => _width;
         internal bool WithTable => _withTable;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 
@@ -32,7 +32,7 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        internal abstract string ComputeFinal(StringFormat outputFormat);
+        internal abstract string ComputeFinal(NumericsStringFormat outputFormat);
 
         internal abstract int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset);
 

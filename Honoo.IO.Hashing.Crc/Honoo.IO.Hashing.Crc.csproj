@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net40;net462;netstandard2.0</TargetFrameworks>
 		<PackageId>Honoo.IO.Hashing.Crc</PackageId>
-		<Company>Loki Honoo</Company>
+		<Authors>LokiHonoo</Authors>		
+		<Company>LokiHonoo</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
-		<Authors>Loki Honoo</Authors>
-		<VersionPrefix>1.0.14</VersionPrefix>
+		<VersionPrefix>1.0.15</VersionPrefix>
 		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Custom width and parameters are supported.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>

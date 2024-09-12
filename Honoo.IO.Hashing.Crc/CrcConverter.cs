@@ -9,99 +9,85 @@ namespace Honoo.IO.Hashing
     public sealed class CrcConverter
     {
         /// <summary>
-        /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static byte[] ToBytes(string input, int? truncateToWidth = null)
+        public static byte[] ToBytes(string input, int? truncateToWidth)
         {
-            string bin = ToBinary(input, false, truncateToWidth);
-            int rem = bin.Length % 8;
-            int truncates = rem > 0 ? 8 - rem : 0;
-            if (truncates > 0)
-            {
-                bin = bin.PadLeft(bin.Length + truncates, '0');
-            }
-            byte[] result = new byte[bin.Length / 8];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Convert.ToByte(bin.Substring(i * 8, 8), 2);
-            }
-            return result;
+            return GetBytes(input, truncateToWidth);
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFFFF) to the specified format,
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static string ToString(string input, StringFormat outputFormat, int? truncateToWidth = null)
+        public static string ToString(string input, int? truncateToWidth, NumericsStringFormat outputFormat)
         {
             switch (outputFormat)
             {
-                case StringFormat.Binary: return ToBinary(input, false, truncateToWidth);
-                case StringFormat.BinaryWithPrefix: return ToBinary(input, true, truncateToWidth);
-                case StringFormat.Hex: return ToHex(input, false, truncateToWidth);
-                case StringFormat.HexWithPrefix: return ToHex(input, true, truncateToWidth);
-                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
+                case NumericsStringFormat.Binary: return GetBinaryString(input, truncateToWidth);
+                case NumericsStringFormat.Hex: return GetHexString(input, truncateToWidth);
+                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
             }
         }
 
         /// <summary>
-        /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static ushort ToUInt16(string input, int? truncateToWidth = null)
+        public static ushort ToUInt16(string input, int? truncateToWidth)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
+            byte[] bytes = GetBytes(input, truncateToWidth);
             return BEToUInt16(bytes);
         }
 
         /// <summary>
-        /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static uint ToUInt32(string input, int? truncateToWidth = null)
+        public static uint ToUInt32(string input, int? truncateToWidth)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
+            byte[] bytes = GetBytes(input, truncateToWidth);
             return BEToUInt32(bytes);
         }
 
         /// <summary>
-        /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static ulong ToUInt64(string input, int? truncateToWidth = null)
+        public static ulong ToUInt64(string input, int? truncateToWidth)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
+            byte[] bytes = GetBytes(input, truncateToWidth);
             return BEToUInt64(bytes);
         }
 
         /// <summary>
-        /// Convert Binary(e.g. 0b11110000), Hex(e.g. 0xFFFF) to the specified format.
+        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
         /// </summary>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidth">Truncated the input string to the specifies width.</param>
+        /// <param name="truncateToWidth">Truncated the input string to the specifies width. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static byte ToUInt8(string input, int? truncateToWidth = null)
+        public static byte ToUInt8(string input, int? truncateToWidth)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
+            byte[] bytes = GetBytes(input, truncateToWidth);
             return BEToUInt8(bytes);
         }
 
-        internal static uint[] GenerateSharding32Value(string input, int? truncateToWidth = null)
+        internal static uint[] GenerateSharding32Value(string input, int? truncateToWidth)
         {
-            string bin = ToBinary(input, false, truncateToWidth);
+            string bin = GetBinaryString(input, truncateToWidth);
             int rem = bin.Length % 32;
             int truncates = rem > 0 ? 32 - rem : 0;
             if (truncates > 0)
@@ -116,9 +102,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static byte[] GenerateSharding8Value(string input, int? truncateToWidth = null)
+        internal static byte[] GenerateSharding8Value(string input, int? truncateToWidth)
         {
-            return ToBytes(input, truncateToWidth);
+            return GetBytes(input, truncateToWidth);
         }
 
         private static ushort BEToUInt16(byte[] input)
@@ -159,15 +145,15 @@ namespace Honoo.IO.Hashing
             return input[input.Length - 1];
         }
 
-        private static string ToBinary(string input, bool withPrefix, int? truncateToWidth)
+        private static string GetBinaryString(string input, int? truncateToWidth)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
                 throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
             }
-            if (truncateToWidth <= 0)
+            if (truncateToWidth.HasValue && truncateToWidth <= 0)
             {
-                throw new ArgumentException("Invalid checkcum width. The allowed values are more than 0.", nameof(truncateToWidth));
+                throw new ArgumentException("Invalid width. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidth));
             }
             input = input.Trim();
             StringBuilder bin = new StringBuilder();
@@ -182,7 +168,7 @@ namespace Honoo.IO.Hashing
             {
                 bin.Append(input, 2, input.Length - 2);
             }
-            int width = truncateToWidth > 0 ? truncateToWidth.Value : bin.Length;
+            int width = truncateToWidth.HasValue && truncateToWidth > 0 ? truncateToWidth.Value : bin.Length;
             if (bin.Length > width)
             {
                 bin.Remove(0, bin.Length - width);
@@ -191,18 +177,43 @@ namespace Honoo.IO.Hashing
             {
                 bin.Insert(0, "0", width - bin.Length);
             }
-            return withPrefix ? "0b" + bin.ToString() : bin.ToString();
+            return bin.ToString();
         }
 
-        private static string ToHex(string input, bool withPrefix, int? truncateToWidth)
+        private static byte[] GetBytes(string input, int? truncateToWidth)
         {
-            byte[] bytes = ToBytes(input, truncateToWidth);
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
+            string bin = GetBinaryString(input, truncateToWidth);
+            int rem = bin.Length % 8;
+            int truncates = rem > 0 ? 8 - rem : 0;
+            if (truncates > 0)
             {
-                result.Append(Convert.ToString(bytes[i], 16).PadLeft(2, '0'));
+                bin = bin.PadLeft(bin.Length + truncates, '0');
             }
-            return withPrefix ? "0x" + result.ToString() : result.ToString();
+            byte[] result = new byte[bin.Length / 8];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToByte(bin.Substring(i * 8, 8), 2);
+            }
+            return result;
+        }
+
+        private static string GetHexString(string input, int? truncateToWidth)
+        {
+            string bin = GetBinaryString(input, truncateToWidth);
+            int rem = bin.Length % 8;
+            int truncates = rem > 0 ? 8 - rem : 0;
+            if (truncates > 0)
+            {
+                bin = bin.PadLeft(bin.Length + truncates, '0');
+            }
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < bin.Length; i += 8)
+            {
+                byte b = Convert.ToByte(bin.Substring(i, 8), 2);
+                result.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
+            }
+            return result.ToString();
         }
     }
 }

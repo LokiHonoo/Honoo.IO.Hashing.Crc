@@ -5,16 +5,16 @@ namespace Honoo.IO.Hashing
 {
     internal sealed class CrcEngineSharding32 : CrcEngine
     {
-        #region Properties
+        #region Members
 
-        private readonly uint[] _init;
+        private readonly uint[] _initParsed;
         private readonly int _moves;
-        private readonly uint[] _poly;
+        private readonly uint[] _polyParsed;
         private readonly uint[][] _table;
-        private readonly uint[] _xorout;
+        private readonly uint[] _xoroutParsed;
         private uint[] _crc;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 
@@ -27,13 +27,13 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = poly;
-            _init = init;
-            _xorout = xorout;
-            Parse(_poly, _moves, _refin);
-            Parse(_init, _moves, _refin);
-            _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
-            _crc = (uint[])_init.Clone();
+            _polyParsed = poly;
+            _initParsed = init;
+            _xoroutParsed = xorout;
+            Parse(_polyParsed, _moves, _refin);
+            Parse(_initParsed, _moves, _refin);
+            _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
+            _crc = (uint[])_initParsed.Clone();
         }
 
         internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, uint[][] table)
@@ -45,30 +45,30 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
-            _poly = poly;
-            _init = init;
-            _xorout = xorout;
-            Parse(_poly, _moves, _refin);
-            Parse(_init, _moves, _refin);
+            _polyParsed = poly;
+            _initParsed = init;
+            _xoroutParsed = xorout;
+            Parse(_polyParsed, _moves, _refin);
+            Parse(_initParsed, _moves, _refin);
             _table = table;
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
         }
 
         #endregion Construction
 
-        internal static uint[][] GenerateReversedTable(uint[] reversedPoly)
+        internal static uint[][] GenerateReversedTable(uint[] reversedPolyParsed)
         {
             uint[][] table = new uint[256][];
             for (int i = 0; i < 256; i++)
             {
-                uint[] data = new uint[reversedPoly.Length];
+                uint[] data = new uint[reversedPolyParsed.Length];
                 data[data.Length - 1] = (uint)i;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data[data.Length - 1] & 1) == 1)
                     {
                         ShiftRight(data, 1);
-                        Xor(data, reversedPoly);
+                        Xor(data, reversedPolyParsed);
                     }
                     else
                     {
@@ -80,19 +80,19 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static uint[][] GenerateTable(uint[] poly)
+        internal static uint[][] GenerateTable(uint[] polyParsed)
         {
             uint[][] table = new uint[256][];
             for (int i = 0; i < 256; i++)
             {
-                uint[] data = new uint[poly.Length];
+                uint[] data = new uint[polyParsed.Length];
                 data[0] = (uint)i << 24;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data[0] & 0x80000000) == 0x80000000)
                     {
                         ShiftLeft(data, 1);
-                        Xor(data, poly);
+                        Xor(data, polyParsed);
                     }
                     else
                     {
@@ -104,19 +104,17 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string ComputeFinal(StringFormat outputFormat)
+        internal override string ComputeFinal(NumericsStringFormat outputFormat)
         {
             Finish();
             string result;
             switch (outputFormat)
             {
-                case StringFormat.Binary: result = GetBinaryString(_crc, false, _width); break;
-                case StringFormat.BinaryWithPrefix: result = GetBinaryString(_crc, true, _width); break;
-                case StringFormat.Hex: result = GetHexString(_crc, false, _checksumHexLength); break;
-                case StringFormat.HexWithPrefix: result = GetHexString(_crc, true, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
+                case NumericsStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
+                case NumericsStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
+                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
             }
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return result;
         }
 
@@ -153,7 +151,7 @@ namespace Honoo.IO.Hashing
                     m += 8;
                 }
             }
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return _checksumByteLength;
         }
 
@@ -161,7 +159,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = (byte)_crc[_crc.Length - 1];
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return _width > 8;
         }
 
@@ -169,7 +167,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = (ushort)_crc[_crc.Length - 1];
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return _width > 16;
         }
 
@@ -177,7 +175,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc[_crc.Length - 1];
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return _width > 32;
         }
 
@@ -186,13 +184,13 @@ namespace Honoo.IO.Hashing
             Finish();
             checksum = _crc[_crc.Length - 1];
             if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFFFFFUL) << 32;
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
             return _width > 64;
         }
 
         internal override void Reset()
         {
-            _crc = (uint[])_init.Clone();
+            _crc = (uint[])_initParsed.Clone();
         }
 
         protected override void UpdateWithoutTable(byte input)
@@ -209,7 +207,7 @@ namespace Honoo.IO.Hashing
                     if ((_crc[_crc.Length - 1] & 1) == 1)
                     {
                         ShiftRight(_crc, 1);
-                        Xor(_crc, _poly);
+                        Xor(_crc, _polyParsed);
                     }
                     else
                     {
@@ -229,7 +227,7 @@ namespace Honoo.IO.Hashing
                     if ((_crc[0] & 0x80000000) == 0x80000000)
                     {
                         ShiftLeft(_crc, 1);
-                        Xor(_crc, _poly);
+                        Xor(_crc, _polyParsed);
                     }
                     else
                     {
@@ -255,7 +253,7 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static string GetBinaryString(uint[] input, bool withPrefix, int width)
+        private static string GetBinaryString(uint[] input, int width)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
@@ -266,10 +264,10 @@ namespace Honoo.IO.Hashing
             {
                 result.Remove(0, result.Length - width);
             }
-            return withPrefix ? "0b" + result.ToString() : result.ToString();
+            return result.ToString();
         }
 
-        private static string GetHexString(uint[] input, bool withPrefix, int hexLength)
+        private static string GetHexString(uint[] input, int hexLength)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
@@ -280,7 +278,7 @@ namespace Honoo.IO.Hashing
             {
                 result.Remove(0, result.Length - hexLength);
             }
-            return withPrefix ? "0x" + result.ToString() : result.ToString();
+            return result.ToString();
         }
 
         private static void Parse(uint[] input, int moves, bool reverse)
@@ -352,7 +350,7 @@ namespace Honoo.IO.Hashing
             {
                 ShiftRight(_crc, _moves);
             }
-            Xor(_crc, _xorout);
+            Xor(_crc, _xoroutParsed);
         }
     }
 }

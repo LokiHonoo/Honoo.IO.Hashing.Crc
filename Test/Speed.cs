@@ -159,7 +159,7 @@ namespace Test
             for (int i = 0; i < 100000; i++)
             {
                 crc.Update(input);
-                crc.ComputeFinal(StringFormat.Hex);
+                crc.ComputeFinal(NumericsStringFormat.Hex);
             }
             stopwatch.Stop();
             Console.WriteLine("|CRC-217/CUSTUM|sharding 32 bits|table|100000|" + stopwatch.ElapsedMilliseconds + " ms|");

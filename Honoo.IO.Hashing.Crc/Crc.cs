@@ -8,7 +8,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public abstract class Crc
     {
-        #region Properties
+        #region Members
 
         private readonly CrcEngine _engine;
         private readonly string _name;
@@ -33,7 +33,7 @@ namespace Honoo.IO.Hashing
         /// </summary>
         public bool WithTable => _engine.WithTable;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 
@@ -144,7 +144,7 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(StringFormat outputFormat)
+        public string ComputeFinal(NumericsStringFormat outputFormat)
         {
             return _engine.ComputeFinal(outputFormat);
         }
@@ -155,7 +155,7 @@ namespace Honoo.IO.Hashing
         /// <param name="input">Input.</param>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(byte[] input, StringFormat outputFormat)
+        public string ComputeFinal(byte[] input, NumericsStringFormat outputFormat)
         {
             Update(input);
             return ComputeFinal(outputFormat);
@@ -169,7 +169,7 @@ namespace Honoo.IO.Hashing
         /// <param name="inputLength">Read length from buffer.</param>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, StringFormat outputFormat)
+        public string ComputeFinal(byte[] inputBuffer, int inputOffset, int inputLength, NumericsStringFormat outputFormat)
         {
             Update(inputBuffer, inputOffset, inputLength);
             return ComputeFinal(outputFormat);

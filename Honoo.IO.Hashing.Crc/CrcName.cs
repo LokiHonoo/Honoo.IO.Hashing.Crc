@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// <summary>
     /// CRC name.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public sealed class CrcName : IEquatable<CrcName>
     {
         #region Delegate
@@ -12,8 +13,6 @@ namespace Honoo.IO.Hashing
         internal delegate Crc GetAlgorithmCallback();
 
         #endregion Delegate
-
-#pragma warning disable CA1707 // 标识符不应包含下划线
 
         #region CRC3
 
@@ -673,9 +672,7 @@ namespace Honoo.IO.Hashing
 
         #endregion CRC82
 
-#pragma warning restore CA1707 // 标识符不应包含下划线
-
-        #region Properties
+        #region Members
 
         private readonly GetAlgorithmCallback _getAlgorithm;
         private readonly CrcParameter _init;
@@ -738,7 +735,7 @@ namespace Honoo.IO.Hashing
 
         internal GetAlgorithmCallback GetAlgorithm => _getAlgorithm;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 

@@ -94,7 +94,7 @@ namespace Test
 
                 //
                 Crc crc = Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
-                string bin = crc.ComputeFinal(input, StringFormat.BinaryWithPrefix);
+                string bin = "0b" + crc.ComputeFinal(input, NumericsStringFormat.Binary);
                 Console.WriteLine(bin);
                 string h = Calc(crc, input);
                 CrcCore noTable;
@@ -162,7 +162,7 @@ namespace Test
             byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
             string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
             crc.Update(input);
-            string h = crc.ComputeFinal(StringFormat.Hex);
+            string h = crc.ComputeFinal(NumericsStringFormat.Hex);
             crc.Update(input);
             crc.ComputeFinal(out byte b);
             string h1 = Convert.ToString(b, 16);

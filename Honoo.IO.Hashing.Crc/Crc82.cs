@@ -11,7 +11,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 82;
         private const string XOROUT = "0x000000000000000000000";
-        private static readonly uint[] REVERSED_POLY = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
         private static uint[][] _table;
 
         /// <summary>
@@ -29,18 +28,19 @@ namespace Honoo.IO.Hashing
         private static CrcEngineSharding32 GetEngine()
         {
             //
-            // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430; (CrcEngineX 88-82, (CrcEngineX2 96-82))
+            // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430; (CrcEngineSharding8 88-82, (CrcEngineSharding32 96-82))
             //
             if (_table == null)
             {
-                _table = CrcEngineSharding32.GenerateReversedTable(REVERSED_POLY);
+                uint[] reversedPoly = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
+                _table = CrcEngineSharding32.GenerateReversedTable(reversedPoly);
             }
             return new CrcEngineSharding32(WIDTH,
                                            REFIN,
                                            REFOUT,
-                                           CrcConverter.GenerateSharding32Value(POLY),
-                                           CrcConverter.GenerateSharding32Value(INIT),
-                                           CrcConverter.GenerateSharding32Value(XOROUT),
+                                           CrcConverter.GenerateSharding32Value(POLY, null),
+                                           CrcConverter.GenerateSharding32Value(INIT, null),
+                                           CrcConverter.GenerateSharding32Value(XOROUT, null),
                                            _table);
         }
     }

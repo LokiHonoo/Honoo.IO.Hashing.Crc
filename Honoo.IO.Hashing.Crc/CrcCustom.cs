@@ -79,19 +79,19 @@ namespace Honoo.IO.Hashing
         /// <param name="width">Width bits. The allowed values are more than 0.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
-        /// <param name="polyHex">Polynomials value hex string.</param>
-        /// <param name="initHex">Initialization value hex string.</param>
-        /// <param name="xoroutHex">Output xor value hex string.</param>
+        /// <param name="polyFormatted">Polynomials value string. String must with prefix as "0b11110000" or "0xFF55".</param>
+        /// <param name="initFormatted">Initialization value string. String must with prefix as "0b11110000" or "0xFF55".</param>
+        /// <param name="xoroutFormatted">Output xor value string. String must with prefix as "0b11110000" or "0xFF55".</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core = CrcCore.Auto)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, polyHex, initHex, xoroutHex, core))
+        public CrcCustom(int width, bool refin, bool refout, string polyFormatted, string initFormatted, string xoroutFormatted, CrcCore core = CrcCore.Auto)
+            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, polyFormatted, initFormatted, xoroutFormatted, core))
         {
         }
 
         #endregion Construction
 
-        private static CrcEngine GetEngine(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core)
+        private static CrcEngine GetEngine(int width, bool refin, bool refout, string polyFormatted, string initFormatted, string xoroutFormatted, CrcCore core)
         {
             if (width <= 0)
             {
@@ -124,98 +124,98 @@ namespace Honoo.IO.Hashing
             {
                 case CrcCore.UInt8:
                     {
-                        byte poly = CrcConverter.ToUInt8(polyHex, width);
-                        byte init = CrcConverter.ToUInt8(initHex, width);
-                        byte xorout = CrcConverter.ToUInt8(xoroutHex, width);
+                        byte poly = CrcConverter.ToUInt8(polyFormatted, width);
+                        byte init = CrcConverter.ToUInt8(initFormatted, width);
+                        byte xorout = CrcConverter.ToUInt8(xoroutFormatted, width);
                         return new CrcEngine8(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt8Table:
                     {
-                        byte poly = CrcConverter.ToUInt8(polyHex, width);
-                        byte init = CrcConverter.ToUInt8(initHex, width);
-                        byte xorout = CrcConverter.ToUInt8(xoroutHex, width);
+                        byte poly = CrcConverter.ToUInt8(polyFormatted, width);
+                        byte init = CrcConverter.ToUInt8(initFormatted, width);
+                        byte xorout = CrcConverter.ToUInt8(xoroutFormatted, width);
                         return new CrcEngine8(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt16:
                     {
-                        ushort poly = CrcConverter.ToUInt16(polyHex, width);
-                        ushort init = CrcConverter.ToUInt16(initHex, width);
-                        ushort xorout = CrcConverter.ToUInt16(xoroutHex, width);
+                        ushort poly = CrcConverter.ToUInt16(polyFormatted, width);
+                        ushort init = CrcConverter.ToUInt16(initFormatted, width);
+                        ushort xorout = CrcConverter.ToUInt16(xoroutFormatted, width);
                         return new CrcEngine16(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt16Table:
                     {
-                        ushort poly = CrcConverter.ToUInt16(polyHex, width);
-                        ushort init = CrcConverter.ToUInt16(initHex, width);
-                        ushort xorout = CrcConverter.ToUInt16(xoroutHex, width);
+                        ushort poly = CrcConverter.ToUInt16(polyFormatted, width);
+                        ushort init = CrcConverter.ToUInt16(initFormatted, width);
+                        ushort xorout = CrcConverter.ToUInt16(xoroutFormatted, width);
                         return new CrcEngine16(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt32:
                     {
-                        uint poly = CrcConverter.ToUInt32(polyHex, width);
-                        uint init = CrcConverter.ToUInt32(initHex, width);
-                        uint xorout = CrcConverter.ToUInt32(xoroutHex, width);
+                        uint poly = CrcConverter.ToUInt32(polyFormatted, width);
+                        uint init = CrcConverter.ToUInt32(initFormatted, width);
+                        uint xorout = CrcConverter.ToUInt32(xoroutFormatted, width);
                         return new CrcEngine32(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt32Table:
                     {
-                        uint poly = CrcConverter.ToUInt32(polyHex, width);
-                        uint init = CrcConverter.ToUInt32(initHex, width);
-                        uint xorout = CrcConverter.ToUInt32(xoroutHex, width);
+                        uint poly = CrcConverter.ToUInt32(polyFormatted, width);
+                        uint init = CrcConverter.ToUInt32(initFormatted, width);
+                        uint xorout = CrcConverter.ToUInt32(xoroutFormatted, width);
                         return new CrcEngine32(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.UInt64:
                     {
-                        ulong poly = CrcConverter.ToUInt64(polyHex, width);
-                        ulong init = CrcConverter.ToUInt64(initHex, width);
-                        ulong xorout = CrcConverter.ToUInt64(xoroutHex, width);
+                        ulong poly = CrcConverter.ToUInt64(polyFormatted, width);
+                        ulong init = CrcConverter.ToUInt64(initFormatted, width);
+                        ulong xorout = CrcConverter.ToUInt64(xoroutFormatted, width);
                         return new CrcEngine64(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.UInt64Table:
                     {
-                        ulong poly = CrcConverter.ToUInt64(polyHex, width);
-                        ulong init = CrcConverter.ToUInt64(initHex, width);
-                        ulong xorout = CrcConverter.ToUInt64(xoroutHex, width);
+                        ulong poly = CrcConverter.ToUInt64(polyFormatted, width);
+                        ulong init = CrcConverter.ToUInt64(initFormatted, width);
+                        ulong xorout = CrcConverter.ToUInt64(xoroutFormatted, width);
                         return new CrcEngine64(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding8:
                     {
-                        byte[] poly = CrcConverter.GenerateSharding8Value(polyHex, width);
-                        byte[] init = CrcConverter.GenerateSharding8Value(initHex, width);
-                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutHex, width);
+                        byte[] poly = CrcConverter.GenerateSharding8Value(polyFormatted, width);
+                        byte[] init = CrcConverter.GenerateSharding8Value(initFormatted, width);
+                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutFormatted, width);
                         return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.Sharding8Table:
                     {
-                        byte[] poly = CrcConverter.GenerateSharding8Value(polyHex, width);
-                        byte[] init = CrcConverter.GenerateSharding8Value(initHex, width);
-                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutHex, width);
+                        byte[] poly = CrcConverter.GenerateSharding8Value(polyFormatted, width);
+                        byte[] init = CrcConverter.GenerateSharding8Value(initFormatted, width);
+                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutFormatted, width);
                         return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding32:
                     {
-                        uint[] poly = CrcConverter.GenerateSharding32Value(polyHex, width);
-                        uint[] init = CrcConverter.GenerateSharding32Value(initHex, width);
-                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutHex, width);
+                        uint[] poly = CrcConverter.GenerateSharding32Value(polyFormatted, width);
+                        uint[] init = CrcConverter.GenerateSharding32Value(initFormatted, width);
+                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutFormatted, width);
                         return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.Sharding32Table:
                 default:
                     {
-                        uint[] poly = CrcConverter.GenerateSharding32Value(polyHex, width);
-                        uint[] init = CrcConverter.GenerateSharding32Value(initHex, width);
-                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutHex, width);
+                        uint[] poly = CrcConverter.GenerateSharding32Value(polyFormatted, width);
+                        uint[] init = CrcConverter.GenerateSharding32Value(initFormatted, width);
+                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutFormatted, width);
                         return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, true);
                     }
             }

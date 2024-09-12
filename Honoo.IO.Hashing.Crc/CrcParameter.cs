@@ -9,17 +9,17 @@ namespace Honoo.IO.Hashing
     {
         #region Enum
 
-        internal enum ValueType
+        private enum ValueType
         { UInt8, UInt16, UInt32, UInt64, HexString }
 
         #endregion Enum
 
-        #region Properties
+        #region Members
 
         private readonly object _value;
         private readonly ValueType _valueType;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 

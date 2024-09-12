@@ -4,16 +4,16 @@ namespace Honoo.IO.Hashing
 {
     internal sealed class CrcEngine8 : CrcEngine
     {
-        #region Properties
+        #region Members
 
-        private readonly byte _init;
+        private readonly byte _initParsed;
         private readonly int _moves;
-        private readonly byte _poly;
+        private readonly byte _polyParsed;
         private readonly byte[] _table;
-        private readonly byte _xorout;
+        private readonly byte _xoroutParsed;
         private byte _crc;
 
-        #endregion Properties
+        #endregion Members
 
         #region Construction
 
@@ -25,13 +25,13 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
             _moves = 8 - width;
-            _poly = TruncateLeft(poly, _moves);
-            _init = TruncateLeft(init, _moves);
-            _xorout = TruncateLeft(xorout, _moves);
-            _poly = Parse(_poly, _moves, _refin);
-            _init = Parse(_init, _moves, _refin);
-            _table = generateTable ? _refin ? GenerateReversedTable(_poly) : GenerateTable(_poly) : null;
-            _crc = _init;
+            _polyParsed = TruncateLeft(poly, _moves);
+            _initParsed = TruncateLeft(init, _moves);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
+            _polyParsed = Parse(_polyParsed, _moves, _refin);
+            _initParsed = Parse(_initParsed, _moves, _refin);
+            _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
+            _crc = _initParsed;
         }
 
         internal CrcEngine8(int width, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
@@ -42,18 +42,18 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
             _moves = 8 - width;
-            _poly = TruncateLeft(poly, _moves);
-            _init = TruncateLeft(init, _moves);
-            _xorout = TruncateLeft(xorout, _moves);
-            _poly = Parse(_poly, _moves, _refin);
-            _init = Parse(_init, _moves, _refin);
+            _polyParsed = TruncateLeft(poly, _moves);
+            _initParsed = TruncateLeft(init, _moves);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
+            _polyParsed = Parse(_polyParsed, _moves, _refin);
+            _initParsed = Parse(_initParsed, _moves, _refin);
             _table = table;
-            _crc = _init;
+            _crc = _initParsed;
         }
 
         #endregion Construction
 
-        internal static byte[] GenerateReversedTable(byte reversedPoly)
+        internal static byte[] GenerateReversedTable(byte reversedPolyParsed)
         {
             byte[] table = new byte[256];
             for (int i = 0; i < 256; i++)
@@ -63,7 +63,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((data & 1) == 1)
                     {
-                        data = (byte)((data >> 1) ^ reversedPoly);
+                        data = (byte)((data >> 1) ^ reversedPolyParsed);
                     }
                     else
                     {
@@ -75,7 +75,7 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static byte[] GenerateTable(byte poly)
+        internal static byte[] GenerateTable(byte polyParsed)
         {
             byte[] table = new byte[256];
             for (int i = 0; i < 256; i++)
@@ -85,7 +85,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((data & 0x80) == 0x80)
                     {
-                        data = (byte)((data << 1) ^ poly);
+                        data = (byte)((data << 1) ^ polyParsed);
                     }
                     else
                     {
@@ -97,19 +97,17 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override string ComputeFinal(StringFormat outputFormat)
+        internal override string ComputeFinal(NumericsStringFormat outputFormat)
         {
             Finish();
             string result;
             switch (outputFormat)
             {
-                case StringFormat.Binary: result = GetBinaryString(_crc, false, _width); break;
-                case StringFormat.BinaryWithPrefix: result = GetBinaryString(_crc, true, _width); break;
-                case StringFormat.Hex: result = GetHexString(_crc, false, _checksumHexLength); break;
-                case StringFormat.HexWithPrefix: result = GetHexString(_crc, true, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid StringFormat value.", nameof(outputFormat));
+                case NumericsStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
+                case NumericsStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
+                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
             }
-            _crc = _init;
+            _crc = _initParsed;
             return result;
         }
 
@@ -117,7 +115,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             outputBuffer[outputOffset] = _crc;
-            _crc = _init;
+            _crc = _initParsed;
             return 1;
         }
 
@@ -125,7 +123,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc;
-            _crc = _init;
+            _crc = _initParsed;
             return false;
         }
 
@@ -133,7 +131,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc;
-            _crc = _init;
+            _crc = _initParsed;
             return false;
         }
 
@@ -141,7 +139,7 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc;
-            _crc = _init;
+            _crc = _initParsed;
             return false;
         }
 
@@ -149,13 +147,13 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc;
-            _crc = _init;
+            _crc = _initParsed;
             return false;
         }
 
         internal override void Reset()
         {
-            _crc = _init;
+            _crc = _initParsed;
         }
 
         protected override void UpdateWithoutTable(byte input)
@@ -167,7 +165,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((_crc & 1) == 1)
                     {
-                        _crc = (byte)((_crc >> 1) ^ _poly);
+                        _crc = (byte)((_crc >> 1) ^ _polyParsed);
                     }
                     else
                     {
@@ -182,7 +180,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((_crc & 0x80) == 0x80)
                     {
-                        _crc = (byte)((_crc << 1) ^ _poly);
+                        _crc = (byte)((_crc << 1) ^ _polyParsed);
                     }
                     else
                     {
@@ -204,24 +202,24 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static string GetBinaryString(byte input, bool withPrefix, int width)
+        private static string GetBinaryString(byte input, int width)
         {
             string result = Convert.ToString(input, 2).PadLeft(8, '0');
             if (result.Length > width)
             {
                 result = result.Substring(result.Length - width, width);
             }
-            return withPrefix ? "0b" + result : result;
+            return result;
         }
 
-        private static string GetHexString(byte input, bool withPrefix, int hexLength)
+        private static string GetHexString(byte input, int hexLength)
         {
             string result = Convert.ToString(input, 16).PadLeft(2, '0');
             if (result.Length > hexLength)
             {
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
-            return withPrefix ? "0x" + result : result;
+            return result;
         }
 
         private static byte Parse(byte input, int moves, bool reverse)
@@ -262,7 +260,7 @@ namespace Honoo.IO.Hashing
             {
                 _crc >>= _moves;
             }
-            _crc ^= _xorout;
+            _crc ^= _xoroutParsed;
         }
     }
 }
