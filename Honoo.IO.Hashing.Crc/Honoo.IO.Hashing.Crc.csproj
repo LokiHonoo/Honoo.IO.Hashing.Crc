@@ -16,27 +16,19 @@
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>
 		<PackageTags>Honoo;Hashing;Crc;Crc3;Crc4;Crc5;Crc6;Crc7;Crc8;Crc10;Crc11;Crc12;Crc13;Crc14;Crc15;Crc16;Crc17;Crc21;Crc24;Crc30;Crc31;Crc32;Crc40;Crc64;Crc82</PackageTags>
 		<RootNamespace>Honoo.IO.Hashing</RootNamespace>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<AnalysisLevel>latest-all</AnalysisLevel>
-		<PackageReadmeFile>README-NuGet.md</PackageReadmeFile>
+		<PackageReadmeFile>Honoo.IO.Hashing.Crc.md</PackageReadmeFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<BaseOutputPath>..\bin\</BaseOutputPath>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath>..\bin\Debug</OutputPath>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<OutputPath>..\bin\Release</OutputPath>
-		<DocumentationFile></DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-	  <WarningLevel>4</WarningLevel>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-	  <WarningLevel>4</WarningLevel>
-	</PropertyGroup>
+	
+	<ItemGroup>
+		<None Include="Honoo.IO.Hashing.Crc.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
 </Project>

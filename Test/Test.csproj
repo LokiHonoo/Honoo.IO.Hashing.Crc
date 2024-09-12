@@ -5,11 +5,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<BaseOutputPath>..\bin\</BaseOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="catalogue.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="catalogue.txt" />
