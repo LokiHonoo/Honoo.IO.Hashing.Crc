@@ -93,7 +93,7 @@ namespace Test
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
 
                 //
-                Crc crc = Crc.CreateBy($"CRC-{alg.Width}/Core-Auto", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                Crc crc = Crc.CreateBy($"CRC-{alg.Width}/Auto", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
                 string bin = "0b" + crc.ComputeFinal(input, NumericsStringFormat.Binary);
                 Console.WriteLine(bin);
                 string h = Calc(crc, input);

@@ -186,7 +186,7 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom lengths and parameters are supported.
-    var crc = Crc.Create("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
+    var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
     int length = crc.ComputeFinal(Endian.BigEndian, checksum, 0);
@@ -196,23 +196,23 @@ private static void Demo4()
 
 ## SPEED
 
-Byte length - 8192
-
 |algorithm|core|table|times|elapsed|
 |:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits|table|10000|329 ms|
-|CRC-32|32 bits||10000|3182 ms|
-|CRC-32|sharding 8 bits|table|10000|1081 ms|
-|CRC-32|sharding 8 bits||10000|9702 ms|
-|CRC-32|sharding 32 bits|table|10000|673 ms|
-|CRC-32|sharding 32 bits||10000|6164 ms|
-|CRC-64/REDIS|64 bits|table|10000|312 ms|
-|CRC-64/REDIS|sharding 32 bits|table|10000|790 ms|
-|CRC-217/CUSTOM|sharding 32 bits|table|10000|1405 ms|
-|CRC32|system|table|10000|196 ms|
-|CRC64|system|table|10000|176 ms|
-|SHA1|system||10000|120 ms|
-|SHA256|system||10000|41 ms|
+|CRC-32|32 bits|table|10000|238 MiB/s|
+|CRC-32|32 bits||10000|25 MiB/s|
+|CRC-32|sharding 8 bits|table|10000|72 MiB/s|
+|CRC-32|sharding 8 bits||10000|8 MiB/s|
+|CRC-32|sharding 32 bits|table|10000|107 MiB/s|
+|CRC-32|sharding 32 bits||10000|12 MiB/s|
+|CRC-64/REDIS|64 bits|table|10000|259 MiB/s|
+|CRC-64/REDIS|sharding 32 bits|table|10000|97 MiB/s|
+|CRC-217/CUSTOM|sharding 32 bits|table|10000|54 MiB/s|
+|[CRC32](https://www.nuget.org/packages/System.IO.Hashing/)||table|10000|376 MiB/s|
+|[CRC64](https://www.nuget.org/packages/System.IO.Hashing/)||table|10000|432 MiB/s|
+|[Crc32.NET](https://github.com/force-net/Crc32.NET)||table|10000|1562 MiB/s|
+|[Crc32C.NET](https://github.com/force-net/Crc32.NET)||table|10000|1594 MiB/s|
+|SHA1|system||10000|657 MiB/s|
+|SHA256|system||10000|1860 MiB/s|
 
 ## LICENSE
 

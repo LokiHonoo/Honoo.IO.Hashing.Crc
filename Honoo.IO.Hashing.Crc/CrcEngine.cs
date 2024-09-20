@@ -58,8 +58,24 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        internal void Update(byte[] inputBuffer, int offset, int length)
+        {
+            if (_withTable)
+            {
+                UpdateWithTable(inputBuffer, offset, length);
+            }
+            else
+            {
+                UpdateWithoutTable(inputBuffer, offset, length);
+            }
+        }
+
         protected abstract void UpdateWithoutTable(byte input);
 
+        protected abstract void UpdateWithoutTable(byte[] inputBuffer, int offset, int length);
+
         protected abstract void UpdateWithTable(byte input);
+
+        protected abstract void UpdateWithTable(byte[] inputBuffer, int offset, int length);
     }
 }

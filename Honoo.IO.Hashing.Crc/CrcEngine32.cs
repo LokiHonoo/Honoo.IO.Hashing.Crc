@@ -199,6 +199,14 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        protected override void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTable(inputBuffer[i]);
+            }
+        }
+
         protected override void UpdateWithTable(byte input)
         {
             if (_refin)
@@ -209,6 +217,87 @@ namespace Honoo.IO.Hashing
             {
                 _crc = (_crc << 8) ^ _table[((_crc >> 24) & 0xFF) ^ input];
             }
+        }
+
+        protected override void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTable(inputBuffer[i]);
+            }
+            //
+            //if (_refin)
+            //{
+            //    _crc = uint.MaxValue ^ _crc;
+            //    uint[] table = _table;
+            //    while (length >= 16)
+            //    {
+            //        var a = table[(3 * 256) + _table[offset + 12]]
+            //            ^ table[(2 * 256) + _table[offset + 13]]
+            //            ^ table[(1 * 256) + _table[offset + 14]]
+            //            ^ table[(0 * 256) + _table[offset + 15]];
+
+            //        var b = table[(7 * 256) + _table[offset + 8]]
+            //            ^ table[(6 * 256) + _table[offset + 9]]
+            //            ^ table[(5 * 256) + _table[offset + 10]]
+            //            ^ table[(4 * 256) + _table[offset + 11]];
+
+            //        var c = table[(11 * 256) + _table[offset + 4]]
+            //            ^ table[(10 * 256) + _table[offset + 5]]
+            //            ^ table[(9 * 256) + _table[offset + 6]]
+            //            ^ table[(8 * 256) + _table[offset + 7]];
+
+            //        var d = table[(15 * 256) + ((byte)_crc ^ _table[offset])]
+            //            ^ table[(14 * 256) + ((byte)(_crc >> 8) ^ _table[offset + 1])]
+            //            ^ table[(13 * 256) + ((byte)(_crc >> 16) ^ _table[offset + 2])]
+            //            ^ table[(12 * 256) + ((_crc >> 24) ^ _table[offset + 3])];
+
+            //        _crc = d ^ c ^ b ^ a;
+            //        offset += 16;
+            //        length -= 16;
+            //    }
+            //    while (--length >= 0)
+            //    {
+            //        _crc = table[(byte)(_crc ^ _table[offset++])] ^ _crc >> 8;
+            //    }
+            //    _crc ^= uint.MaxValue;
+            //}
+            //else
+            //{
+            //    _crc = uint.MaxValue ^ _crc;
+            //    uint[] table = _table;
+            //    while (length >= 16)
+            //    {
+            //        var a = table[(3 * 256) + _table[offset + 12]]
+            //            ^ table[(2 * 256) + _table[offset + 13]]
+            //            ^ table[(1 * 256) + _table[offset + 14]]
+            //            ^ table[(0 * 256) + _table[offset + 15]];
+
+            //        var b = table[(7 * 256) + _table[offset + 8]]
+            //            ^ table[(6 * 256) + _table[offset + 9]]
+            //            ^ table[(5 * 256) + _table[offset + 10]]
+            //            ^ table[(4 * 256) + _table[offset + 11]];
+
+            //        var c = table[(11 * 256) + _table[offset + 4]]
+            //            ^ table[(10 * 256) + _table[offset + 5]]
+            //            ^ table[(9 * 256) + _table[offset + 6]]
+            //            ^ table[(8 * 256) + _table[offset + 7]];
+
+            //        var d = table[(15 * 256) + ((byte)_crc ^ _table[offset])]
+            //            ^ table[(14 * 256) + ((byte)(_crc >> 8) ^ _table[offset + 1])]
+            //            ^ table[(13 * 256) + ((byte)(_crc >> 16) ^ _table[offset + 2])]
+            //            ^ table[(12 * 256) + ((_crc >> 24) ^ _table[offset + 3])];
+
+            //        _crc = d ^ c ^ b ^ a;
+            //        offset += 16;
+            //        length -= 16;
+            //    }
+            //    while (--length >= 0)
+            //    {
+            //        _crc = table[(byte)(_crc ^ _table[offset++])] ^ _crc >> 8;
+            //    }
+            //    _crc ^= uint.MaxValue;
+            //}
         }
 
         private static string GetBinaryString(uint input, int width)

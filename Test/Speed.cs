@@ -1,4 +1,5 @@
-﻿using Honoo.IO.Hashing;
+﻿using Honoo.IO;
+using Honoo.IO.Hashing;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
@@ -8,14 +9,13 @@ namespace Test
     {
         internal static void Test()
         {
-            byte[] input = new byte[8 * 1024];
+            int length = 8 * 1024;
+            byte[] input = new byte[length];
             new Random().NextBytes(input);
             int times = 10000;
             //
-            Console.WriteLine($"Byte length - {input.Length}");
-            Console.WriteLine();
-            Console.WriteLine("|algorithm|core|table|times|elapsed|");
-            Console.WriteLine("|:-------:|:--:|:---:|:---:|------:|");
+            Console.WriteLine("|algorithm|core|table|elapsed|");
+            Console.WriteLine("|:-------:|:--:|:---:|------:|");
             //
             //
             //
@@ -28,18 +28,19 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|32 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            double spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out string unit);
+            Console.WriteLine($"|{crc.Name}|32 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
             crc = Crc.CreateBy(CrcName.CRC32.Name,
-                                  CrcName.CRC32.Width,
-                                  CrcName.CRC32.Refin,
-                                  CrcName.CRC32.Refout,
-                                  CrcName.CRC32.Poly.ToUInt32(),
-                                  CrcName.CRC32.Init.ToUInt32(),
-                                  CrcName.CRC32.Xorout.ToUInt32(),
-                                  false);
+                               CrcName.CRC32.Width,
+                               CrcName.CRC32.Refin,
+                               CrcName.CRC32.Refout,
+                               CrcName.CRC32.Poly.ToUInt32(),
+                               CrcName.CRC32.Init.ToUInt32(),
+                               CrcName.CRC32.Xorout.ToUInt32(),
+                               false);
             stopwatch.Restart();
             for (int i = 0; i < times; i++)
             {
@@ -47,7 +48,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|32 bits||{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|32 bits||" + spd + " " + unit + "|");
             //
             //
             //
@@ -66,7 +68,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 8 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 8 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -85,7 +88,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 8 bits||{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 8 bits||" + spd + " " + unit + "|");
             //
             //
             //
@@ -104,7 +108,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -123,7 +128,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 32 bits||{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 32 bits||" + spd + " " + unit + "|");
             //
             //
             //
@@ -135,7 +141,8 @@ namespace Test
                 crc.ComputeFinal(out uint _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|64 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|64 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -154,7 +161,8 @@ namespace Test
                 crc.ComputeFinal(out ulong _);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -173,7 +181,8 @@ namespace Test
                 crc.ComputeFinal(NumericsStringFormat.Hex);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|{crc.Name}|sharding 32 bits|table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -185,7 +194,8 @@ namespace Test
                 crc32.GetCurrentHash();
             }
             stopwatch.Stop();
-            Console.WriteLine($"|CRC32|system|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[CRC32](https://www.nuget.org/packages/System.IO.Hashing/)||table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -197,7 +207,32 @@ namespace Test
                 crc64.GetCurrentHash();
             }
             stopwatch.Stop();
-            Console.WriteLine($"|CRC64|system|table|{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[CRC64](https://www.nuget.org/packages/System.IO.Hashing/)||table|" + spd + " " + unit + "|");
+            //
+            //
+            //
+            var crc32Algorithm = new Force.Crc32.Crc32Algorithm();
+            stopwatch.Restart();
+            for (int i = 0; i < times; i++)
+            {
+                crc32Algorithm.ComputeHash(input);
+            }
+            stopwatch.Stop();
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[Crc32.NET](https://github.com/force-net/Crc32.NET)||table|" + spd + " " + unit + "|");
+            //
+            //
+            //
+            var crc32cAlgorithm = new Force.Crc32.Crc32CAlgorithm();
+            stopwatch.Restart();
+            for (int i = 0; i < times; i++)
+            {
+                crc32cAlgorithm.ComputeHash(input);
+            }
+            stopwatch.Stop();
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[Crc32C.NET](https://github.com/force-net/Crc32.NET)||table|" + spd + " " + unit + "|");
             //
             //
             //
@@ -208,7 +243,8 @@ namespace Test
                 sha1.ComputeHash(input);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|SHA1|system||{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|SHA1|system||" + spd + " " + unit + "|");
             //
             //
             //
@@ -219,7 +255,8 @@ namespace Test
                 sha256.ComputeHash(input);
             }
             stopwatch.Stop();
-            Console.WriteLine($"|SHA256|system||{times}|" + stopwatch.ElapsedMilliseconds + " ms|");
+            spd = Numeric.GetSpeed((long)length * times * 1000 / stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|SHA256|system||" + spd + " " + unit + "|");
         }
     }
 }

@@ -186,6 +186,14 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        protected override void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTable(inputBuffer[i]);
+            }
+        }
+
         protected override void UpdateWithTable(byte input)
         {
             if (_refin)
@@ -195,6 +203,14 @@ namespace Honoo.IO.Hashing
             else
             {
                 _crc = (byte)((_crc << 8) ^ _table[(_crc & 0xFF) ^ input]);
+            }
+        }
+
+        protected override void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTable(inputBuffer[i]);
             }
         }
 

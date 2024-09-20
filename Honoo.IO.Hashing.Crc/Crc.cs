@@ -497,10 +497,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(inputBuffer));
             }
-            for (int i = offset; i < offset + length; i++)
-            {
-                Update(inputBuffer[i]);
-            }
+            _engine.Update(inputBuffer, offset, length);
         }
     }
 }
