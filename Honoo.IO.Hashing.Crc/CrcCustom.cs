@@ -12,6 +12,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the CrcCustom class.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 8.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -20,14 +21,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", new CrcEngine8(width, refin, refout, poly, init, xorout, withTable))
+        public CrcCustom(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
+            : base(name, new CrcEngine8(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the CrcCustom class.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 16.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -36,14 +38,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", new CrcEngine16(width, refin, refout, poly, init, xorout, withTable))
+        public CrcCustom(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
+            : base(name, new CrcEngine16(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the CrcCustom class.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 32.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -52,14 +55,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", new CrcEngine32(width, refin, refout, poly, init, xorout, withTable))
+        public CrcCustom(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
+            : base(name, new CrcEngine32(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the CrcCustom class.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 64.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -68,14 +72,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
-            : base($"CRC-{width}/CUSTOM", new CrcEngine64(width, refin, refout, poly, init, xorout, withTable))
+        public CrcCustom(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
+            : base(name, new CrcEngine64(width, refin, refout, poly, init, xorout, withTable))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the CrcCustom class.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are more than 0.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -84,8 +89,8 @@ namespace Honoo.IO.Hashing
         /// <param name="xoroutFormatted">Output xor value string. String must with prefix as "0b11110000" or "0xFF55".</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(int width, bool refin, bool refout, string polyFormatted, string initFormatted, string xoroutFormatted, CrcCore core = CrcCore.Auto)
-            : base($"CRC-{width}/CUSTOM", GetEngine(width, refin, refout, polyFormatted, initFormatted, xoroutFormatted, core))
+        public CrcCustom(string name, int width, bool refin, bool refout, string polyFormatted, string initFormatted, string xoroutFormatted, CrcCore core = CrcCore.Auto)
+            : base(name, GetEngine(width, refin, refout, polyFormatted, initFormatted, xoroutFormatted, core))
         {
         }
 
@@ -188,34 +193,34 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.Sharding8:
                     {
-                        byte[] poly = CrcConverter.GenerateSharding8Value(polyFormatted, width);
-                        byte[] init = CrcConverter.GenerateSharding8Value(initFormatted, width);
-                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutFormatted, width);
+                        byte[] poly = CrcConverter.ToUInt8Array(polyFormatted, width);
+                        byte[] init = CrcConverter.ToUInt8Array(initFormatted, width);
+                        byte[] xorout = CrcConverter.ToUInt8Array(xoroutFormatted, width);
                         return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.Sharding8Table:
                     {
-                        byte[] poly = CrcConverter.GenerateSharding8Value(polyFormatted, width);
-                        byte[] init = CrcConverter.GenerateSharding8Value(initFormatted, width);
-                        byte[] xorout = CrcConverter.GenerateSharding8Value(xoroutFormatted, width);
+                        byte[] poly = CrcConverter.ToUInt8Array(polyFormatted, width);
+                        byte[] init = CrcConverter.ToUInt8Array(initFormatted, width);
+                        byte[] xorout = CrcConverter.ToUInt8Array(xoroutFormatted, width);
                         return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, true);
                     }
 
                 case CrcCore.Sharding32:
                     {
-                        uint[] poly = CrcConverter.GenerateSharding32Value(polyFormatted, width);
-                        uint[] init = CrcConverter.GenerateSharding32Value(initFormatted, width);
-                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutFormatted, width);
+                        uint[] poly = CrcConverter.ToUInt32Array(polyFormatted, width);
+                        uint[] init = CrcConverter.ToUInt32Array(initFormatted, width);
+                        uint[] xorout = CrcConverter.ToUInt32Array(xoroutFormatted, width);
                         return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, false);
                     }
 
                 case CrcCore.Sharding32Table:
                 default:
                     {
-                        uint[] poly = CrcConverter.GenerateSharding32Value(polyFormatted, width);
-                        uint[] init = CrcConverter.GenerateSharding32Value(initFormatted, width);
-                        uint[] xorout = CrcConverter.GenerateSharding32Value(xoroutFormatted, width);
+                        uint[] poly = CrcConverter.ToUInt32Array(polyFormatted, width);
+                        uint[] init = CrcConverter.ToUInt32Array(initFormatted, width);
+                        uint[] xorout = CrcConverter.ToUInt32Array(xoroutFormatted, width);
                         return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, true);
                     }
             }

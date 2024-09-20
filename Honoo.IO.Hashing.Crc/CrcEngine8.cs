@@ -25,11 +25,9 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
             _moves = 8 - width;
-            _polyParsed = TruncateLeft(poly, _moves);
-            _initParsed = TruncateLeft(init, _moves);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _polyParsed = Parse(_polyParsed, _moves, _refin);
-            _initParsed = Parse(_initParsed, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = _initParsed;
         }
@@ -42,18 +40,16 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 8.", nameof(width));
             }
             _moves = 8 - width;
-            _polyParsed = TruncateLeft(poly, _moves);
-            _initParsed = TruncateLeft(init, _moves);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _polyParsed = Parse(_polyParsed, _moves, _refin);
-            _initParsed = Parse(_initParsed, _moves, _refin);
             _table = table;
             _crc = _initParsed;
         }
 
         #endregion Construction
 
-        internal static byte[] GenerateReversedTable(byte reversedPolyParsed)
+        internal static byte[] GenerateReversedTable(byte polyParsed)
         {
             byte[] table = new byte[256];
             for (int i = 0; i < 256; i++)
@@ -63,7 +59,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((data & 1) == 1)
                     {
-                        data = (byte)((data >> 1) ^ reversedPolyParsed);
+                        data = (byte)((data >> 1) ^ polyParsed);
                     }
                     else
                     {
@@ -245,8 +241,11 @@ namespace Honoo.IO.Hashing
 
         private static byte TruncateLeft(byte input, int bits)
         {
-            input <<= bits;
-            input >>= bits;
+            if (bits > 0)
+            {
+                input <<= bits;
+                input >>= bits;
+            }
             return input;
         }
 

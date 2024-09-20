@@ -93,7 +93,7 @@ namespace Test
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
 
                 //
-                Crc crc = Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
+                Crc crc = Crc.CreateBy($"CRC-{alg.Width}/Core-Auto", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
                 string bin = "0b" + crc.ComputeFinal(input, NumericsStringFormat.Binary);
                 Console.WriteLine(bin);
                 string h = Calc(crc, input);
@@ -103,7 +103,7 @@ namespace Test
                 else if (alg.Width <= 32) noTable = CrcCore.UInt32;
                 else if (alg.Width <= 64) noTable = CrcCore.UInt64;
                 else noTable = CrcCore.Sharding32;
-                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
+                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/{noTable}", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
                 {
                     error = true;
                 }
@@ -125,19 +125,19 @@ namespace Test
                         error = true;
                     }
                 }
-                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
+                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding8", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
+                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding8", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
+                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding32", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
                 {
                     error = true;
                 }
-                if (Calc(Crc.CreateBy(alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
+                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding32", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
                 {
                     error = true;
                 }

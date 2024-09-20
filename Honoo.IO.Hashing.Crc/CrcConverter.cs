@@ -85,7 +85,7 @@ namespace Honoo.IO.Hashing
             return BEToUInt8(bytes);
         }
 
-        internal static uint[] GenerateSharding32Value(string input, int? truncateToWidth)
+        internal static uint[] ToUInt32Array(string input, int? truncateToWidth)
         {
             string bin = GetBinaryString(input, truncateToWidth);
             int rem = bin.Length % 32;
@@ -102,7 +102,7 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static byte[] GenerateSharding8Value(string input, int? truncateToWidth)
+        internal static byte[] ToUInt8Array(string input, int? truncateToWidth)
         {
             return GetBytes(input, truncateToWidth);
         }

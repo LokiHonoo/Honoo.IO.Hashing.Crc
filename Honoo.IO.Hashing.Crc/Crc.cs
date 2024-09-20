@@ -62,6 +62,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 8.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -70,14 +71,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
         {
-            return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
 
         /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 16.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -86,14 +88,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
         {
-            return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
 
         /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 32.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -102,14 +105,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
         {
-            return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
 
         /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are between 0 - 64.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -118,14 +122,15 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculations with the table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
         {
-            return new CrcCustom(width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
 
         /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
+        /// <param name="name">Custom name.</param>
         /// <param name="width">Width bits. The allowed values are more than 0.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
@@ -134,9 +139,9 @@ namespace Honoo.IO.Hashing
         /// <param name="xoroutHex">Output xor value hex string.</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core = CrcCore.Auto)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, string polyHex, string initHex, string xoroutHex, CrcCore core = CrcCore.Auto)
         {
-            return new CrcCustom(width, refin, refout, polyHex, initHex, xoroutHex, core);
+            return new CrcCustom(name, width, refin, refout, polyHex, initHex, xoroutHex, core);
         }
 
         /// <summary>

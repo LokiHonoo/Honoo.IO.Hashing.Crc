@@ -161,7 +161,7 @@ private static void Demo1()
     // Update input data.
     crc.Update(inputBytes);
     // The return value is "Hex String".
-    string checksum = crc.ComputeFinal();
+    string checksum = crc.ComputeFinal(NumericsStringFormat.Hex);
 }
 
 private static void Demo2()
@@ -186,7 +186,7 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom lengths and parameters are supported.
-    var crc = Crc.Create(217, true, true, "polyHex", "initHex", "xoroutHex");
+    var crc = Crc.Create("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumLength];
     int length = crc.ComputeFinal(Endian.BigEndian, checksum, 0);
@@ -206,7 +206,7 @@ private static void Demo4()
 |CRC-32|sharding 32 bits|table|100000|46 ms|
 |CRC-64/REDIS|64 bits|table|100000|31 ms|
 |CRC-64/REDIS|sharding 32 bits|table|100000|55 ms|
-|CUSTUM CRC-217|sharding 32 bits|table|100000|129 ms|
+|CRC-217/CUSTUM|sharding 32 bits|table|100000|129 ms|
 
 ## LICENSE
 

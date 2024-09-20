@@ -32,15 +32,15 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                uint[] reversedPoly = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
-                _table = CrcEngineSharding32.GenerateReversedTable(reversedPoly);
+                uint[] polyParsed = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
+                _table = CrcEngineSharding32.GenerateReversedTable(polyParsed);
             }
             return new CrcEngineSharding32(WIDTH,
                                            REFIN,
                                            REFOUT,
-                                           CrcConverter.GenerateSharding32Value(POLY, null),
-                                           CrcConverter.GenerateSharding32Value(INIT, null),
-                                           CrcConverter.GenerateSharding32Value(XOROUT, null),
+                                           CrcConverter.ToUInt32Array(POLY, null),
+                                           CrcConverter.ToUInt32Array(INIT, null),
+                                           CrcConverter.ToUInt32Array(XOROUT, null),
                                            _table);
         }
     }

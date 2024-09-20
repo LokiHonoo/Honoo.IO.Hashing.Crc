@@ -25,11 +25,9 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
             }
             _moves = 16 - width;
-            _polyParsed = TruncateLeft(poly, _moves);
-            _initParsed = TruncateLeft(init, _moves);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _polyParsed = Parse(_polyParsed, _moves, _refin);
-            _initParsed = Parse(_initParsed, _moves, _refin);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = _initParsed;
         }
@@ -42,18 +40,16 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
             }
             _moves = 16 - width;
-            _polyParsed = TruncateLeft(poly, _moves);
-            _initParsed = TruncateLeft(init, _moves);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _polyParsed = Parse(_polyParsed, _moves, _refin);
-            _initParsed = Parse(_initParsed, _moves, _refin);
             _table = table;
             _crc = _initParsed;
         }
 
         #endregion Construction
 
-        internal static ushort[] GenerateReversedTable(ushort reversedPolyParsed)
+        internal static ushort[] GenerateReversedTable(ushort polyParsed)
         {
             ushort[] table = new ushort[256];
             for (int i = 0; i < 256; i++)
@@ -63,7 +59,7 @@ namespace Honoo.IO.Hashing
                 {
                     if ((data & 1) == 1)
                     {
-                        data = (ushort)((data >> 1) ^ reversedPolyParsed);
+                        data = (ushort)((data >> 1) ^ polyParsed);
                     }
                     else
                     {
@@ -241,6 +237,9 @@ namespace Honoo.IO.Hashing
             {
                 input <<= moves;
             }
+            else
+            {
+            }
             if (reverse)
             {
                 input = Reverse(input);
@@ -259,8 +258,11 @@ namespace Honoo.IO.Hashing
 
         private static ushort TruncateLeft(ushort input, int bits)
         {
-            input <<= bits;
-            input >>= bits;
+            if (bits > 0)
+            {
+                input <<= bits;
+                input >>= bits;
+            }
             return input;
         }
 

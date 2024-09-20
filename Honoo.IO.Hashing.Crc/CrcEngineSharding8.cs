@@ -27,11 +27,9 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 8;
             _moves = rem > 0 ? 8 - rem : 0;
-            _polyParsed = poly;
-            _initParsed = init;
-            _xoroutParsed = xorout;
-            Parse(_polyParsed, _moves, _refin);
-            Parse(_initParsed, _moves, _refin);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = (byte[])_initParsed.Clone();
         }
@@ -45,34 +43,32 @@ namespace Honoo.IO.Hashing
             }
             int rem = width % 8;
             _moves = rem > 0 ? 8 - rem : 0;
-            _polyParsed = poly;
-            _initParsed = init;
-            _xoroutParsed = xorout;
-            Parse(_polyParsed, _moves, _refin);
-            Parse(_initParsed, _moves, _refin);
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = table;
             _crc = (byte[])_initParsed.Clone();
         }
 
         #endregion Construction
 
-        internal static byte[][] GenerateReversedTable(byte[] reversedPolyParsed)
+        internal static byte[][] GenerateReversedTable(byte[] polyParsed)
         {
             byte[][] table = new byte[256][];
             for (int i = 0; i < 256; i++)
             {
-                byte[] data = new byte[reversedPolyParsed.Length];
+                byte[] data = new byte[polyParsed.Length];
                 data[data.Length - 1] = (byte)i;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data[data.Length - 1] & 1) == 1)
                     {
-                        ShiftRight(data, 1);
-                        Xor(data, reversedPolyParsed);
+                        data = ShiftRight(data, 1);
+                        data = Xor(data, polyParsed);
                     }
                     else
                     {
-                        ShiftRight(data, 1);
+                        data = ShiftRight(data, 1);
                     }
                 }
                 table[i] = data;
@@ -91,12 +87,12 @@ namespace Honoo.IO.Hashing
                 {
                     if ((data[0] & 0x80) == 0x80)
                     {
-                        ShiftLeft(data, 1);
-                        Xor(data, polyParsed);
+                        data = ShiftLeft(data, 1);
+                        data = Xor(data, polyParsed);
                     }
                     else
                     {
-                        ShiftLeft(data, 1);
+                        data = ShiftLeft(data, 1);
                     }
                 }
                 table[i] = data;
@@ -200,12 +196,12 @@ namespace Honoo.IO.Hashing
                 {
                     if ((_crc[_crc.Length - 1] & 1) == 1)
                     {
-                        ShiftRight(_crc, 1);
-                        Xor(_crc, _polyParsed);
+                        _crc = ShiftRight(_crc, 1);
+                        _crc = Xor(_crc, _polyParsed);
                     }
                     else
                     {
-                        ShiftRight(_crc, 1);
+                        _crc = ShiftRight(_crc, 1);
                     }
                 }
             }
@@ -220,12 +216,12 @@ namespace Honoo.IO.Hashing
                 {
                     if ((_crc[0] & 0x80) == 0x80)
                     {
-                        ShiftLeft(_crc, 1);
-                        Xor(_crc, _polyParsed);
+                        _crc = ShiftLeft(_crc, 1);
+                        _crc = Xor(_crc, _polyParsed);
                     }
                     else
                     {
-                        ShiftLeft(_crc, 1);
+                        _crc = ShiftLeft(_crc, 1);
                     }
                 }
             }
@@ -236,14 +232,14 @@ namespace Honoo.IO.Hashing
             if (_refin)
             {
                 byte[] match = _table[_crc[_crc.Length - 1] ^ input];
-                ShiftRight(_crc, 8);
-                Xor(_crc, match);
+                _crc = ShiftRight(_crc, 8);
+                _crc = Xor(_crc, match);
             }
             else
             {
                 byte[] match = _table[_crc[0] ^ input];
-                ShiftLeft(_crc, 8);
-                Xor(_crc, match);
+                _crc = ShiftLeft(_crc, 8);
+                _crc = Xor(_crc, match);
             }
         }
 
@@ -275,16 +271,17 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
-        private static void Parse(byte[] input, int moves, bool reverse)
+        private static byte[] Parse(byte[] input, int moves, bool reverse)
         {
             if (moves > 0)
             {
-                ShiftLeft(input, moves);
+                input = ShiftLeft(input, moves);
             }
             if (reverse)
             {
-                Reverse(input);
+                input = Reverse(input);
             }
+            return input;
         }
 
         private static byte Reverse(byte input)
@@ -295,7 +292,7 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static void Reverse(byte[] input)
+        private static byte[] Reverse(byte[] input)
         {
             byte tmp;
             for (int i = 0; i < (int)Math.Ceiling(input.Length / 2d); i++)
@@ -304,45 +301,59 @@ namespace Honoo.IO.Hashing
                 input[input.Length - 1 - i] = Reverse(input[i]);
                 input[i] = tmp;
             }
+            return input;
         }
 
-        private static void ShiftLeft(byte[] input, int bits)
+        private static byte[] ShiftLeft(byte[] input, int bits)
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
                 input[i] = (byte)((input[i] << bits) | (input[i + 1] >> (8 - bits)));
             }
             input[input.Length - 1] <<= bits;
+            return input;
         }
 
-        private static void ShiftRight(byte[] input, int bits)
+        private static byte[] ShiftRight(byte[] input, int bits)
         {
             for (int i = input.Length - 1; i >= 1; i--)
             {
                 input[i] = (byte)((input[i] >> bits) | (input[i - 1] << (8 - bits)));
             }
             input[0] >>= bits;
+            return input;
         }
 
-        private static void Xor(byte[] input, byte[] input2)
+        private static byte[] TruncateLeft(byte[] input, int bits)
+        {
+            if (bits > 0)
+            {
+                input = ShiftLeft(input, bits);
+                input = ShiftRight(input, bits);
+            }
+            return input;
+        }
+
+        private static byte[] Xor(byte[] input, byte[] input2)
         {
             for (int i = 0; i < input.Length; i++)
             {
                 input[i] ^= input2[i];
             }
+            return input;
         }
 
         private void Finish()
         {
             if (_refout ^ _refin)
             {
-                Reverse(_crc);
+                _crc = Reverse(_crc);
             }
             if (_moves > 0 && !_refout)
             {
-                ShiftRight(_crc, _moves);
+                _crc = ShiftRight(_crc, _moves);
             }
-            Xor(_crc, _xoroutParsed);
+            _crc = Xor(_crc, _xoroutParsed);
         }
     }
 }

@@ -16,7 +16,8 @@ namespace Test
             //
             //
             //
-            Crc crc = Crc.CreateBy(CrcName.CRC32.Width,
+            Crc crc = Crc.CreateBy(CrcName.CRC32.Name,
+                                   CrcName.CRC32.Width,
                                    CrcName.CRC32.Refin,
                                    CrcName.CRC32.Refout,
                                    CrcName.CRC32.Poly.ToUInt32(),
@@ -46,7 +47,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Width,
+            crc = Crc.CreateBy(CrcName.CRC32.Name,
+                               CrcName.CRC32.Width,
                                CrcName.CRC32.Refin,
                                CrcName.CRC32.Refout,
                                CrcName.CRC32.Poly.ToHexString(),
@@ -64,7 +66,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Width,
+            crc = Crc.CreateBy(CrcName.CRC32.Name,
+                               CrcName.CRC32.Width,
                                CrcName.CRC32.Refin,
                                CrcName.CRC32.Refout,
                                CrcName.CRC32.Poly.ToHexString(),
@@ -82,7 +85,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Width,
+            crc = Crc.CreateBy(CrcName.CRC32.Name,
+                               CrcName.CRC32.Width,
                                CrcName.CRC32.Refin,
                                CrcName.CRC32.Refout,
                                CrcName.CRC32.Poly.ToHexString(),
@@ -100,7 +104,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Width,
+            crc = Crc.CreateBy(CrcName.CRC32.Name,
+                               CrcName.CRC32.Width,
                                CrcName.CRC32.Refin,
                                CrcName.CRC32.Refout,
                                CrcName.CRC32.Poly.ToHexString(),
@@ -130,7 +135,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(CrcName.CRC64_REDIS.Width,
+            crc = Crc.CreateBy(CrcName.CRC64_REDIS.Name,
+                               CrcName.CRC64_REDIS.Width,
                                CrcName.CRC64_REDIS.Refin,
                                CrcName.CRC64_REDIS.Refin,
                                CrcName.CRC64_REDIS.Poly.ToString(),
@@ -148,7 +154,8 @@ namespace Test
             //
             //
             //
-            crc = Crc.CreateBy(217,
+            crc = Crc.CreateBy("CRC-217/CUSTOM",
+                               217,
                                true,
                                true,
                                "0x7204CA357EDF00742A12C562157732D9",
