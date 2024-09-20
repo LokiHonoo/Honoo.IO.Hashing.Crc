@@ -196,17 +196,23 @@ private static void Demo4()
 
 ## SPEED
 
+Byte length - 8192
+
 |algorithm|core|table|times|elapsed|
 |:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits||100000|84 ms|
-|CRC-32|32 bits|table|100000|27 ms|
-|CRC-32|sharding 8 bits||100000|430 ms|
-|CRC-32|sharding 8 bits|table|100000|68 ms|
-|CRC-32|sharding 32 bits||100000|275 ms|
-|CRC-32|sharding 32 bits|table|100000|46 ms|
-|CRC-64/REDIS|64 bits|table|100000|31 ms|
-|CRC-64/REDIS|sharding 32 bits|table|100000|55 ms|
-|CRC-217/CUSTUM|sharding 32 bits|table|100000|129 ms|
+|CRC-32|32 bits|table|10000|329 ms|
+|CRC-32|32 bits||10000|3182 ms|
+|CRC-32|sharding 8 bits|table|10000|1081 ms|
+|CRC-32|sharding 8 bits||10000|9702 ms|
+|CRC-32|sharding 32 bits|table|10000|673 ms|
+|CRC-32|sharding 32 bits||10000|6164 ms|
+|CRC-64/REDIS|64 bits|table|10000|312 ms|
+|CRC-64/REDIS|sharding 32 bits|table|10000|790 ms|
+|CRC-217/CUSTOM|sharding 32 bits|table|10000|1405 ms|
+|CRC32|system|table|10000|196 ms|
+|CRC64|system|table|10000|176 ms|
+|SHA1|system||10000|120 ms|
+|SHA256|system||10000|41 ms|
 
 ## LICENSE
 
