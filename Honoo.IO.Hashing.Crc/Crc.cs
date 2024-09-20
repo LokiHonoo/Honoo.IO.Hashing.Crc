@@ -60,6 +60,24 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Creates an instance of the algorithm by algorithm name.
+        /// </summary>
+        /// <param name="mechanism">Crc algorithm name.</param>
+        /// <returns></returns>
+        public static Crc Create(string mechanism)
+        {
+            if (string.IsNullOrWhiteSpace(mechanism))
+            {
+                throw new ArgumentNullException(nameof(mechanism));
+            }
+            if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
+            {
+                return algorithmName.GetAlgorithm();
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="name">Custom name.</param>
