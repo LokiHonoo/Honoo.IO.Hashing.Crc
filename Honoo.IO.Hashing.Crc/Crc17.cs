@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc17CanFd : Crc
     {
+        private const string DEFAULT_NAME = "CRC-17/CAN-FD";
         private const uint INIT = 0x00000;
         private const uint POLY = 0x1685B;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc17CanFd class.
         /// </summary>
-        public Crc17CanFd() : base("CRC-17/CAN-FD", GetEngine())
+        public Crc17CanFd() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-17/CAN-FD", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc17CanFd(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc17CanFd(); });
         }
 
         private static CrcEngine32 GetEngine()

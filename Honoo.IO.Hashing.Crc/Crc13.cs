@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc13bbc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-13/BBC";
         private const ushort INIT = 0x0000;
         private const ushort POLY = 0x1CF5;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc13bbc class.
         /// </summary>
-        public Crc13bbc() : base("CRC-13/BBC", GetEngine())
+        public Crc13bbc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-13/BBC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc13bbc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc13bbc(); });
         }
 
         private static CrcEngine16 GetEngine()

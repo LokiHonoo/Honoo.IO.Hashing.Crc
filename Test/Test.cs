@@ -3,7 +3,9 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Test
@@ -82,6 +84,7 @@ namespace Test
         internal static void Test1()
         {
             _error = 0;
+            int displayLimit = 22;
             Alg[] algs = GetAlgs();
             //foreach (Alg alg in algs)
             //{
@@ -90,110 +93,152 @@ namespace Test
             byte[] input = Encoding.UTF8.GetBytes("1111221ADV233334444555566677788000AAAABB");
             foreach (Alg alg in algs)
             {
-                bool error = false;
+                var checksums = new List<string>();
                 Console.WriteLine("===================================================================================================");
                 Console.WriteLine(string.Join(',', alg.Names));
                 Console.WriteLine($"Width={alg.Width} Refin={alg.Refin} Refout={alg.Refout} Poly={alg.Poly} Init={alg.Init} Xorout={alg.Xorout}");
-
+                Console.WriteLine();
                 //
-                Crc crc = Crc.CreateBy($"CRC-{alg.Width}/Auto", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Auto);
-                string bin = "0b" + crc.ComputeFinal(input, NumericsStringFormat.Binary);
-                Console.WriteLine(bin);
-                string h = Calc(crc, input);
-                CrcCore noTable;
-                if (alg.Width <= 8) noTable = CrcCore.UInt8;
-                else if (alg.Width <= 16) noTable = CrcCore.UInt16;
-                else if (alg.Width <= 32) noTable = CrcCore.UInt32;
-                else if (alg.Width <= 64) noTable = CrcCore.UInt64;
-                else noTable = CrcCore.Sharding32;
-                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/{noTable}", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, noTable), input) != h)
-                {
-                    error = true;
-                }
                 foreach (var name in alg.Names)
                 {
-                    if (CrcName.TryGetAlgorithmName(name, out CrcName crcName))
+                    checksums.Add(Calc(Crc.Create(name), input, displayLimit));
+                    if (name == "CRC-32")
                     {
-                        if (crcName.Name != name)
-                        {
-                            error = true;
-                        }
-                        if (Calc(Crc.Create(crcName), input) != h)
-                        {
-                            error = true;
-                        }
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(new Force.Crc32.Crc32Algorithm(), "Crc32.NET", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
                     }
-                    else
+                    if (name == "CRC-32C")
                     {
-                        error = true;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(new Force.Crc32.Crc32CAlgorithm(), "Crc32c.NET", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
                     }
                 }
-                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding8", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8Table), input) != h)
-                {
-                    error = true;
-                }
-                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding8", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding8), input) != h)
-                {
-                    error = true;
-                }
-                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding32", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32Table), input) != h)
-                {
-                    error = true;
-                }
-                if (Calc(Crc.CreateBy($"CRC-{alg.Width}/Sharding32", alg.Width, alg.Refin, alg.Refout, alg.Poly, alg.Init, alg.Xorout, CrcCore.Sharding32), input) != h)
-                {
-                    error = true;
-                }
-                if (error)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("===================================================================================================");
-                    Console.WriteLine("===================================================================================================");
-                    Console.ResetColor();
-                    _error++;
-                }
+                var poly = new CrcParameter(NumericsStringFormat.Hex, alg.Poly, alg.Width);
+                var init = new CrcParameter(NumericsStringFormat.Hex, alg.Init, alg.Width);
+                var xorout = new CrcParameter(NumericsStringFormat.Hex, alg.Xorout, alg.Width);
+                Do(alg.Width, alg.Refin, alg.Refout, poly, init, xorout, input, checksums, displayLimit);
+                Console.WriteLine();
             }
+            Console.WriteLine("===================================================================================================");
+            Console.WriteLine("CRC-217/CUSTUM");
+            Console.WriteLine();
+            Do(217,
+               false,
+            false,
+               new CrcParameter(NumericsStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
+               new CrcParameter(NumericsStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
+               new CrcParameter(NumericsStringFormat.Hex, "0x00000000000000000000000000000000", 217),
+               input,
+               new List<string>(),
+               displayLimit);
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"Error={_error}");
             Console.WriteLine();
         }
 
-        private static string Calc(Crc crc, byte[] input)
+        private static string Calc(HashAlgorithm crc, string name, byte[] input, out string hex)
+        {
+            var sb = new StringBuilder();
+            byte[] checksum = crc.ComputeHash(input);
+            hex = BitConverter.ToString(checksum).Replace("-", string.Empty).ToLowerInvariant();
+            sb.Append(name.PadRight(27));
+            sb.Append("        ");
+            sb.Append(hex);
+            sb.Append(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return sb.ToString();
+        }
+
+        private static string Calc(Crc crc, byte[] input, int displayLimit)
         {
             crc.Update(input);
             byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
-            string a = BitConverter.ToString(checksum).Replace("-", string.Empty);
-            crc.Update(input);
-            string h = crc.ComputeFinal(NumericsStringFormat.Hex);
+            string hex = BitConverter.ToString(checksum).Replace("-", string.Empty).ToLowerInvariant();
+            string sign = hex;
+            if (hex.Length > displayLimit)
+            {
+                hex = hex.Substring(hex.Length - displayLimit, displayLimit);
+            }
+            foreach (byte item in input)
+            {
+                crc.Update(item);
+            }
+            string res1 = crc.ComputeFinal(NumericsStringFormat.Hex);
+            if (res1.Length > displayLimit)
+            {
+                res1 = res1.Substring(res1.Length - displayLimit, displayLimit);
+            }
             crc.Update(input);
             crc.ComputeFinal(out byte b);
-            string h1 = Convert.ToString(b, 16);
+            string res2 = Convert.ToString(b, 16);
             crc.Update(input);
             crc.ComputeFinal(out ushort s);
-            string h2 = Convert.ToString(s, 16);
+            string res3 = Convert.ToString(s, 16);
             crc.Update(input);
             crc.ComputeFinal(out uint i);
-            string h3 = Convert.ToString(i, 16);
+            string res4 = Convert.ToString(i, 16);
             crc.Update(input);
-            bool truncated = crc.ComputeFinal(out ulong l);
-            string h4 = Convert.ToString((long)l, 16);
-            Console.Write(crc.Name.PadRight(20));
+            crc.ComputeFinal(out ulong l);
+            string res5 = Convert.ToString((long)l, 16);
+            Console.Write(crc.Name.PadRight(27));
             Console.Write(crc.WithTable ? "TABLE   " : "        ");
-            Console.Write(a + " ");
-            Console.Write(h + " ");
-            Console.Write(h1 + " ");
-            Console.Write(h2 + " ");
-            Console.Write(h3 + " ");
-            Console.Write(h4 + " ");
-            Console.WriteLine(truncated ? "truncated" : string.Empty);
+            Console.Write(hex + " ");
+            Console.Write(res1 + " ");
+            Console.Write(res2 + " ");
+            Console.Write(res3 + " ");
+            Console.Write(res4 + " ");
+            Console.WriteLine(res5);
             bool error = false;
-            if (!a.EndsWith(h)) error = true;
-            if (!a.EndsWith(h1)) error = true;
-            if (!a.EndsWith(h2)) error = true;
-            if (!a.EndsWith(h3)) error = true;
-            if (!a.EndsWith(h4)) error = true;
-            return error ? "X" : h;
+            if (!hex.EndsWith(res1)) error = true;
+            if (!hex.EndsWith(res2)) error = true;
+            if (!hex.EndsWith(res3)) error = true;
+            if (!hex.EndsWith(res4)) error = true;
+            if (!hex.EndsWith(res5)) error = true;
+            return error ? "X" : sign;
+        }
+
+        private static void Do(int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, byte[] input, IList<string> checksums, int displayLimit)
+        {
+            CrcCore core;
+            if (width <= 8) core = CrcCore.UInt8;
+            else if (width <= 16) core = CrcCore.UInt16;
+            else if (width <= 32) core = CrcCore.UInt32;
+            else if (width <= 64) core = CrcCore.UInt64;
+            else core = CrcCore.Sharding32;
+            Crc crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, true, core);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, false, core);
+            checksums.Add(Calc(crc, input, displayLimit));
+            //
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, true, CrcCore.Sharding8);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, false, CrcCore.Sharding8);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, true, CrcCore.Sharding16);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, false, CrcCore.Sharding16);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, true, CrcCore.Sharding32);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, false, CrcCore.Sharding32);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, true, CrcCore.Sharding64);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, false, CrcCore.Sharding64);
+            checksums.Add(Calc(crc, input, displayLimit));
+            //
+            if (checksums.Distinct().Count() != 1)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("====================================================================================");
+                Console.WriteLine("====================================================================================");
+                Console.ResetColor();
+                _error++;
+            }
         }
 
         internal struct Alg

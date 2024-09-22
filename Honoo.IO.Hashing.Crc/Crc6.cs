@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc6Cdma2000A : Crc
     {
+        private const string DEFAULT_NAME = "CRC-6/CDMA2000-A";
         private const byte INIT = 0x3F;
         private const byte POLY = 0x27;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc6Cdma2000A class.
         /// </summary>
-        public Crc6Cdma2000A() : base("CRC-6/CDMA2000-A", GetEngine())
+        public Crc6Cdma2000A() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-6/CDMA2000-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Cdma2000A(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Cdma2000A(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -44,6 +45,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc6Cdma2000B : Crc
     {
+        private const string DEFAULT_NAME = "CRC-6/CDMA2000-B";
         private const byte INIT = 0x3F;
         private const byte POLY = 0x07;
         private const bool REFIN = false;
@@ -55,13 +57,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc6Cdma2000B class.
         /// </summary>
-        public Crc6Cdma2000B() : base("CRC-6/CDMA2000-B", GetEngine())
+        public Crc6Cdma2000B() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-6/CDMA2000-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Cdma2000B(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Cdma2000B(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -83,6 +85,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc6Darc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-6/DARC";
         private const byte INIT = 0x00;
         private const byte POLY = 0x19;
         private const bool REFIN = true;
@@ -94,13 +97,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc6Darc class.
         /// </summary>
-        public Crc6Darc() : base("CRC-6/DARC", GetEngine())
+        public Crc6Darc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-6/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Darc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Darc(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -121,6 +124,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc6Gsm : Crc
     {
+        private const string DEFAULT_NAME = "CRC-6/GSM";
         private const byte INIT = 0x00;
         private const byte POLY = 0x2F;
         private const bool REFIN = false;
@@ -132,13 +136,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc6Gsm class.
         /// </summary>
-        public Crc6Gsm() : base("CRC-6/GSM", GetEngine())
+        public Crc6Gsm() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-6/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Gsm(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -159,6 +163,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc6Itu : Crc
     {
+        private const string DEFAULT_NAME = "CRC-6/ITU";
         private const byte INIT = 0x00;
         private const byte POLY = 0x03;
         private const bool REFIN = true;
@@ -170,7 +175,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc6Itu class.
         /// </summary>
-        public Crc6Itu() : base("CRC-6/ITU", GetEngine())
+        public Crc6Itu() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -180,12 +185,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-6/ITU", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Itu(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Itu(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc6Itu(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc6Itu(alias); });
         }
 
         private static CrcEngine8 GetEngine()

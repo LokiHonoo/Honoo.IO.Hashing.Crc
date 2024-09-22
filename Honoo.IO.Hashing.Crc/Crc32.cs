@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = true;
@@ -16,7 +17,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32 class.
         /// </summary>
-        public Crc32() : base("CRC-32", GetEngine())
+        public Crc32() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -26,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32(alias); });
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -52,6 +53,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Autosar : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/AUTOSAR";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0xF4ACFB13;
         private const bool REFIN = true;
@@ -63,13 +65,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Autosar class.
         /// </summary>
-        public Crc32Autosar() : base("CRC-32/AUTOSAR", GetEngine())
+        public Crc32Autosar() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/AUTOSAR", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Autosar(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Autosar(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -90,6 +92,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Bzip2 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/BZIP2";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = false;
@@ -101,7 +104,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Bzip2 class.
         /// </summary>
-        public Crc32Bzip2() : base("CRC-32/BZIP2", GetEngine())
+        public Crc32Bzip2() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -111,12 +114,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/BZIP2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Bzip2(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Bzip2(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Bzip2(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Bzip2(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -137,6 +140,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32c : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32C";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x1EDC6F41;
         private const bool REFIN = true;
@@ -148,7 +152,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32c class.
         /// </summary>
-        public Crc32c() : base("CRC-32C", GetEngine())
+        public Crc32c() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -158,12 +162,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32C", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32c(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32c(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32c(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32c(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -184,6 +188,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32CdromEdc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/CD-ROM-EDC";
         private const uint INIT = 0x00000000;
         private const uint POLY = 0x8001801B;
         private const bool REFIN = true;
@@ -195,13 +200,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32CdromEdc class.
         /// </summary>
-        public Crc32CdromEdc() : base("CRC-32/CD-ROM-EDC", GetEngine())
+        public Crc32CdromEdc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/CD-ROM-EDC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32CdromEdc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32CdromEdc(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -222,6 +227,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Cksum : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/CKSUM";
         private const uint INIT = 0x00000000;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = false;
@@ -233,7 +239,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Cksum class.
         /// </summary>
-        public Crc32Cksum() : base("CRC-32/CKSUM", GetEngine())
+        public Crc32Cksum() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -243,12 +249,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/CKSUM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Cksum(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Cksum(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Cksum(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Cksum(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -269,6 +275,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32d : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32D";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0xA833982B;
         private const bool REFIN = true;
@@ -280,7 +287,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32d class.
         /// </summary>
-        public Crc32d() : base("CRC-32D", GetEngine())
+        public Crc32d() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -290,12 +297,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32D", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32d(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32d(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32d(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32d(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -316,6 +323,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32JamCrc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/JAMCRC";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = true;
@@ -327,7 +335,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32JamCrc class.
         /// </summary>
-        public Crc32JamCrc() : base("CRC-32/JAMCRC", GetEngine())
+        public Crc32JamCrc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -337,12 +345,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/JAMCRC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32JamCrc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32JamCrc(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32JamCrc(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32JamCrc(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -363,6 +371,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Koopman : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/KOOPMAN";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x741B8CD7;
         private const bool REFIN = true;
@@ -374,13 +383,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Koopman class.
         /// </summary>
-        public Crc32Koopman() : base("CRC-32/KOOPMAN", GetEngine())
+        public Crc32Koopman() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/KOOPMAN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Koopman(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Koopman(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -401,6 +410,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Mef : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/MEF";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x741B8CD7;
         private const bool REFIN = true;
@@ -412,13 +422,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Mef class.
         /// </summary>
-        public Crc32Mef() : base("CRC-32/MEF", GetEngine())
+        public Crc32Mef() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/MEF", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Mef(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Mef(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -439,6 +449,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Mpeg2 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/MPEG-2";
         private const uint INIT = 0xFFFFFFFF;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = false;
@@ -450,13 +461,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Mpeg2 class.
         /// </summary>
-        public Crc32Mpeg2() : base("CRC-32/MPEG-2", GetEngine())
+        public Crc32Mpeg2() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/MPEG-2", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Mpeg2(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Mpeg2(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -477,6 +488,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32q : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32Q";
         private const uint INIT = 0x00000000;
         private const uint POLY = 0x814141AB;
         private const bool REFIN = false;
@@ -488,7 +500,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32q class.
         /// </summary>
-        public Crc32q() : base("CRC-32Q", GetEngine())
+        public Crc32q() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -498,12 +510,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32Q", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32q(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32q(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32q(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32q(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -524,6 +536,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Sata : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/SATA";
         private const uint INIT = 0x52325032;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = false;
@@ -535,13 +548,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Posix class.
         /// </summary>
-        public Crc32Sata() : base("CRC-32/SATA", GetEngine())
+        public Crc32Sata() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/SATA", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Sata(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Sata(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -562,6 +575,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc32Xfer : Crc
     {
+        private const string DEFAULT_NAME = "CRC-32/XFER";
         private const uint INIT = 0x00000000;
         private const uint POLY = 0x000000AF;
         private const bool REFIN = false;
@@ -573,7 +587,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc32Xfer class.
         /// </summary>
-        public Crc32Xfer() : base("CRC-32/XFER", GetEngine())
+        public Crc32Xfer() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -583,12 +597,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-32/XFER", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Xfer(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Xfer(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc32Xfer(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc32Xfer(alias); });
         }
 
         private static CrcEngine32 GetEngine()

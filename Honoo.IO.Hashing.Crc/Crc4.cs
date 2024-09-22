@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc4Interlaken : Crc
     {
+        private const string DEFAULT_NAME = "CRC-4/INTERLAKEN";
         private const byte INIT = 0xF;
         private const byte POLY = 0x3;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc4Interlaken class.
         /// </summary>
-        public Crc4Interlaken() : base("CRC-4/INTERLAKEN", GetEngine())
+        public Crc4Interlaken() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-4/INTERLAKEN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc4Interlaken(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc4Interlaken(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -44,6 +45,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc4Itu : Crc
     {
+        private const string DEFAULT_NAME = "CRC-4/ITU";
         private const byte INIT = 0x0;
         private const byte POLY = 0x3;
         private const bool REFIN = true;
@@ -55,7 +57,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc4Itu class.
         /// </summary>
-        public Crc4Itu() : base("CRC-4/ITU", GetEngine())
+        public Crc4Itu() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -65,12 +67,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-4/ITU", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc4Itu(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc4Itu(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc4Itu(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc4Itu(alias); });
         }
 
         private static CrcEngine8 GetEngine()

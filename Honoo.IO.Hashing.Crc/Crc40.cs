@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc40Gsm : Crc
     {
+        private const string DEFAULT_NAME = "CRC-40/GSM";
         private const ulong INIT = 0x0000000000;
         private const ulong POLY = 0x0004820009;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc40Gsm class.
         /// </summary>
-        public Crc40Gsm() : base("CRC-40/GSM", GetEngine())
+        public Crc40Gsm() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-40/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc40Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc40Gsm(); });
         }
 
         private static CrcEngine64 GetEngine()

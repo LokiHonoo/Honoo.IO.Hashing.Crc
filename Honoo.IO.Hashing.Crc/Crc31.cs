@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc31Philips : Crc
     {
+        private const string DEFAULT_NAME = "CRC-31/PHILIPS";
         private const uint INIT = 0x7FFFFFFF;
         private const uint POLY = 0x04C11DB7;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc31Philips class.
         /// </summary>
-        public Crc31Philips() : base("CRC-31/PHILIPS", GetEngine())
+        public Crc31Philips() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-31/PHILIPS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc31Philips(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc31Philips(); });
         }
 
         private static CrcEngine32 GetEngine()

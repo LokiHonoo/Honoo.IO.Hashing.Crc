@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc82Darc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-82/DARC";
         private const string INIT = "0x000000000000000000000";
         private const string POLY = "0x0308C0111011401440411";
         private const bool REFIN = true;
@@ -16,13 +17,20 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
         /// </summary>
-        public Crc82Darc() : base("CRC-82/DARC", GetEngine())
+        public Crc82Darc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-82/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc82Darc(); });
+            return new CrcName(DEFAULT_NAME,
+                               WIDTH,
+                               REFIN,
+                               REFOUT,
+                               new CrcParameter(NumericsStringFormat.Hex, POLY, WIDTH),
+                               new CrcParameter(NumericsStringFormat.Hex, INIT, WIDTH),
+                               new CrcParameter(NumericsStringFormat.Hex, XOROUT, WIDTH),
+                               () => { return new Crc82Darc(); });
         }
 
         private static CrcEngineSharding32 GetEngine()
@@ -38,9 +46,9 @@ namespace Honoo.IO.Hashing
             return new CrcEngineSharding32(WIDTH,
                                            REFIN,
                                            REFOUT,
-                                           CrcConverter.ToUInt32Array(POLY, null),
-                                           CrcConverter.ToUInt32Array(INIT, null),
-                                           CrcConverter.ToUInt32Array(XOROUT, null),
+                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, POLY, null),
+                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, INIT, null),
+                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, XOROUT, null),
                                            _table);
         }
     }

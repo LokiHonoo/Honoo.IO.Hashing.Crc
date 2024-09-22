@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc11 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-11";
         private const ushort INIT = 0x01A;
         private const ushort POLY = 0x385;
         private const bool REFIN = false;
@@ -16,7 +17,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc11 class.
         /// </summary>
-        public Crc11() : base("CRC-11", GetEngine())
+        public Crc11() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -26,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-11", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc11(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc11(alias); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -53,6 +54,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc11Umts : Crc
     {
+        private const string DEFAULT_NAME = "CRC-11/UMTS";
         private const ushort INIT = 0x000;
         private const ushort POLY = 0x307;
         private const bool REFIN = false;
@@ -64,13 +66,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc11Umts class.
         /// </summary>
-        public Crc11Umts() : base("CRC-11/UMTS", GetEngine())
+        public Crc11Umts() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-11/UMTS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc11Umts(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc11Umts(); });
         }
 
         private static CrcEngine16 GetEngine()

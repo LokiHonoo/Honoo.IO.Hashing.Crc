@@ -684,12 +684,12 @@ namespace Honoo.IO.Hashing
         private readonly CrcParameter _xorout;
 
         /// <summary>
-        /// Gets init value.
-        /// Type is <see cref="byte"/> (width less or equals 8 bits),
-        /// <see cref="ushort"/> (width less or equals 16 bits),
-        /// <see cref="uint"/> (width less or equals 32 bits),
-        /// <see cref="ulong"/> (width less or equals 64 bits),
-        /// and hex <see cref="string"/> (width unlimited).
+        /// Gets poly value. Width limited by
+        /// <br/><see cref="byte"/> less or equals 8 bits,
+        /// <br/><see cref="ushort"/> less or equals 16 bits,
+        /// <br/><see cref="uint"/> less or equals 32 bits,
+        /// <br/><see cref="ulong"/> less or equals 64 bits,
+        /// <br/>and hex <see cref="string"/> unlimited.
         /// </summary>
         public CrcParameter Init => _init;
 
@@ -699,12 +699,12 @@ namespace Honoo.IO.Hashing
         public string Name => _name;
 
         /// <summary>
-        /// Gets poly value.
-        /// Width limited by <see cref="byte"/> less or equals 8 bits,
-        /// <see cref="ushort"/> less or equals 16 bits,
-        /// <see cref="uint"/> less or equals 32 bits,
-        /// <see cref="ulong"/> less or equals 64 bits,
-        /// and hex <see cref="string"/> unlimited.
+        /// Gets poly value. Width limited by
+        /// <br/><see cref="byte"/> less or equals 8 bits,
+        /// <br/><see cref="ushort"/> less or equals 16 bits,
+        /// <br/><see cref="uint"/> less or equals 32 bits,
+        /// <br/><see cref="ulong"/> less or equals 64 bits,
+        /// <br/>and hex <see cref="string"/> unlimited.
         /// </summary>
         public CrcParameter Poly => _poly;
 
@@ -719,17 +719,17 @@ namespace Honoo.IO.Hashing
         public bool Refout => _refout;
 
         /// <summary>
-        /// Gets width bits.
+        /// Gets crc width in bits.
         /// </summary>
         public int Width => _width;
 
         /// <summary>
-        /// Gets xorout value.
-        /// Type is <see cref="byte"/> (width less or equals 8 bits),
-        /// <see cref="ushort"/> (width less or equals 16 bits),
-        /// <see cref="uint"/> (width less or equals 32 bits),
-        /// <see cref="ulong"/> (width less or equals 64 bits),
-        /// and hex <see cref="string"/> (width unlimited).
+        /// Gets poly value. Width limited by
+        /// <br/><see cref="byte"/> less or equals 8 bits,
+        /// <br/><see cref="ushort"/> less or equals 16 bits,
+        /// <br/><see cref="uint"/> less or equals 32 bits,
+        /// <br/><see cref="ulong"/> less or equals 64 bits,
+        /// <br/>and hex <see cref="string"/> unlimited.
         /// </summary>
         public CrcParameter Xorout => _xorout;
 
@@ -739,15 +739,15 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcName(string name, int width, bool refin, bool refout, object poly, object init, object xorout, GetAlgorithmCallback getAlgorithm)
+        internal CrcName(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, GetAlgorithmCallback getAlgorithm)
         {
             _name = name;
             _width = width;
             _refin = refin;
             _refout = refout;
-            _poly = new CrcParameter(poly);
-            _init = new CrcParameter(init);
-            _xorout = new CrcParameter(xorout);
+            _poly = poly;
+            _init = init;
+            _xorout = xorout;
             _getAlgorithm = getAlgorithm;
         }
 

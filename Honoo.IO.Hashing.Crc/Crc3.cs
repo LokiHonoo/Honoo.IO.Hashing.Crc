@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc3Gsm : Crc
     {
+        private const string DEFAULT_NAME = "CRC-3/GSM";
         private const byte INIT = 0x0;
         private const byte POLY = 0x3;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Gsm class.
         /// </summary>
-        public Crc3Gsm() : base("CRC-3/GSM", GetEngine())
+        public Crc3Gsm() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-3/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc3Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc3Gsm(); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -43,6 +44,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc3Rohc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-3/ROHC";
         private const byte INIT = 0x7;
         private const byte POLY = 0x3;
         private const bool REFIN = true;
@@ -54,13 +56,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Rohc class.
         /// </summary>
-        public Crc3Rohc() : base("CRC-3/ROHC", GetEngine())
+        public Crc3Rohc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-3/ROHC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc3Rohc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc3Rohc(); });
         }
 
         private static CrcEngine8 GetEngine()

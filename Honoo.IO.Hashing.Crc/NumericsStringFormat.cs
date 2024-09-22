@@ -6,12 +6,12 @@
     public enum NumericsStringFormat
     {
         /// <summary>
-        /// String as "11110000".
+        /// String e.g. "11110000".
         /// </summary>
         Binary,
 
         /// <summary>
-        /// String as "FF55".
+        /// String e.g. "FF55".
         /// </summary>
         Hex,
     }

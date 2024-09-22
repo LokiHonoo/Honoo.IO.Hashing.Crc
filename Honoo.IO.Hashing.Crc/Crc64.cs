@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64";
         private const ulong INIT = 0x0000000000000000;
         private const ulong POLY = 0x42F0E1EBA9EA3693;
         private const bool REFIN = false;
@@ -16,7 +17,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64 class.
         /// </summary>
-        public Crc64() : base("CRC-64", GetEngine())
+        public Crc64() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -26,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64(alias); });
         }
 
         private static CrcEngine64 GetEngine()
@@ -52,6 +53,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64GoIso : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64/GO-ISO";
         private const ulong INIT = 0xFFFFFFFFFFFFFFFF;
         private const ulong POLY = 0x000000000000001B;
         private const bool REFIN = true;
@@ -63,13 +65,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64GoIso class.
         /// </summary>
-        public Crc64GoIso() : base("CRC-64/GO-ISO", GetEngine())
+        public Crc64GoIso() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64/GO-ISO", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64GoIso(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64GoIso(); });
         }
 
         private static CrcEngine64 GetEngine()
@@ -90,6 +92,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64Ms : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64/MS";
         private const ulong INIT = 0xFFFFFFFFFFFFFFFF;
         private const ulong POLY = 0x259C84CBA6426349;
         private const bool REFIN = true;
@@ -101,13 +104,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Ms class.
         /// </summary>
-        public Crc64Ms() : base("CRC-64/MS", GetEngine())
+        public Crc64Ms() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64/MS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Ms(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64Ms(); });
         }
 
         private static CrcEngine64 GetEngine()
@@ -128,6 +131,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64Redis : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64/REDIS";
         private const ulong INIT = 0x0000000000000000;
         private const ulong POLY = 0xAD93D23594C935A9;
         private const bool REFIN = true;
@@ -139,13 +143,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Redis class.
         /// </summary>
-        public Crc64Redis() : base("CRC-64/REDIS", GetEngine())
+        public Crc64Redis() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64/REDIS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Redis(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64Redis(); });
         }
 
         private static CrcEngine64 GetEngine()
@@ -166,6 +170,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64We : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64/WE";
         private const ulong INIT = 0xFFFFFFFFFFFFFFFF;
         private const ulong POLY = 0x42F0E1EBA9EA3693UL;
         private const bool REFIN = false;
@@ -177,13 +182,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64We class.
         /// </summary>
-        public Crc64We() : base("CRC-64/WE", GetEngine())
+        public Crc64We() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64/WE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64We(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64We(); });
         }
 
         private static CrcEngine64 GetEngine()
@@ -204,6 +209,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc64Xz : Crc
     {
+        private const string DEFAULT_NAME = "CRC-64/XZ";
         private const ulong INIT = 0xFFFFFFFFFFFFFFFF;
         private const ulong POLY = 0x42F0E1EBA9EA3693;
         private const bool REFIN = true;
@@ -215,7 +221,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Xz class.
         /// </summary>
-        public Crc64Xz() : base("CRC-64/XZ", GetEngine())
+        public Crc64Xz() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -225,12 +231,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-64/XZ", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Xz(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64Xz(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc64Xz(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc64Xz(alias); });
         }
 
         private static CrcEngine64 GetEngine()

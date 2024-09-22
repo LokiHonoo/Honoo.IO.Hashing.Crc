@@ -7,24 +7,41 @@ namespace Honoo.IO.Hashing
     {
         #region Members
 
+        private readonly int _checksumByteLength;
+        private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.Sharding32;
         private readonly uint[] _initParsed;
         private readonly int _moves;
         private readonly uint[] _polyParsed;
+        private readonly bool _refin;
+        private readonly bool _refout;
         private readonly uint[][] _table;
+        private readonly int _width;
+        private readonly bool _withTable;
         private readonly uint[] _xoroutParsed;
         private uint[] _crc;
+        internal override int ChecksumByteLength => _checksumByteLength;
 
+        internal override CrcCore Core => _core;
+        internal override int Width => _width;
+        internal override bool WithTable => _withTable;
         #endregion Members
 
         #region Construction
 
         internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, bool generateTable)
-            : base(width, refin, refout, generateTable)
         {
             if (width <= 0)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
             }
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            _refin = refin;
+            _refout = refout;
+            _withTable = generateTable;
+            //
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
             _polyParsed = Parse(poly, _moves, _refin);
@@ -35,12 +52,18 @@ namespace Honoo.IO.Hashing
         }
 
         internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, uint[][] table)
-            : base(width, refin, refout, true)
         {
             if (width <= 0)
             {
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
             }
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            _refin = refin;
+            _refout = refout;
+            _withTable = table != null;
+            //
             int rem = width % 32;
             _moves = rem > 0 ? 32 - rem : 0;
             _polyParsed = Parse(poly, _moves, _refin);
@@ -51,7 +74,6 @@ namespace Honoo.IO.Hashing
         }
 
         #endregion Construction
-
         internal static uint[][] GenerateReversedTable(uint[] polyParsed)
         {
             uint[][] table = new uint[256][];
@@ -98,6 +120,11 @@ namespace Honoo.IO.Hashing
                 table[i] = data;
             }
             return table;
+        }
+
+        internal override object CloneTable()
+        {
+            return _table?.Clone();
         }
 
         internal override string ComputeFinal(NumericsStringFormat outputFormat)
@@ -189,82 +216,29 @@ namespace Honoo.IO.Hashing
             _crc = (uint[])_initParsed.Clone();
         }
 
-        protected override void UpdateWithoutTable(byte input)
+        internal override void Update(byte input)
         {
-            if (_refin)
+            if (_withTable)
             {
-                for (int i = 0; i < _crc.Length - 1; i++)
-                {
-                    _crc[i] ^= 0;
-                }
-                _crc[_crc.Length - 1] ^= input;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc[_crc.Length - 1] & 1) == 1)
-                    {
-                        _crc = ShiftRight(_crc, 1);
-                        _crc = Xor(_crc, _polyParsed);
-                    }
-                    else
-                    {
-                        _crc = ShiftRight(_crc, 1);
-                    }
-                }
+                UpdateWithTable(input);
             }
             else
             {
-                for (int i = _crc.Length - 1; i >= 1; i--)
-                {
-                    _crc[i] ^= 0;
-                }
-                _crc[0] ^= (uint)input << 24;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc[0] & 0x80000000) == 0x80000000)
-                    {
-                        _crc = ShiftLeft(_crc, 1);
-                        _crc = Xor(_crc, _polyParsed);
-                    }
-                    else
-                    {
-                        _crc = ShiftLeft(_crc, 1);
-                    }
-                }
+                UpdateWithoutTable(input);
             }
         }
 
-        protected override void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        internal override void Update(byte[] inputBuffer, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            if (_withTable)
             {
-                UpdateWithoutTable(inputBuffer[i]);
-            }
-        }
-
-        protected override void UpdateWithTable(byte input)
-        {
-            if (_refin)
-            {
-                uint[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
-                _crc = ShiftRight(_crc, 8);
-                _crc = Xor(_crc, match);
+                UpdateWithTable(inputBuffer, offset, length);
             }
             else
             {
-                uint[] match = _table[((_crc[0] >> 24) & 0xFF) ^ input];
-                _crc = ShiftLeft(_crc, 8);
-                _crc = Xor(_crc, match);
+                UpdateWithoutTable(inputBuffer, offset, length);
             }
         }
-
-        protected override void UpdateWithTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithTable(inputBuffer[i]);
-            }
-        }
-
         private static string GetBinaryString(uint[] input, int width)
         {
             StringBuilder result = new StringBuilder();
@@ -384,6 +358,82 @@ namespace Honoo.IO.Hashing
                 _crc = ShiftRight(_crc, _moves);
             }
             _crc = Xor(_crc, _xoroutParsed);
+        }
+
+        private void UpdateWithoutTable(byte input)
+        {
+            if (_refin)
+            {
+                for (int i = 0; i < _crc.Length - 1; i++)
+                {
+                    _crc[i] ^= 0;
+                }
+                _crc[_crc.Length - 1] ^= input;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((_crc[_crc.Length - 1] & 1) == 1)
+                    {
+                        _crc = ShiftRight(_crc, 1);
+                        _crc = Xor(_crc, _polyParsed);
+                    }
+                    else
+                    {
+                        _crc = ShiftRight(_crc, 1);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = _crc.Length - 1; i >= 1; i--)
+                {
+                    _crc[i] ^= 0;
+                }
+                _crc[0] ^= (uint)input << 24;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((_crc[0] & 0x80000000) == 0x80000000)
+                    {
+                        _crc = ShiftLeft(_crc, 1);
+                        _crc = Xor(_crc, _polyParsed);
+                    }
+                    else
+                    {
+                        _crc = ShiftLeft(_crc, 1);
+                    }
+                }
+            }
+        }
+
+        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTable(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithTable(byte input)
+        {
+            if (_refin)
+            {
+                uint[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
+                _crc = ShiftRight(_crc, 8);
+                _crc = Xor(_crc, match);
+            }
+            else
+            {
+                uint[] match = _table[((_crc[0] >> 24) & 0xFF) ^ input];
+                _crc = ShiftLeft(_crc, 8);
+                _crc = Xor(_crc, match);
+            }
+        }
+
+        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTable(inputBuffer[i]);
+            }
         }
     }
 }

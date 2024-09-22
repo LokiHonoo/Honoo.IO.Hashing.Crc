@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc5Epc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-5/EPC";
         private const byte INIT = 0x09;
         private const byte POLY = 0x09;
         private const bool REFIN = false;
@@ -16,7 +17,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Epc class.
         /// </summary>
-        public Crc5Epc() : base("CRC-5/EPC", GetEngine())
+        public Crc5Epc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -26,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-5/EPC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Epc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc5Epc(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Epc(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc5Epc(alias); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -53,6 +54,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc5Itu : Crc
     {
+        private const string DEFAULT_NAME = "CRC-5/ITU";
         private const byte INIT = 0x00;
         private const byte POLY = 0x15;
         private const bool REFIN = true;
@@ -64,7 +66,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Itu class.
         /// </summary>
-        public Crc5Itu() : base("CRC-5/ITU", GetEngine())
+        public Crc5Itu() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -74,12 +76,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-5/ITU", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Itu(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc5Itu(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Itu(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc5Itu(alias); });
         }
 
         private static CrcEngine8 GetEngine()
@@ -100,6 +102,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc5Usb : Crc
     {
+        private const string DEFAULT_NAME = "CRC-5/USB";
         private const byte INIT = 0x1F;
         private const byte POLY = 0x05;
         private const bool REFIN = true;
@@ -111,13 +114,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Usb class.
         /// </summary>
-        public Crc5Usb() : base("CRC-5/USB", GetEngine())
+        public Crc5Usb() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-5/USB", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc5Usb(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc5Usb(); });
         }
 
         private static CrcEngine8 GetEngine()

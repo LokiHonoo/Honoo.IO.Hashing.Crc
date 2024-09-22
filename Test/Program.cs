@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Honoo.IO.Hashing;
+using System;
 
 namespace Test
 {
@@ -8,6 +9,8 @@ namespace Test
 
         private static void Main()
         {
+
+            var a = CrcName.ARC;
             while (true)
             {
                 Console.Clear();

@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc14Darc : Crc
     {
+        private const string DEFAULT_NAME = "CRC-14/DARC";
         private const ushort INIT = 0x0000;
         private const ushort POLY = 0x0805;
         private const bool REFIN = true;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc14Darc class.
         /// </summary>
-        public Crc14Darc() : base("CRC-14/DARC", GetEngine())
+        public Crc14Darc() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-14/DARC", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc14Darc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc14Darc(); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -43,6 +44,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc14Gsm : Crc
     {
+        private const string DEFAULT_NAME = "CRC-14/GSM";
         private const ushort INIT = 0x0000;
         private const ushort POLY = 0x202D;
         private const bool REFIN = false;
@@ -54,13 +56,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc14Gsm class.
         /// </summary>
-        public Crc14Gsm() : base("CRC-14/GSM", GetEngine())
+        public Crc14Gsm() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-14/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc14Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc14Gsm(); });
         }
 
         private static CrcEngine16 GetEngine()

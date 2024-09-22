@@ -196,23 +196,22 @@ private static void Demo4()
 
 ## SPEED
 
-|algorithm|core|table|times|elapsed|
-|:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits|table|10000|238 MiB/s|
-|CRC-32|32 bits||10000|25 MiB/s|
-|CRC-32|sharding 8 bits|table|10000|72 MiB/s|
-|CRC-32|sharding 8 bits||10000|8 MiB/s|
-|CRC-32|sharding 32 bits|table|10000|107 MiB/s|
-|CRC-32|sharding 32 bits||10000|12 MiB/s|
-|CRC-64/REDIS|64 bits|table|10000|259 MiB/s|
-|CRC-64/REDIS|sharding 32 bits|table|10000|97 MiB/s|
-|CRC-217/CUSTOM|sharding 32 bits|table|10000|54 MiB/s|
-|[CRC32](https://www.nuget.org/packages/System.IO.Hashing/)||table|10000|376 MiB/s|
-|[CRC64](https://www.nuget.org/packages/System.IO.Hashing/)||table|10000|432 MiB/s|
-|[Crc32.NET](https://github.com/force-net/Crc32.NET)||table|10000|1562 MiB/s|
-|[Crc32C.NET](https://github.com/force-net/Crc32.NET)||table|10000|1594 MiB/s|
-|SHA1|system||10000|657 MiB/s|
-|SHA256|system||10000|1860 MiB/s|
+|algorithm|core|table overhead|speed|
+|:-------:|:--:|:------------:|----:|
+|CRC-32|UInt32|1 KiB|237 MiB/s|
+|CRC-32|UInt32||23 MiB/s|
+|CRC-32|Sharding32|1 KiB|126 MiB/s|
+|CRC-32|Sharding64|2 KiB|129 MiB/s|
+|CRC-64/REDIS|UInt64|2 KiB|260 MiB/s|
+|CRC-64/REDIS|UInt64||23 MiB/s|
+|CRC-64/REDIS|Sharding32|2 KiB|103 MiB/s|
+|CRC-64/REDIS|Sharding64|2 KiB|70 MiB/s|
+|CRC-217/CUSTOM|Sharding32|7 KiB|58 MiB/s|
+|CRC-217/CUSTOM|Sharding64|8 KiB|82 MiB/s|
+|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)||1 KiB|326 MiB/s|
+|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)||16 KiB|1447 MiB/s|
+|SHA1|system||592 MiB/s|
+|SHA256|system||1502 MiB/s|
 
 ## LICENSE
 

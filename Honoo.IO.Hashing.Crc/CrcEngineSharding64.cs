@@ -3,34 +3,33 @@ using System.Text;
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngineSharding8 : CrcEngine
+    internal sealed class CrcEngineSharding64 : CrcEngine
     {
         #region Members
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
-        private readonly CrcCore _core = CrcCore.Sharding8;
-        private readonly byte[] _initParsed;
+        private readonly CrcCore _core = CrcCore.Sharding64;
+        private readonly ulong[] _initParsed;
         private readonly int _moves;
-        private readonly byte[] _polyParsed;
+        private readonly ulong[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly byte[][] _table;
+        private readonly ulong[][] _table;
         private readonly int _width;
         private readonly bool _withTable;
-        private readonly byte[] _xoroutParsed;
-        private byte[] _crc;
+        private readonly ulong[] _xoroutParsed;
+        private ulong[] _crc;
         internal override int ChecksumByteLength => _checksumByteLength;
 
         internal override CrcCore Core => _core;
         internal override int Width => _width;
         internal override bool WithTable => _withTable;
-
         #endregion Members
 
         #region Construction
 
-        internal CrcEngineSharding8(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout, bool generateTable)
+        internal CrcEngineSharding64(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, bool generateTable)
         {
             if (width <= 0)
             {
@@ -43,24 +42,45 @@ namespace Honoo.IO.Hashing
             _refout = refout;
             _withTable = generateTable;
             //
-            int rem = width % 8;
-            _moves = rem > 0 ? 8 - rem : 0;
+            int rem = width % 64;
+            _moves = rem > 0 ? 64 - rem : 0;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
-            _crc = (byte[])_initParsed.Clone();
+            _crc = (ulong[])_initParsed.Clone();
+        }
+
+        internal CrcEngineSharding64(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, ulong[][] table)
+        {
+            if (width <= 0)
+            {
+                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
+            }
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            _refin = refin;
+            _refout = refout;
+            _withTable = table != null;
+            //
+            int rem = width % 64;
+            _moves = rem > 0 ? 64 - rem : 0;
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
+            _table = table;
+            _crc = (ulong[])_initParsed.Clone();
         }
 
         #endregion Construction
-
-        internal static byte[][] GenerateReversedTable(byte[] polyParsed)
+        internal static ulong[][] GenerateReversedTable(ulong[] polyParsed)
         {
-            byte[][] table = new byte[256][];
+            ulong[][] table = new ulong[256][];
             for (int i = 0; i < 256; i++)
             {
-                byte[] data = new byte[polyParsed.Length];
-                data[data.Length - 1] = (byte)i;
+                ulong[] data = new ulong[polyParsed.Length];
+                data[data.Length - 1] = (ulong)i;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data[data.Length - 1] & 1) == 1)
@@ -78,16 +98,16 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static byte[][] GenerateTable(byte[] polyParsed)
+        internal static ulong[][] GenerateTable(ulong[] polyParsed)
         {
-            byte[][] table = new byte[256][];
+            ulong[][] table = new ulong[256][];
             for (int i = 0; i < 256; i++)
             {
-                byte[] data = new byte[polyParsed.Length];
-                data[0] = (byte)i;
+                ulong[] data = new ulong[polyParsed.Length];
+                data[0] = (ulong)i << 56;
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((data[0] & 0x80) == 0x80)
+                    if ((data[0] & 0x8000000000000000) == 0x8000000000000000)
                     {
                         data = ShiftLeft(data, 1);
                         data = Xor(data, polyParsed);
@@ -117,7 +137,7 @@ namespace Honoo.IO.Hashing
                 case NumericsStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
                 default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
             }
-            _crc = (byte[])_initParsed.Clone();
+            _crc = (ulong[])_initParsed.Clone();
             return result;
         }
 
@@ -126,47 +146,59 @@ namespace Honoo.IO.Hashing
             Finish();
             if (outputEndian == Endian.LittleEndian)
             {
+                int j = -1;
+                int m = 56;
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = _crc[i];
+                    if (i % 8 == 0)
+                    {
+                        j++;
+                        m = 56;
+                    }
+                    outputBuffer[i + outputOffset] = (byte)(_crc[j] << m);
+                    m -= 8;
                 }
             }
             else
             {
+                int j = _crc.Length;
+                int m = 0;
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    outputBuffer[i + outputOffset] = _crc[i];
+                    if (i % 8 == 0)
+                    {
+                        j--;
+                        m = 0;
+                    }
+                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = (byte)(_crc[j] >> m);
+                    m += 8;
                 }
             }
-            _crc = (byte[])_initParsed.Clone();
+            _crc = (ulong[])_initParsed.Clone();
             return _checksumByteLength;
         }
 
         internal override bool ComputeFinal(out byte checksum)
         {
             Finish();
-            checksum = _crc[_crc.Length - 1];
-            _crc = (byte[])_initParsed.Clone();
+            checksum = (byte)_crc[_crc.Length - 1];
+            _crc = (ulong[])_initParsed.Clone();
             return _width > 8;
         }
 
         internal override bool ComputeFinal(out ushort checksum)
         {
             Finish();
-            checksum = _crc[_crc.Length - 1];
-            if (_crc.Length > 1) checksum |= (ushort)((_crc[_crc.Length - 1 - 1] & 0xFF) << 8);
-            _crc = (byte[])_initParsed.Clone();
+            checksum = (ushort)_crc[_crc.Length - 1];
+            _crc = (ulong[])_initParsed.Clone();
             return _width > 16;
         }
 
         internal override bool ComputeFinal(out uint checksum)
         {
             Finish();
-            checksum = _crc[_crc.Length - 1];
-            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFU) << 8;
-            if (_crc.Length > 2) checksum |= (_crc[_crc.Length - 1 - 2] & 0xFFU) << 16;
-            if (_crc.Length > 3) checksum |= (_crc[_crc.Length - 1 - 3] & 0xFFU) << 24;
-            _crc = (byte[])_initParsed.Clone();
+            checksum = (uint)_crc[_crc.Length - 1];
+            _crc = (ulong[])_initParsed.Clone();
             return _width > 32;
         }
 
@@ -174,20 +206,13 @@ namespace Honoo.IO.Hashing
         {
             Finish();
             checksum = _crc[_crc.Length - 1];
-            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFUL) << 8;
-            if (_crc.Length > 2) checksum |= (_crc[_crc.Length - 1 - 2] & 0xFFUL) << 16;
-            if (_crc.Length > 3) checksum |= (_crc[_crc.Length - 1 - 3] & 0xFFUL) << 24;
-            if (_crc.Length > 4) checksum |= (_crc[_crc.Length - 1 - 4] & 0xFFUL) << 32;
-            if (_crc.Length > 5) checksum |= (_crc[_crc.Length - 1 - 5] & 0xFFUL) << 40;
-            if (_crc.Length > 6) checksum |= (_crc[_crc.Length - 1 - 6] & 0xFFUL) << 48;
-            if (_crc.Length > 7) checksum |= (_crc[_crc.Length - 1 - 7] & 0xFFUL) << 56;
-            _crc = (byte[])_initParsed.Clone();
+            _crc = (ulong[])_initParsed.Clone();
             return _width > 64;
         }
 
         internal override void Reset()
         {
-            _crc = (byte[])_initParsed.Clone();
+            _crc = (ulong[])_initParsed.Clone();
         }
 
         internal override void Update(byte input)
@@ -213,13 +238,12 @@ namespace Honoo.IO.Hashing
                 UpdateWithoutTable(inputBuffer, offset, length);
             }
         }
-
-        private static string GetBinaryString(byte[] input, int width)
+        private static string GetBinaryString(ulong[] input, int width)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
             {
-                result.Append(Convert.ToString(input[i], 2).PadLeft(8, '0'));
+                result.Append(Convert.ToString((long)input[i], 2).PadLeft(64, '0'));
             }
             if (result.Length > width)
             {
@@ -228,12 +252,12 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
-        private static string GetHexString(byte[] input, int hexLength)
+        private static string GetHexString(ulong[] input, int hexLength)
         {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
             {
-                result.Append(Convert.ToString(input[i], 16).PadLeft(2, '0'));
+                result.Append(Convert.ToString((long)input[i], 16).PadLeft(16, '0'));
             }
             if (result.Length > hexLength)
             {
@@ -242,7 +266,7 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
-        private static byte[] Parse(byte[] input, int moves, bool reverse)
+        private static ulong[] Parse(ulong[] input, int moves, bool reverse)
         {
             if (moves > 0)
             {
@@ -255,17 +279,20 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static byte Reverse(byte input)
+        private static ulong Reverse(ulong input)
         {
-            input = (byte)((input & 0x55) << 1 | (input >> 1) & 0x55);
-            input = (byte)((input & 0x33) << 2 | (input >> 2) & 0x33);
-            input = (byte)((input & 0x0F) << 4 | (input >> 4) & 0x0F);
+            input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;
+            input = (input & 0x3333333333333333) << 2 | (input >> 2) & 0x3333333333333333;
+            input = (input & 0x0F0F0F0F0F0F0F0F) << 4 | (input >> 4) & 0x0F0F0F0F0F0F0F0F;
+            input = (input & 0x00FF00FF00FF00FF) << 8 | (input >> 8) & 0x00FF00FF00FF00FF;
+            input = (input & 0x0000FFFF0000FFFF) << 16 | (input >> 16) & 0x0000FFFF0000FFFF;
+            input = (input & 0x00000000FFFFFFFF) << 32 | (input >> 32) & 0x00000000FFFFFFFF;
             return input;
         }
 
-        private static byte[] Reverse(byte[] input)
+        private static ulong[] Reverse(ulong[] input)
         {
-            byte tmp;
+            ulong tmp;
             for (int i = 0; i < (int)Math.Ceiling(input.Length / 2d); i++)
             {
                 tmp = Reverse(input[input.Length - 1 - i]);
@@ -275,27 +302,33 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static byte[] ShiftLeft(byte[] input, int bits)
+        private static ulong[] ShiftLeft(ulong[] input, int bits)
         {
-            for (int i = 0; i < input.Length - 1; i++)
+            if (bits > 0)
             {
-                input[i] = (byte)((input[i] << bits) | (input[i + 1] >> (8 - bits)));
+                for (int i = 0; i < input.Length - 1; i++)
+                {
+                    input[i] = (input[i] << bits) | (input[i + 1] >> (64 - bits));
+                }
+                input[input.Length - 1] <<= bits;
             }
-            input[input.Length - 1] <<= bits;
             return input;
         }
 
-        private static byte[] ShiftRight(byte[] input, int bits)
+        private static ulong[] ShiftRight(ulong[] input, int bits)
         {
-            for (int i = input.Length - 1; i >= 1; i--)
+            if (bits > 0)
             {
-                input[i] = (byte)((input[i] >> bits) | (input[i - 1] << (8 - bits)));
+                for (int i = input.Length - 1; i >= 1; i--)
+                {
+                    input[i] = (input[i] >> bits) | (input[i - 1] << (64 - bits));
+                }
+                input[0] >>= bits;
             }
-            input[0] >>= bits;
             return input;
         }
 
-        private static byte[] TruncateLeft(byte[] input, int bits)
+        private static ulong[] TruncateLeft(ulong[] input, int bits)
         {
             if (bits > 0)
             {
@@ -305,7 +338,7 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static byte[] Xor(byte[] input, byte[] input2)
+        private static ulong[] Xor(ulong[] input, ulong[] input2)
         {
             for (int i = 0; i < input.Length; i++)
             {
@@ -355,10 +388,10 @@ namespace Honoo.IO.Hashing
                 {
                     _crc[i] ^= 0;
                 }
-                _crc[0] ^= input;
+                _crc[0] ^= (ulong)input << 56;
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((_crc[0] & 0x80) == 0x80)
+                    if ((_crc[0] & 0x8000000000000000) == 0x8000000000000000)
                     {
                         _crc = ShiftLeft(_crc, 1);
                         _crc = Xor(_crc, _polyParsed);
@@ -383,13 +416,13 @@ namespace Honoo.IO.Hashing
         {
             if (_refin)
             {
-                byte[] match = _table[_crc[_crc.Length - 1] ^ input];
+                ulong[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
                 _crc = ShiftRight(_crc, 8);
                 _crc = Xor(_crc, match);
             }
             else
             {
-                byte[] match = _table[_crc[0] ^ input];
+                ulong[] match = _table[((_crc[0] >> 56) & 0xFF) ^ input];
                 _crc = ShiftLeft(_crc, 8);
                 _crc = Xor(_crc, match);
             }

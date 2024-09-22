@@ -6,31 +6,24 @@ namespace Honoo.IO.Hashing
     {
         #region Members
 
-        protected readonly int _checksumByteLength;
-        protected readonly int _checksumHexLength;
-        protected readonly bool _refin;
-        protected readonly bool _refout;
-        protected readonly int _width;
-        protected readonly bool _withTable;
-        internal int ChecksumByteLength => _checksumByteLength;
-        internal int Width => _width;
-        internal bool WithTable => _withTable;
+        internal abstract int ChecksumByteLength { get; }
+        internal abstract CrcCore Core { get; }
+        internal abstract int Width { get; }
+        internal abstract bool WithTable { get; }
 
         #endregion Members
 
         #region Construction
 
-        protected CrcEngine(int width, bool refin, bool refout, bool useTable)
+        /// <summary>
+        /// Initializes a new instance of the CrcEngine class.
+        /// </summary>
+        protected CrcEngine()
         {
-            _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _refin = refin;
-            _refout = refout;
-            _withTable = useTable;
         }
 
         #endregion Construction
+        internal abstract object CloneTable();
 
         internal abstract string ComputeFinal(NumericsStringFormat outputFormat);
 
@@ -46,36 +39,8 @@ namespace Honoo.IO.Hashing
 
         internal abstract void Reset();
 
-        internal void Update(byte input)
-        {
-            if (_withTable)
-            {
-                UpdateWithTable(input);
-            }
-            else
-            {
-                UpdateWithoutTable(input);
-            }
-        }
+        internal abstract void Update(byte input);
 
-        internal void Update(byte[] inputBuffer, int offset, int length)
-        {
-            if (_withTable)
-            {
-                UpdateWithTable(inputBuffer, offset, length);
-            }
-            else
-            {
-                UpdateWithoutTable(inputBuffer, offset, length);
-            }
-        }
-
-        protected abstract void UpdateWithoutTable(byte input);
-
-        protected abstract void UpdateWithoutTable(byte[] inputBuffer, int offset, int length);
-
-        protected abstract void UpdateWithTable(byte input);
-
-        protected abstract void UpdateWithTable(byte[] inputBuffer, int offset, int length);
+        internal abstract void Update(byte[] inputBuffer, int offset, int length);
     }
 }

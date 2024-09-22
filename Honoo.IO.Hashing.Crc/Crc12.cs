@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc12Cdma2000 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-12/CDMA2000";
         private const ushort INIT = 0xFFF;
         private const ushort POLY = 0xF13;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Cdma2000 class.
         /// </summary>
-        public Crc12Cdma2000() : base("CRC-12/CDMA2000", GetEngine())
+        public Crc12Cdma2000() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-12/CDMA2000", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Cdma2000(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Cdma2000(); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -44,6 +45,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc12Dect : Crc
     {
+        private const string DEFAULT_NAME = "CRC-12/DECT";
         private const ushort INIT = 0x000;
         private const ushort POLY = 0x80F;
         private const bool REFIN = false;
@@ -55,7 +57,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Dect class.
         /// </summary>
-        public Crc12Dect() : base("CRC-12/DECT", GetEngine())
+        public Crc12Dect() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -65,12 +67,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-12/DECT", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Dect(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Dect(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Dect(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Dect(alias); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -91,6 +93,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc12Gsm : Crc
     {
+        private const string DEFAULT_NAME = "CRC-12/GSM";
         private const ushort INIT = 0x000;
         private const ushort POLY = 0xD31;
         private const bool REFIN = false;
@@ -102,13 +105,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Gsm class.
         /// </summary>
-        public Crc12Gsm() : base("CRC-12/GSM", GetEngine())
+        public Crc12Gsm() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-12/GSM", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Gsm(); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -129,6 +132,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc12Umts : Crc
     {
+        private const string DEFAULT_NAME = "CRC-12/UMTS";
         private const ushort INIT = 0x000;
         private const ushort POLY = 0x80F;
         private const bool REFIN = false;
@@ -140,7 +144,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Umts class.
         /// </summary>
-        public Crc12Umts() : base("CRC-12/UMTS", GetEngine())
+        public Crc12Umts() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -150,12 +154,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-12/UMTS", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Umts(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Umts(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc12Umts(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc12Umts(alias); });
         }
 
         private static CrcEngine16 GetEngine()

@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc30Cdma : Crc
     {
+        private const string DEFAULT_NAME = "CRC-30/CDMA";
         private const uint INIT = 0x3FFFFFFF;
         private const uint POLY = 0x2030B9C7;
         private const bool REFIN = false;
@@ -16,13 +17,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc30Cdma class.
         /// </summary>
-        public Crc30Cdma() : base("CRC-30/CDMA", GetEngine())
+        public Crc30Cdma() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-30/CDMA", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc30Cdma(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc30Cdma(); });
         }
 
         private static CrcEngine32 GetEngine()

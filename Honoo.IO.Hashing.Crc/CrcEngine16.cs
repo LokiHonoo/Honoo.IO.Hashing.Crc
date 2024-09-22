@@ -6,24 +6,42 @@ namespace Honoo.IO.Hashing
     {
         #region Members
 
+        private readonly int _checksumByteLength;
+        private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.UInt16;
         private readonly ushort _initParsed;
         private readonly int _moves;
         private readonly ushort _polyParsed;
+        private readonly bool _refin;
+        private readonly bool _refout;
         private readonly ushort[] _table;
+        private readonly int _width;
+        private readonly bool _withTable;
         private readonly ushort _xoroutParsed;
         private ushort _crc;
+        internal override int ChecksumByteLength => _checksumByteLength;
+        internal override CrcCore Core => _core;
+        internal override int Width => _width;
+
+        internal override bool WithTable => _withTable;
 
         #endregion Members
 
         #region Construction
 
         internal CrcEngine16(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool generateTable)
-            : base(width, refin, refout, generateTable)
         {
             if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
+                throw new ArgumentException("Invalid width bits length. The allowed values are between 0 - 16.", nameof(width));
             }
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            _refin = refin;
+            _refout = refout;
+            _withTable = generateTable;
+            //
             _moves = 16 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
@@ -33,12 +51,18 @@ namespace Honoo.IO.Hashing
         }
 
         internal CrcEngine16(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, ushort[] table)
-            : base(width, refin, refout, true)
         {
             if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
+                throw new ArgumentException("Invalid width bits length. The allowed values are between 0 - 16.", nameof(width));
             }
+            _width = width;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            _refin = refin;
+            _refout = refout;
+            _withTable = table != null;
+            //
             _moves = 16 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
@@ -91,6 +115,11 @@ namespace Honoo.IO.Hashing
                 table[i] = data;
             }
             return table;
+        }
+
+        internal override object CloneTable()
+        {
+            return _table?.Clone();
         }
 
         internal override string ComputeFinal(NumericsStringFormat outputFormat)
@@ -165,65 +194,27 @@ namespace Honoo.IO.Hashing
             _crc = _initParsed;
         }
 
-        protected override void UpdateWithoutTable(byte input)
+        internal override void Update(byte input)
         {
-            if (_refin)
+            if (_withTable)
             {
-                _crc ^= input;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc & 1) == 1)
-                    {
-                        _crc = (ushort)((_crc >> 1) ^ _polyParsed);
-                    }
-                    else
-                    {
-                        _crc >>= 1;
-                    }
-                }
+                UpdateWithTable(input);
             }
             else
             {
-                _crc ^= (ushort)(input << 8);
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc & 0x8000) == 0x8000)
-                    {
-                        _crc = (ushort)((_crc << 1) ^ _polyParsed);
-                    }
-                    else
-                    {
-                        _crc <<= 1;
-                    }
-                }
+                UpdateWithoutTable(input);
             }
         }
 
-        protected override void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        internal override void Update(byte[] inputBuffer, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            if (_withTable)
             {
-                UpdateWithoutTable(inputBuffer[i]);
-            }
-        }
-
-        protected override void UpdateWithTable(byte input)
-        {
-            if (_refin)
-            {
-                _crc = (ushort)((_crc >> 8) ^ _table[(_crc & 0xFF) ^ input]);
+                UpdateWithTable(inputBuffer, offset, length);
             }
             else
             {
-                _crc = (ushort)((_crc << 8) ^ _table[((_crc >> 8) & 0xFF) ^ input]);
-            }
-        }
-
-        protected override void UpdateWithTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithTable(inputBuffer[i]);
+                UpdateWithoutTable(inputBuffer, offset, length);
             }
         }
 
@@ -293,6 +284,68 @@ namespace Honoo.IO.Hashing
                 _crc >>= _moves;
             }
             _crc ^= _xoroutParsed;
+        }
+
+        private void UpdateWithoutTable(byte input)
+        {
+            if (_refin)
+            {
+                _crc ^= input;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((_crc & 1) == 1)
+                    {
+                        _crc = (ushort)((_crc >> 1) ^ _polyParsed);
+                    }
+                    else
+                    {
+                        _crc >>= 1;
+                    }
+                }
+            }
+            else
+            {
+                _crc ^= (ushort)(input << 8);
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((_crc & 0x8000) == 0x8000)
+                    {
+                        _crc = (ushort)((_crc << 1) ^ _polyParsed);
+                    }
+                    else
+                    {
+                        _crc <<= 1;
+                    }
+                }
+            }
+        }
+
+        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTable(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithTable(byte input)
+        {
+            if (_refin)
+            {
+                _crc = (ushort)((_crc >> 8) ^ _table[(_crc & 0xFF) ^ input]);
+            }
+            else
+            {
+                _crc = (ushort)((_crc << 8) ^ _table[((_crc >> 8) & 0xFF) ^ input]);
+            }
+        }
+
+        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTable(inputBuffer[i]);
+            }
         }
     }
 }

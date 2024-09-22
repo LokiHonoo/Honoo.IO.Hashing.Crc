@@ -22,6 +22,7 @@
 		<PackageReadmeFile>Honoo.IO.Hashing.Crc.md</PackageReadmeFile>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<BaseOutputPath>..\bin\</BaseOutputPath>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 	
 	<ItemGroup>

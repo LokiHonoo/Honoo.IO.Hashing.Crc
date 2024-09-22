@@ -5,6 +5,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24";
         private const uint INIT = 0xB704CE;
         private const uint POLY = 0x864CFB;
         private const bool REFIN = false;
@@ -16,7 +17,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24 class.
         /// </summary>
-        public Crc24() : base("CRC-24", GetEngine())
+        public Crc24() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
@@ -26,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-            return new CrcName(alias, WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24(alias); });
+             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -53,6 +54,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24Ble : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/BLE";
         private const uint INIT = 0x555555;
         private const uint POLY = 0x00065B;
         private const bool REFIN = true;
@@ -64,13 +66,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Ble class.
         /// </summary>
-        public Crc24Ble() : base("CRC-24/BLE", GetEngine())
+        public Crc24Ble() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/BLE", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Ble(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Ble(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -92,6 +94,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24FlexrayA : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/FLEXRAY-A";
         private const uint INIT = 0xFEDCBA;
         private const uint POLY = 0x5D6DCB;
         private const bool REFIN = false;
@@ -103,13 +106,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayA class.
         /// </summary>
-        public Crc24FlexrayA() : base("CRC-24/FLEXRAY-A", GetEngine())
+        public Crc24FlexrayA() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/FLEXRAY-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayA(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayA(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -131,6 +134,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24FlexrayB : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/FLEXRAY-B";
         private const uint INIT = 0xABCDEF;
         private const uint POLY = 0x5D6DCB;
         private const bool REFIN = false;
@@ -142,13 +146,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayB class.
         /// </summary>
-        public Crc24FlexrayB() : base("CRC-24/FLEXRAY-B", GetEngine())
+        public Crc24FlexrayB() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/FLEXRAY-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24FlexrayB(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayB(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -170,6 +174,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24Interlaken : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/INTERLAKEN";
         private const uint INIT = 0xFFFFFF;
         private const uint POLY = 0x328B63;
         private const bool REFIN = false;
@@ -181,13 +186,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Interlaken class.
         /// </summary>
-        public Crc24Interlaken() : base("CRC-24/INTERLAKEN", GetEngine())
+        public Crc24Interlaken() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/INTERLAKEN", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Interlaken(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Interlaken(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -209,6 +214,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24LteA : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/LTE-A";
         private const uint INIT = 0x000000;
         private const uint POLY = 0x864CFB;
         private const bool REFIN = false;
@@ -220,13 +226,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24LteA class.
         /// </summary>
-        public Crc24LteA() : base("CRC-24/LTE-A", GetEngine())
+        public Crc24LteA() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/LTE-A", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteA(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteA(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -247,6 +253,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24LteB : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/LTE-B";
         private const uint INIT = 0x000000;
         private const uint POLY = 0x800063;
         private const bool REFIN = false;
@@ -258,13 +265,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24LteB class.
         /// </summary>
-        public Crc24LteB() : base("CRC-24/LTE-B", GetEngine())
+        public Crc24LteB() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/LTE-B", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24LteB(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteB(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -285,6 +292,7 @@ namespace Honoo.IO.Hashing
     /// </summary>
     public sealed class Crc24Os9 : Crc
     {
+        private const string DEFAULT_NAME = "CRC-24/OS-9";
         private const uint INIT = 0xFFFFFF;
         private const uint POLY = 0x800063;
         private const bool REFIN = false;
@@ -296,13 +304,13 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Os9 class.
         /// </summary>
-        public Crc24Os9() : base("CRC-24/OS-9", GetEngine())
+        public Crc24Os9() : base(DEFAULT_NAME, GetEngine())
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName("CRC-24/OS-9", WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, () => { return new Crc24Os9(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Os9(); });
         }
 
         private static CrcEngine32 GetEngine()
