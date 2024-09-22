@@ -1,5 +1,6 @@
 ﻿using Honoo.IO;
 using Honoo.IO.Hashing;
+using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
 

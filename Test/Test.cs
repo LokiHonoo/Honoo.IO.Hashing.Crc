@@ -1,5 +1,8 @@
 ﻿using Honoo.IO.Hashing;
 using HtmlAgilityPack;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
