@@ -55,6 +55,8 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
+        #region Table
+
         internal static ushort[][] GenerateReversedTable(ushort[] polyParsed)
         {
             ushort[][] table = new ushort[256][];
@@ -108,15 +110,19 @@ namespace Honoo.IO.Hashing
             return _table?.Clone();
         }
 
-        internal override string ComputeFinal(NumericsStringFormat outputFormat)
+        #endregion Table
+
+        #region ComputeFinal
+
+        internal override string ComputeFinal(CrcStringFormat outputFormat)
         {
             Finish();
             string result;
             switch (outputFormat)
             {
-                case NumericsStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
-                case NumericsStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
+                case CrcStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
+                case CrcStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
+                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
             }
             _crc = (ushort[])_initParsed.Clone();
             return result;
@@ -195,33 +201,159 @@ namespace Honoo.IO.Hashing
             return _width > 64;
         }
 
-        internal override void Reset()
-        {
-            _crc = (ushort[])_initParsed.Clone();
-        }
+        #endregion ComputeFinal
+
+        #region Update byte
 
         internal override void Update(byte input)
         {
             if (_withTable)
             {
-                UpdateWithTable(input);
+                if (_refin)
+                {
+                    UpdateWithTableRef(input);
+                }
+                else
+                {
+                    UpdateWithTable(input);
+                }
             }
             else
             {
-                UpdateWithoutTable(input);
+                if (_refin)
+                {
+                    UpdateWithoutTableRef(input);
+                }
+                else
+                {
+                    UpdateWithoutTable(input);
+                }
             }
         }
+
+        private void UpdateWithoutTable(byte input)
+        {
+            for (int i = _crc.Length - 1; i >= 1; i--)
+            {
+                _crc[i] ^= 0;
+            }
+            _crc[0] ^= (ushort)(input << 8);
+            for (int j = 0; j < 8; j++)
+            {
+                if ((_crc[0] & 0x8000) == 0x8000)
+                {
+                    _crc = ShiftLeft(_crc, 1);
+                    _crc = Xor(_crc, _polyParsed);
+                }
+                else
+                {
+                    _crc = ShiftLeft(_crc, 1);
+                }
+            }
+        }
+
+        private void UpdateWithoutTableRef(byte input)
+        {
+            for (int i = 0; i < _crc.Length - 1; i++)
+            {
+                _crc[i] ^= 0;
+            }
+            _crc[_crc.Length - 1] ^= input;
+            for (int j = 0; j < 8; j++)
+            {
+                if ((_crc[_crc.Length - 1] & 1) == 1)
+                {
+                    _crc = ShiftRight(_crc, 1);
+                    _crc = Xor(_crc, _polyParsed);
+                }
+                else
+                {
+                    _crc = ShiftRight(_crc, 1);
+                }
+            }
+        }
+
+        private void UpdateWithTable(byte input)
+        {
+            ushort[] match = _table[((_crc[0] >> 8) & 0xFF) ^ input];
+            _crc = ShiftLeft(_crc, 8);
+            _crc = Xor(_crc, match);
+        }
+
+        private void UpdateWithTableRef(byte input)
+        {
+            ushort[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
+            _crc = ShiftRight(_crc, 8);
+            _crc = Xor(_crc, match);
+        }
+
+        #endregion Update byte
+
+        #region Update bytes
 
         internal override void Update(byte[] inputBuffer, int offset, int length)
         {
             if (_withTable)
             {
-                UpdateWithTable(inputBuffer, offset, length);
+                if (_refin)
+                {
+                    UpdateWithTableRef(inputBuffer, offset, length);
+                }
+                else
+                {
+                    UpdateWithTable(inputBuffer, offset, length);
+                }
             }
             else
             {
-                UpdateWithoutTable(inputBuffer, offset, length);
+                if (_refin)
+                {
+                    UpdateWithoutTableRef(inputBuffer, offset, length);
+                }
+                else
+                {
+                    UpdateWithoutTable(inputBuffer, offset, length);
+                }
             }
+        }
+
+        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTable(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithoutTableRef(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithoutTableRef(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTable(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithTableRef(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTableRef(inputBuffer[i]);
+            }
+        }
+
+        #endregion Update bytes
+
+        internal override void Reset()
+        {
+            _crc = (ushort[])_initParsed.Clone();
         }
 
         private static string GetBinaryString(ushort[] input, int width)
@@ -342,82 +474,6 @@ namespace Honoo.IO.Hashing
                 _crc = ShiftRight(_crc, _moves);
             }
             _crc = Xor(_crc, _xoroutParsed);
-        }
-
-        private void UpdateWithoutTable(byte input)
-        {
-            if (_refin)
-            {
-                for (int i = 0; i < _crc.Length - 1; i++)
-                {
-                    _crc[i] ^= 0;
-                }
-                _crc[_crc.Length - 1] ^= input;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc[_crc.Length - 1] & 1) == 1)
-                    {
-                        _crc = ShiftRight(_crc, 1);
-                        _crc = Xor(_crc, _polyParsed);
-                    }
-                    else
-                    {
-                        _crc = ShiftRight(_crc, 1);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = _crc.Length - 1; i >= 1; i--)
-                {
-                    _crc[i] ^= 0;
-                }
-                _crc[0] ^= (ushort)(input << 8);
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((_crc[0] & 0x8000) == 0x8000)
-                    {
-                        _crc = ShiftLeft(_crc, 1);
-                        _crc = Xor(_crc, _polyParsed);
-                    }
-                    else
-                    {
-                        _crc = ShiftLeft(_crc, 1);
-                    }
-                }
-            }
-        }
-
-        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithoutTable(inputBuffer[i]);
-            }
-        }
-
-        private void UpdateWithTable(byte input)
-        {
-            if (_refin)
-            {
-                ushort[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
-                _crc = ShiftRight(_crc, 8);
-                _crc = Xor(_crc, match);
-            }
-            else
-            {
-                ushort[] match = _table[((_crc[0] >> 8) & 0xFF) ^ input];
-                _crc = ShiftLeft(_crc, 8);
-                _crc = Xor(_crc, match);
-            }
-        }
-
-        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithTable(inputBuffer[i]);
-            }
         }
     }
 }

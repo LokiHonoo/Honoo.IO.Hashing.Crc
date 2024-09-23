@@ -121,71 +121,72 @@ namespace Honoo.IO.Hashing
                 else if (width <= 16) core = CrcCore.UInt16;
                 else if (width <= 32) core = CrcCore.UInt32;
                 else if (width <= 64) core = CrcCore.UInt64;
-                else core = CrcCore.Sharding32;
+                else core = CrcCore.Sharding64;
             }
             switch (core)
             {
                 case CrcCore.UInt8:
                     {
-                        byte poly = CrcConverter.ToUInt8(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        byte init = CrcConverter.ToUInt8(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        byte xorout = CrcConverter.ToUInt8(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        byte init = CrcConverter.ToUInt8(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        byte xorout = CrcConverter.ToUInt8(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngine8(width, refin, refout, poly, init, xorout, withTable);
                     }
 
                 case CrcCore.UInt16:
                     {
-                        ushort poly = CrcConverter.ToUInt16(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        ushort init = CrcConverter.ToUInt16(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        ushort xorout = CrcConverter.ToUInt16(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort init = CrcConverter.ToUInt16(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort xorout = CrcConverter.ToUInt16(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngine16(width, refin, refout, poly, init, xorout, withTable);
                     }
 
                 case CrcCore.UInt32:
                     {
-                        uint poly = CrcConverter.ToUInt32(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        uint init = CrcConverter.ToUInt32(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        uint xorout = CrcConverter.ToUInt32(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        uint init = CrcConverter.ToUInt32(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        uint xorout = CrcConverter.ToUInt32(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngine32(width, refin, refout, poly, init, xorout, withTable);
                     }
 
                 case CrcCore.UInt64:
                     {
-                        ulong poly = CrcConverter.ToUInt64(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        ulong init = CrcConverter.ToUInt64(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        ulong xorout = CrcConverter.ToUInt64(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong init = CrcConverter.ToUInt64(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong xorout = CrcConverter.ToUInt64(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngine64(width, refin, refout, poly, init, xorout, withTable);
                     }
 
                 case CrcCore.Sharding8:
                     {
-                        byte[] poly = CrcConverter.ToUInt8Array(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        byte[] init = CrcConverter.ToUInt8Array(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        byte[] xorout = CrcConverter.ToUInt8Array(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        byte[] poly = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        byte[] init = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        byte[] xorout = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngineSharding8(width, refin, refout, poly, init, xorout, withTable);
                     }
 
                 case CrcCore.Sharding16:
                     {
-                        ushort[] poly = CrcConverter.ToUInt16Array(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        ushort[] init = CrcConverter.ToUInt16Array(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        ushort[] xorout = CrcConverter.ToUInt16Array(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
+                        ushort[] poly = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort[] init = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort[] xorout = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
                         return new CrcEngineSharding16(width, refin, refout, poly, init, xorout, withTable);
                     }
-                case CrcCore.Sharding64:
-                    {
-                        ulong[] poly = CrcConverter.ToUInt64Array(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        ulong[] init = CrcConverter.ToUInt64Array(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        ulong[] xorout = CrcConverter.ToUInt64Array(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
-                        return new CrcEngineSharding64(width, refin, refout, poly, init, xorout, withTable);
-                    }
                 case CrcCore.Sharding32:
+
+                    {
+                        uint[] poly = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        uint[] init = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        uint[] xorout = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, withTable);
+                    }
+                case CrcCore.Sharding64:
                 default:
                     {
-                        uint[] poly = CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, polyParameter.ToHexString(), width);
-                        uint[] init = CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, initParameter.ToHexString(), width);
-                        uint[] xorout = CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, xoroutParameter.ToHexString(), width);
-                        return new CrcEngineSharding32(width, refin, refout, poly, init, xorout, withTable);
+                        ulong[] poly = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong[] init = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong[] xorout = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        return new CrcEngineSharding64(width, refin, refout, poly, init, xorout, withTable);
                     }
             }
         }

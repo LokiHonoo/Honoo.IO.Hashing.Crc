@@ -27,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(alias); });
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24(alias); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -72,7 +72,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Ble(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Ble(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -112,7 +112,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayA(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayA(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -152,7 +152,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayB(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24FlexrayB(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -192,7 +192,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Interlaken(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Interlaken(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -232,7 +232,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteA(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteA(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -271,7 +271,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteB(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24LteB(); });
         }
 
         private static CrcEngine32 GetEngine()
@@ -310,7 +310,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Os9(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc24Os9(); });
         }
 
         private static CrcEngine32 GetEngine()

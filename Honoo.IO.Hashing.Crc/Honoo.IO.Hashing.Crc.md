@@ -143,7 +143,7 @@ CRC-82/DARC,
 
 ### GitHub
 
-<https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc>
+<https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc/>
 
 ## USAGE
 
@@ -161,14 +161,14 @@ private static void Demo1()
     // Update input data.
     crc.Update(inputBytes);
     // The return value is "Hex String".
-    string checksum = crc.ComputeFinal(NumericsStringFormat.Hex);
+    string checksum = crc.ComputeFinal(CrcStringFormat.Hex);
 }
 
 private static void Demo2()
 {
     var crc = new Crc16Modbus();
     crc.Update(inputBytes);
-    // The return value length is crc.ChecksumLength.
+    // The return value length is crc.ChecksumByteLength.
     byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
 }
 
@@ -185,10 +185,10 @@ private static void Demo3()
 
 private static void Demo4()
 {
-    // Custom lengths and parameters are supported.
-    var crc = Crc.Create("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
+    // Custom width and parameters are supported.
+    var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
-    byte[] checksum = new byte[crc.ChecksumLength];
+    byte[] checksum = new byte[crc.ChecksumByteLength];
     int length = crc.ComputeFinal(Endian.BigEndian, checksum, 0);
 }
 
@@ -196,23 +196,22 @@ private static void Demo4()
 
 ## SPEED
 
-Byte length - 8192
-
-|algorithm|core|table|times|elapsed|
-|:-------:|:--:|:---:|:---:|------:|
-|CRC-32|32 bits|table|10000|329 ms|
-|CRC-32|32 bits||10000|3182 ms|
-|CRC-32|sharding 8 bits|table|10000|1081 ms|
-|CRC-32|sharding 8 bits||10000|9702 ms|
-|CRC-32|sharding 32 bits|table|10000|673 ms|
-|CRC-32|sharding 32 bits||10000|6164 ms|
-|CRC-64/REDIS|64 bits|table|10000|312 ms|
-|CRC-64/REDIS|sharding 32 bits|table|10000|790 ms|
-|CRC-217/CUSTOM|sharding 32 bits|table|10000|1405 ms|
-|CRC32|system|table|10000|196 ms|
-|CRC64|system|table|10000|176 ms|
-|SHA1|system||10000|120 ms|
-|SHA256|system||10000|41 ms|
+|algorithm|core|table overhead|speed|
+|:-------:|:--:|:------------:|----:|
+|CRC-32|UInt32|1 KiB|454 MiB/s|
+|CRC-32|UInt32||25 MiB/s|
+|CRC-64/REDIS|UInt64|2 KiB|449 MiB/s|
+|CRC-64/REDIS|UInt64||24 MiB/s|
+|CRC-32|Sharding8|1 KiB|75 MiB/s|
+|CRC-32|Sharding16|1 KiB|97 MiB/s|
+|CRC-32|Sharding32|1 KiB|122 MiB/s|
+|CRC-32|Sharding64|2 KiB|119 MiB/s|
+|CRC-217/CUSTOM|Sharding64|8 KiB|82 MiB/s|
+|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)||1 KiB|362 MiB/s|
+|[K4os.Hash.Crc.Crc32](https://github.com/MiloszKrajewski/K4os.Hash.Crc)||1 KiB|471 MiB/s|
+|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)||16 KiB|1502 MiB/s|
+|SHA1|system||640 MiB/s|
+|SHA256|system||1860 MiB/s|
 
 ## LICENSE
 

@@ -16,7 +16,7 @@
 //        Standard,
 
 //        /// <summary>
-//        /// Use a 4096 size big table.
+//        /// Use a 4096 size fat table.
 //        /// </summary>
 //        Fat,
 //    }

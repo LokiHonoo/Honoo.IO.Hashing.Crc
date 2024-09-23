@@ -27,12 +27,12 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10(); });
         }
 
         internal static CrcName GetAlgorithmName(string alias)
         {
-             return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10(alias); });
+            return new CrcName(alias, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10(alias); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -71,7 +71,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10Cdma2000(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10Cdma2000(); });
         }
 
         private static CrcEngine16 GetEngine()
@@ -111,7 +111,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter( POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc10Gsm(); });
         }
 
         private static CrcEngine16 GetEngine()

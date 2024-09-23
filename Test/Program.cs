@@ -9,7 +9,6 @@ namespace Test
 
         private static void Main()
         {
-
             var a = CrcName.ARC;
             while (true)
             {

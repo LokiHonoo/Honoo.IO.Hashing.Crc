@@ -3,7 +3,7 @@
     /// <summary>
     /// Numerics string format.
     /// </summary>
-    public enum NumericsStringFormat
+    public enum CrcStringFormat
     {
         /// <summary>
         /// String e.g. "11110000".

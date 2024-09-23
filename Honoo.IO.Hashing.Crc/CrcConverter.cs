@@ -13,11 +13,11 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static byte[] ToBytes(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        public static byte[] ToBytes(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            return GetBytes(inputFormat, input, truncateToBinaryWidth);
+            return GetBytes(inputFormat, input, truncateToWidthBits);
         }
 
         /// <summary>
@@ -25,17 +25,17 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static string ToString(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth, NumericsStringFormat outputFormat)
+        public static string ToString(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, CrcStringFormat outputFormat)
         {
             switch (outputFormat)
             {
-                case NumericsStringFormat.Binary: return GetBinaryString(inputFormat, input, truncateToBinaryWidth);
-                case NumericsStringFormat.Hex: return GetHexString(inputFormat, input, truncateToBinaryWidth);
-                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(outputFormat));
+                case CrcStringFormat.Binary: return GetBinaryString(inputFormat, input, truncateToWidthBits);
+                case CrcStringFormat.Hex: return GetHexString(inputFormat, input, truncateToWidthBits);
+                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
             }
         }
 
@@ -44,11 +44,11 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static ushort ToUInt16(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        public static ushort ToUInt16(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            byte[] bytes = GetBytes(inputFormat, input, truncateToBinaryWidth);
+            byte[] bytes = GetBytes(inputFormat, input, truncateToWidthBits);
             return BEToUInt16(bytes);
         }
 
@@ -57,11 +57,11 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static uint ToUInt32(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        public static uint ToUInt32(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            byte[] bytes = GetBytes(inputFormat, input, truncateToBinaryWidth);
+            byte[] bytes = GetBytes(inputFormat, input, truncateToWidthBits);
             return BEToUInt32(bytes);
         }
 
@@ -70,11 +70,11 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static ulong ToUInt64(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        public static ulong ToUInt64(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            byte[] bytes = GetBytes(inputFormat, input, truncateToBinaryWidth);
+            byte[] bytes = GetBytes(inputFormat, input, truncateToWidthBits);
             return BEToUInt64(bytes);
         }
 
@@ -83,17 +83,17 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
-        /// <param name="truncateToBinaryWidth">Truncated the input string to the specifies crc width. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <param name="truncateToWidthBits">Truncated the input string to the specifies crc width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <returns></returns>
-        public static byte ToUInt8(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        public static byte ToUInt8(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            byte[] bytes = GetBytes(inputFormat, input, truncateToBinaryWidth);
+            byte[] bytes = GetBytes(inputFormat, input, truncateToWidthBits);
             return BEToUInt8(bytes);
         }
 
-        internal static ushort[] ToUInt16Array(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        internal static ushort[] ToUInt16Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bin = GetBinaryString(inputFormat, input, truncateToBinaryWidth);
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 16;
             int truncates = rem > 0 ? 16 - rem : 0;
             if (truncates > 0)
@@ -108,9 +108,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static uint[] ToUInt32Array(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        internal static uint[] ToUInt32Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bin = GetBinaryString(inputFormat, input, truncateToBinaryWidth);
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 32;
             int truncates = rem > 0 ? 32 - rem : 0;
             if (truncates > 0)
@@ -125,9 +125,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static ulong[] ToUInt64Array(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        internal static ulong[] ToUInt64Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bin = GetBinaryString(inputFormat, input, truncateToBinaryWidth);
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 64;
             int truncates = rem > 0 ? 64 - rem : 0;
             if (truncates > 0)
@@ -142,9 +142,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static byte[] ToUInt8Array(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        internal static byte[] ToUInt8Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            return GetBytes(inputFormat, input, truncateToBinaryWidth);
+            return GetBytes(inputFormat, input, truncateToWidthBits);
         }
 
         private static ushort BEToUInt16(byte[] input)
@@ -185,21 +185,21 @@ namespace Honoo.IO.Hashing
             return input[input.Length - 1];
         }
 
-        private static string GetBinaryString(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        private static string GetBinaryString(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
                 throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
             }
-            if (truncateToBinaryWidth.HasValue && truncateToBinaryWidth <= 0)
+            if (truncateToWidthBits.HasValue && truncateToWidthBits <= 0)
             {
-                throw new ArgumentException("Invalid width. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToBinaryWidth));
+                throw new ArgumentException("Invalid width. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
             }
             input = input.Trim();
             StringBuilder bin = new StringBuilder();
             switch (inputFormat)
             {
-                case NumericsStringFormat.Binary:
+                case CrcStringFormat.Binary:
                     if (input.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
                     {
                         bin.Append(input, 2, input.Length - 2);
@@ -210,7 +210,7 @@ namespace Honoo.IO.Hashing
                     }
                     break;
 
-                case NumericsStringFormat.Hex:
+                case CrcStringFormat.Hex:
                     if (input.StartsWith("0x", StringComparison.OrdinalIgnoreCase) || input.StartsWith("&h", StringComparison.OrdinalIgnoreCase))
                     {
                         for (int i = 2; i < input.Length; i++)
@@ -227,9 +227,9 @@ namespace Honoo.IO.Hashing
                     }
                     break;
 
-                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(inputFormat));
+                default: throw new ArgumentException("Invalid crc string format.", nameof(inputFormat));
             }
-            int width = truncateToBinaryWidth.HasValue && truncateToBinaryWidth > 0 ? truncateToBinaryWidth.Value : bin.Length;
+            int width = truncateToWidthBits.HasValue && truncateToWidthBits > 0 ? truncateToWidthBits.Value : bin.Length;
             if (bin.Length > width)
             {
                 bin.Remove(0, bin.Length - width);
@@ -241,9 +241,9 @@ namespace Honoo.IO.Hashing
             return bin.ToString();
         }
 
-        private static byte[] GetBytes(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        private static byte[] GetBytes(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bin = GetBinaryString(inputFormat, input, truncateToBinaryWidth);
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
@@ -258,9 +258,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static string GetHexString(NumericsStringFormat inputFormat, string input, int? truncateToBinaryWidth)
+        private static string GetHexString(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bin = GetBinaryString(inputFormat, input, truncateToBinaryWidth);
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)

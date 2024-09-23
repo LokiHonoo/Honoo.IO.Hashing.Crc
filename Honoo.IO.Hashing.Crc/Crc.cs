@@ -4,7 +4,7 @@ namespace Honoo.IO.Hashing
 {
     /// <summary>
     /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
-    /// <br/>Catalogue of parametrised CRC algorithms: https://reveng.sourceforge.io/crc-catalogue/all.htm .
+    /// <br/>Catalogue of parametrised CRC algorithms: <see href="https://reveng.sourceforge.io/crc-catalogue/all.htm"/>.
     /// </summary>
     public abstract class Crc
     {
@@ -306,7 +306,7 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(NumericsStringFormat outputFormat)
+        public string ComputeFinal(CrcStringFormat outputFormat)
         {
             return _engine.ComputeFinal(outputFormat);
         }

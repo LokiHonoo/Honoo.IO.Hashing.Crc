@@ -12,7 +12,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 82;
         private const string XOROUT = "0x000000000000000000000";
-        private static uint[][] _table;
+        private static ulong[][] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
@@ -27,28 +27,28 @@ namespace Honoo.IO.Hashing
                                WIDTH,
                                REFIN,
                                REFOUT,
-                               new CrcParameter(NumericsStringFormat.Hex, POLY, WIDTH),
-                               new CrcParameter(NumericsStringFormat.Hex, INIT, WIDTH),
-                               new CrcParameter(NumericsStringFormat.Hex, XOROUT, WIDTH),
+                               new CrcParameter(CrcStringFormat.Hex, POLY, WIDTH),
+                               new CrcParameter(CrcStringFormat.Hex, INIT, WIDTH),
+                               new CrcParameter(CrcStringFormat.Hex, XOROUT, WIDTH),
                                () => { return new Crc82Darc(); });
         }
 
-        private static CrcEngineSharding32 GetEngine()
+        private static CrcEngineSharding64 GetEngine()
         {
             //
-            // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430; (CrcEngineSharding8 88-82, (CrcEngineSharding32 96-82))
+            // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430;
+            // Need spaces for CrcEngineSharding8 at 8*11-82>0, CrcEngineSharding32 at 32*3-82>0, CrcEngineSharding64 at 64*2-82>0
             //
             if (_table == null)
             {
-                uint[] polyParsed = new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 };
-                _table = CrcEngineSharding32.GenerateReversedTable(polyParsed);
+                _table = CrcEngineSharding64.GenerateReversedTable(new ulong[] { 0x0000000000022080, 0x8A00A2022200C430 });
             }
-            return new CrcEngineSharding32(WIDTH,
+            return new CrcEngineSharding64(WIDTH,
                                            REFIN,
                                            REFOUT,
-                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, POLY, null),
-                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, INIT, null),
-                                           CrcConverter.ToUInt32Array(NumericsStringFormat.Hex, XOROUT, null),
+                                           new ulong[] { 0x000000000000308C, 0x0111011401440411 },
+                                           new ulong[2],
+                                           new ulong[2],
                                            _table);
         }
     }

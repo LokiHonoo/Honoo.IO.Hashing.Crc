@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Honoo.IO.Hashing
+﻿namespace Honoo.IO.Hashing
 {
     internal abstract class CrcEngine
     {
@@ -23,9 +21,10 @@ namespace Honoo.IO.Hashing
         }
 
         #endregion Construction
+
         internal abstract object CloneTable();
 
-        internal abstract string ComputeFinal(NumericsStringFormat outputFormat);
+        internal abstract string ComputeFinal(CrcStringFormat outputFormat);
 
         internal abstract int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset);
 

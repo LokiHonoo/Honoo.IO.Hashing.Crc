@@ -92,13 +92,13 @@ namespace Honoo.IO.Hashing
         /// <param name="value">Value string. String must binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55).</param>
         /// <param name="width">Truncated the value to the specifies crc width.</param>
         /// <exception cref="Exception"></exception>
-        public CrcParameter(NumericsStringFormat format, string value, int width)
+        public CrcParameter(CrcStringFormat format, string value, int width)
         {
             switch (format)
             {
-                case NumericsStringFormat.Binary: _valueType = ValueType.BinaryString; break;
-                case NumericsStringFormat.Hex: _valueType = ValueType.HexString; break;
-                default: throw new ArgumentException("Invalid NumericsStringFormat value.", nameof(format));
+                case CrcStringFormat.Binary: _valueType = ValueType.BinaryString; break;
+                case CrcStringFormat.Hex: _valueType = ValueType.HexString; break;
+                default: throw new ArgumentException("Invalid crc string format.", nameof(format));
             }
             _value = CrcConverter.ToString(format, value, width, format);
             _width = width;
@@ -113,7 +113,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool Equals(CrcParameter other)
         {
-            return other != null && _valueType == other._valueType && _value == other._value;
+            return other != null && _valueType == other._valueType && _width == other._width && _value == other._value;
         }
 
         /// <summary>
@@ -132,25 +132,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return _valueType.GetHashCode() ^ _value.GetHashCode();
-        }
-
-        /// <summary>
-        /// Gets binary <see cref="string"/> value of converted.
-        /// </summary>
-        /// <returns></returns>
-        public string ToBinaryString()
-        {
-            switch (_valueType)
-            {
-                case ValueType.UInt8: return Convert.ToString((byte)_value, 2);
-                case ValueType.UInt16: return Convert.ToString((ushort)_value, 2);
-                case ValueType.UInt32: return Convert.ToString((uint)_value, 2);
-                case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 2);
-                case ValueType.BinaryString: return (string)_value;
-                case ValueType.HexString: return CrcConverter.ToString(NumericsStringFormat.Hex, (string)_value, null, NumericsStringFormat.Binary);
-                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
-            }
+            return _valueType.GetHashCode() ^ _width.GetHashCode() ^ _value.GetHashCode();
         }
 
         /// <summary>
@@ -168,20 +150,37 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Gets hex <see cref="string"/> value of converted.
+        /// Gets <see cref="string"/> value of converted.
         /// </summary>
+        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ToHexString()
+        public string ToString(CrcStringFormat outputFormat)
         {
-            switch (_valueType)
+            switch (outputFormat)
             {
-                case ValueType.UInt8: return Convert.ToString((byte)_value, 16);
-                case ValueType.UInt16: return Convert.ToString((ushort)_value, 16);
-                case ValueType.UInt32: return Convert.ToString((uint)_value, 16);
-                case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 16);
-                case ValueType.BinaryString: return CrcConverter.ToString(NumericsStringFormat.Binary, (string)_value, null, NumericsStringFormat.Hex);
-                case ValueType.HexString: return (string)_value;
-                default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
+                case CrcStringFormat.Binary:
+                    switch (_valueType)
+                    {
+                        case ValueType.UInt8: return Convert.ToString((byte)_value, 2);
+                        case ValueType.UInt16: return Convert.ToString((ushort)_value, 2);
+                        case ValueType.UInt32: return Convert.ToString((uint)_value, 2);
+                        case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 2);
+                        case ValueType.BinaryString: return (string)_value;
+                        case ValueType.HexString: return CrcConverter.ToString(CrcStringFormat.Hex, (string)_value, null, CrcStringFormat.Binary);
+                        default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
+                    }
+                case CrcStringFormat.Hex:
+                    switch (_valueType)
+                    {
+                        case ValueType.UInt8: return Convert.ToString((byte)_value, 16);
+                        case ValueType.UInt16: return Convert.ToString((ushort)_value, 16);
+                        case ValueType.UInt32: return Convert.ToString((uint)_value, 16);
+                        case ValueType.UInt64: return Convert.ToString((long)(ulong)_value, 16);
+                        case ValueType.BinaryString: return CrcConverter.ToString(CrcStringFormat.Binary, (string)_value, null, CrcStringFormat.Hex);
+                        case ValueType.HexString: return (string)_value;
+                        default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
+                    }
+                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
             }
         }
 
@@ -191,7 +190,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override string ToString()
         {
-            return ToHexString();
+            return ToString(CrcStringFormat.Hex);
         }
 
         /// <summary>

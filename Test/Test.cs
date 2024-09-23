@@ -105,7 +105,7 @@ namespace Test
                     if (name == "CRC-32")
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(Calc(new Force.Crc32.Crc32Algorithm(), "Crc32.NET", input, out string hex));
+                        Console.WriteLine(Calc(new K4os.Hash.Crc.Crc32(), "K4os Crc32", input, out string hex));
                         Console.ResetColor();
                         checksums.Add(hex);
                     }
@@ -116,10 +116,38 @@ namespace Test
                         Console.ResetColor();
                         checksums.Add(hex);
                     }
+                    if (name == "CRC-64")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(new System.IO.Hashing.Crc64(), "System.IO.Hashing.Crc64", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
+                    }
+                    if (name == "CRC-14/DARC")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(System.Data.HashFunction.CRC.CRCFactory.Instance.Create(System.Data.HashFunction.CRC.CRCConfig.CRC14_DARC), "HashFunction", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
+                    }
+                    if (name == "CRC-31/PHILIPS")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(System.Data.HashFunction.CRC.CRCFactory.Instance.Create(System.Data.HashFunction.CRC.CRCConfig.CRC31_PHILIPS), "HashFunction", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
+                    }
+                    if (name == "CRC-40/GSM")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(System.Data.HashFunction.CRC.CRCFactory.Instance.Create(System.Data.HashFunction.CRC.CRCConfig.CRC40_GSM), "HashFunction", input, out string hex));
+                        Console.ResetColor();
+                        checksums.Add(hex);
+                    }
                 }
-                var poly = new CrcParameter(NumericsStringFormat.Hex, alg.Poly, alg.Width);
-                var init = new CrcParameter(NumericsStringFormat.Hex, alg.Init, alg.Width);
-                var xorout = new CrcParameter(NumericsStringFormat.Hex, alg.Xorout, alg.Width);
+                var poly = new CrcParameter(CrcStringFormat.Hex, alg.Poly, alg.Width);
+                var init = new CrcParameter(CrcStringFormat.Hex, alg.Init, alg.Width);
+                var xorout = new CrcParameter(CrcStringFormat.Hex, alg.Xorout, alg.Width);
                 Do(alg.Width, alg.Refin, alg.Refout, poly, init, xorout, input, checksums, displayLimit);
                 Console.WriteLine();
             }
@@ -129,9 +157,9 @@ namespace Test
             Do(217,
                false,
             false,
-               new CrcParameter(NumericsStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
-               new CrcParameter(NumericsStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
-               new CrcParameter(NumericsStringFormat.Hex, "0x00000000000000000000000000000000", 217),
+               new CrcParameter(CrcStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
+               new CrcParameter(CrcStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
+               new CrcParameter(CrcStringFormat.Hex, "0x00000000000000000000000000000000", 217),
                input,
                new List<string>(),
                displayLimit);
@@ -141,10 +169,54 @@ namespace Test
             Console.WriteLine();
         }
 
+        private static string Calc(System.Data.HashFunction.CRC.ICRC crc, string name, byte[] input, out string hex)
+        {
+            var sb = new StringBuilder();
+            byte[] checksum = crc.ComputeHash(input).Hash;
+            for (int i = checksum.Length - 1; i >= 0; i--)
+            {
+                sb.Append(Convert.ToString(checksum[i], 16).PadLeft(2, '0'));
+            }
+            hex = sb.ToString();
+            hex = CrcConverter.ToString(CrcStringFormat.Hex, hex, crc.HashSizeInBits, CrcStringFormat.Hex);
+            sb.Clear();
+            sb.Append(name.PadRight(27));
+            sb.Append("        ");
+
+            sb.Append(hex); 
+            sb.Append(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return sb.ToString();
+        }
+
+        private static string Calc(K4os.Hash.Crc.Crc32 crc, string name, byte[] input, out string hex)
+        {
+            var sb = new StringBuilder();
+            crc.Update(input);
+            hex = Convert.ToString(crc.Digest(), 16);
+            sb.Append(name.PadRight(27));
+            sb.Append("        ");
+            sb.Append(hex);
+            sb.Append(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return sb.ToString();
+        }
+
         private static string Calc(HashAlgorithm crc, string name, byte[] input, out string hex)
         {
             var sb = new StringBuilder();
             byte[] checksum = crc.ComputeHash(input);
+            hex = BitConverter.ToString(checksum).Replace("-", string.Empty).ToLowerInvariant();
+            sb.Append(name.PadRight(27));
+            sb.Append("        ");
+            sb.Append(hex);
+            sb.Append(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return sb.ToString();
+        }
+
+        private static string Calc(System.IO.Hashing.Crc64 crc, string name, byte[] input, out string hex)
+        {
+            var sb = new StringBuilder();
+            crc.Append(input);
+            byte[] checksum = crc.GetCurrentHash();
             hex = BitConverter.ToString(checksum).Replace("-", string.Empty).ToLowerInvariant();
             sb.Append(name.PadRight(27));
             sb.Append("        ");
@@ -167,7 +239,7 @@ namespace Test
             {
                 crc.Update(item);
             }
-            string res1 = crc.ComputeFinal(NumericsStringFormat.Hex);
+            string res1 = crc.ComputeFinal(CrcStringFormat.Hex);
             if (res1.Length > displayLimit)
             {
                 res1 = res1.Substring(res1.Length - displayLimit, displayLimit);
