@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Honoo.IO.Hashing
@@ -107,7 +108,16 @@ namespace Honoo.IO.Hashing
 
         internal override object CloneTable()
         {
-            return _table?.Clone();
+            if (_table != null)
+            {
+                var table = new List<ushort[]>();
+                foreach (ushort[] item in _table)
+                {
+                    table.Add((ushort[])item.Clone());
+                }
+                return table.ToArray();
+            }
+            return null;
         }
 
         #endregion Table

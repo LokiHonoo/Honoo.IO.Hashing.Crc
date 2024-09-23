@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Honoo.IO.Hashing
@@ -74,6 +75,8 @@ namespace Honoo.IO.Hashing
             _crc = (ulong[])_initParsed.Clone();
         }
 
+        #endregion Construction
+
         #region Table
 
         internal static ulong[][] GenerateReversedTable(ulong[] polyParsed)
@@ -126,12 +129,19 @@ namespace Honoo.IO.Hashing
 
         internal override object CloneTable()
         {
-            return _table?.Clone();
+            if (_table != null)
+            {
+                var table = new List<ulong[]>();
+                foreach (ulong[] item in _table)
+                {
+                    table.Add((ulong[])item.Clone());
+                }
+                return table.ToArray();
+            }
+            return null;
         }
 
         #endregion Table
-
-        #endregion Construction
 
         #region ComputeFinal
 
