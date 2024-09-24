@@ -120,7 +120,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0xE5);
+                _table = CrcEngine8.GenerateTableRef(0xE5);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -198,7 +198,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0x9C);
+                _table = CrcEngine8.GenerateTableRef(0x9C);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -285,7 +285,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0xB8);
+                _table = CrcEngine8.GenerateTableRef(0xB8);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -576,7 +576,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0x8C);
+                _table = CrcEngine8.GenerateTableRef(0x8C);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -732,7 +732,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0xE0);
+                _table = CrcEngine8.GenerateTableRef(0xE0);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -810,7 +810,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0xD9);
+                _table = CrcEngine8.GenerateTableRef(0xD9);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }

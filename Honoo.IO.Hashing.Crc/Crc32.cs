@@ -42,7 +42,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
+                _table = CrcEngine32.GenerateTableRef(0xEDB88320);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -81,7 +81,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xC8DF352F);
+                _table = CrcEngine32.GenerateTableRef(0xC8DF352F);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -177,7 +177,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0x82F63B78);
+                _table = CrcEngine32.GenerateTableRef(0x82F63B78);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -216,7 +216,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xD8018001);
+                _table = CrcEngine32.GenerateTableRef(0xD8018001);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -312,7 +312,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xD419CC15);
+                _table = CrcEngine32.GenerateTableRef(0xD419CC15);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -360,7 +360,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xEDB88320);
+                _table = CrcEngine32.GenerateTableRef(0xEDB88320);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -399,7 +399,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
+                _table = CrcEngine32.GenerateTableRef(0xEB31D82E);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -438,7 +438,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine32.GenerateReversedTable(0xEB31D82E);
+                _table = CrcEngine32.GenerateTableRef(0xEB31D82E);
             }
             return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }

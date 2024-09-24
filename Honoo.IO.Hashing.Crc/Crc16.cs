@@ -42,7 +42,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xA001);
+                _table = CrcEngine16.GenerateTableRef(0xA001);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -90,7 +90,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -390,7 +390,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xA6BC);
+                _table = CrcEngine16.GenerateTableRef(0xA6BC);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -642,7 +642,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xA001);
+                _table = CrcEngine16.GenerateTableRef(0xA001);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -681,7 +681,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -729,7 +729,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xA001);
+                _table = CrcEngine16.GenerateTableRef(0xA001);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -768,7 +768,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xD010);
+                _table = CrcEngine16.GenerateTableRef(0xD010);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -942,7 +942,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -1108,7 +1108,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -1195,7 +1195,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0xA001);
+                _table = CrcEngine16.GenerateTableRef(0xA001);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -1243,7 +1243,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -1330,7 +1330,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x1021);
+                _table = CrcEngine16.GenerateTableRef(0x1021);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
@@ -1379,7 +1379,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x8408);
+                _table = CrcEngine16.GenerateTableRef(0x8408);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }

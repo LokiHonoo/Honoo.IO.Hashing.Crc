@@ -12,42 +12,47 @@
         Auto,
 
         /// <summary>
-        /// Use 8 bit calculation core. The allowed width bits length are between 0 - 8.
+        /// Use 8 bits calculation core. The allowed width bits length are between 0 - 8.
         /// </summary>
         UInt8,
 
         /// <summary>
-        /// Use 16 bit calculation core. The allowed width bits length are between 0 - 16.
+        /// Use 16 bits calculation core. The allowed width bits length are between 0 - 16.
         /// </summary>
         UInt16,
 
         /// <summary>
-        /// Use 32 bit calculation core. The allowed width bits length are between 0 - 32.
+        /// Use 32 bits calculation core. The allowed width bits length are between 0 - 32.
         /// </summary>
         UInt32,
 
         /// <summary>
-        /// Use 64 bit calculation core. The allowed width bits length are between 0 - 64.
+        /// Use 64 bits calculation core. The allowed width bits length are between 0 - 64.
         /// </summary>
         UInt64,
 
         /// <summary>
-        /// Use 8 bit shardings calculation core. The allowed width bits length are more than 0.
+        /// Use 128 bits (link 2 UInt64) calculation core. The allowed width bits length are between 0 - 128.
+        /// </summary>
+        UInt128L2,
+
+        /// <summary>
+        /// Use 8 bits shardings calculation core. The allowed width bits length are more than 0.
         /// </summary>
         Sharding8,
 
         /// <summary>
-        /// Use 16 bit sharding calculation core. The allowed width bits length are more than 0.
+        /// Use 16 bits sharding calculation core. The allowed width bits length are more than 0.
         /// </summary>
         Sharding16,
 
         /// <summary>
-        /// Use 32 bit sharding calculation core. The allowed width bits length are more than 0.
+        /// Use 32 bits sharding calculation core. The allowed width bits length are more than 0.
         /// </summary>
         Sharding32,
 
         /// <summary>
-        /// Use 64 bit sharding calculation core. The allowed width bits length are more than 0.
+        /// Use 64 bits sharding calculation core. The allowed width bits length are more than 0.
         /// </summary>
         Sharding64,
     }

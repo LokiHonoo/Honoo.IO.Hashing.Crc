@@ -73,7 +73,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine8.GenerateReversedTable(0x6);
+                _table = CrcEngine8.GenerateTableRef(0x6);
             }
             return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }

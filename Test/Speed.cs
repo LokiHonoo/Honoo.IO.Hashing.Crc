@@ -12,7 +12,7 @@ namespace Test
 
         internal static void Test()
         {
-            int length = 8 * 1024;
+            int length = 7 * 1024 + 341;
             byte[] input = new byte[length];
             new Random().NextBytes(input);
             int times = 5000;
@@ -26,10 +26,10 @@ namespace Test
             crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly.ToUInt32(), CrcName.CRC32.Init.ToUInt32(), CrcName.CRC32.Xorout.ToUInt32(), false);
             Do(crc, input, times);
             //
-            crc = new Crc64Redis();
+            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.UInt64);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC64_REDIS.Name, CrcName.CRC64_REDIS.Width, CrcName.CRC64_REDIS.Refin, CrcName.CRC64_REDIS.Refout, CrcName.CRC64_REDIS.Poly.ToUInt64(), CrcName.CRC64_REDIS.Init.ToUInt64(), CrcName.CRC64_REDIS.Xorout.ToUInt64(), false);
+            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.UInt128L2);
             Do(crc, input, times);
             //
             crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding8);
@@ -44,13 +44,24 @@ namespace Test
             crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding64);
             Do(crc, input, times);
             //
+            crc = new Crc64Redis();
+            Do(crc, input, times);
+            //
+            crc = Crc.CreateBy(CrcName.CRC64_REDIS.Name, CrcName.CRC64_REDIS.Width, CrcName.CRC64_REDIS.Refin, CrcName.CRC64_REDIS.Refout, CrcName.CRC64_REDIS.Poly, CrcName.CRC64_REDIS.Init, CrcName.CRC64_REDIS.Xorout, true, CrcCore.Sharding64);
+            Do(crc, input, times);
+            //
+            crc = new Crc82Darc();
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC82_DARC.Name, CrcName.CRC82_DARC.Width, CrcName.CRC82_DARC.Refin, CrcName.CRC82_DARC.Refout, CrcName.CRC82_DARC.Poly, CrcName.CRC82_DARC.Init, CrcName.CRC82_DARC.Xorout, true, CrcCore.Sharding64);
+            Do(crc, input, times);
+            //
             crc = Crc.CreateBy("CRC-217/CUSTOM",
                                217,
                                true,
                                true,
                                new CrcParameter(CrcStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
                                new CrcParameter(CrcStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
-                              new CrcParameter(CrcStringFormat.Hex, "0x00000000000000000000000000000000", 217),
+                               new CrcParameter(CrcStringFormat.Hex, "0x00000000000000000000000000000000", 217),
                                true,
                                CrcCore.Sharding64);
             Do(crc, input, times);
@@ -70,19 +81,6 @@ namespace Test
             //
             //
             //
-            var k4os = new K4os.Hash.Crc.Crc32();
-            _stopwatch.Restart();
-            for (int i = 0; i < times; i++)
-            {
-                k4os.Update(input);
-                k4os.Digest();
-            }
-            _stopwatch.Stop();
-            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|[K4os.Hash.Crc.Crc32](https://github.com/MiloszKrajewski/K4os.Hash.Crc)||1 KiB|" + spd + " " + unit + "|");
-            //
-            //
-            //
             var forceCrc32 = new Force.Crc32.Crc32Algorithm();
             _stopwatch.Restart();
             for (int i = 0; i < times; i++)
@@ -92,6 +90,18 @@ namespace Test
             _stopwatch.Stop();
             spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
             Console.WriteLine($"|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)||16 KiB|" + spd + " " + unit + "|");
+            //
+            //
+            //
+            var hf = System.Data.HashFunction.CRC.CRCFactory.Instance.Create(System.Data.HashFunction.CRC.CRCConfig.CRC32);
+            _stopwatch.Restart();
+            for (int i = 0; i < times; i++)
+            {
+                hf.ComputeHash(input);
+            }
+            _stopwatch.Stop();
+            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[HashFunction](https://github.com/brandondahler/Data.HashFunction/)||1 KiB|" + spd + " " + unit + "|");
             //
             //
             //

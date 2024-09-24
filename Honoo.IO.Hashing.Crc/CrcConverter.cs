@@ -91,14 +91,22 @@ namespace Honoo.IO.Hashing
             return BEToUInt8(bytes);
         }
 
-        internal static ushort[] ToUInt16Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
+        internal static ushort[] ToUInt16Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, int? padLength)
         {
+            if (padLength.HasValue && padLength <= 0)
+            {
+                throw new ArgumentException("Invalid pad length. The allowed values are more than 0 or set 'null' to not pad.", nameof(padLength));
+            }
             string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 16;
             int truncates = rem > 0 ? 16 - rem : 0;
             if (truncates > 0)
             {
                 bin = bin.PadLeft(bin.Length + truncates, '0');
+            }
+            if (padLength.HasValue)
+            {
+                bin = bin.PadLeft(padLength.Value * 16, '0');
             }
             ushort[] result = new ushort[bin.Length / 16];
             for (int i = 0; i < result.Length; i++)
@@ -108,14 +116,22 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static uint[] ToUInt32Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
+        internal static uint[] ToUInt32Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, int? padLength)
         {
+            if (padLength.HasValue && padLength <= 0)
+            {
+                throw new ArgumentException("Invalid pad length. The allowed values are more than 0 or set 'null' to not pad.", nameof(padLength));
+            }
             string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 32;
             int truncates = rem > 0 ? 32 - rem : 0;
             if (truncates > 0)
             {
                 bin = bin.PadLeft(bin.Length + truncates, '0');
+            }
+            if (padLength.HasValue)
+            {
+                bin = bin.PadLeft(padLength.Value * 32, '0');
             }
             uint[] result = new uint[bin.Length / 32];
             for (int i = 0; i < result.Length; i++)
@@ -125,14 +141,22 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static ulong[] ToUInt64Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
+        internal static ulong[] ToUInt64Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, int? padLength)
         {
+            if (padLength.HasValue && padLength <= 0)
+            {
+                throw new ArgumentException("Invalid pad length. The allowed values are more than 0 or set 'null' to not pad.", nameof(padLength));
+            }
             string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
             int rem = bin.Length % 64;
             int truncates = rem > 0 ? 64 - rem : 0;
             if (truncates > 0)
             {
                 bin = bin.PadLeft(bin.Length + truncates, '0');
+            }
+            if (padLength.HasValue)
+            {
+                bin = bin.PadLeft(padLength.Value * 64, '0');
             }
             ulong[] result = new ulong[bin.Length / 64];
             for (int i = 0; i < result.Length; i++)
@@ -142,9 +166,29 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal static byte[] ToUInt8Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
+        internal static byte[] ToUInt8Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, int? padLength)
         {
-            return GetBytes(inputFormat, input, truncateToWidthBits);
+            if (padLength.HasValue && padLength <= 0)
+            {
+                throw new ArgumentException("Invalid pad length. The allowed values are more than 0 or set 'null' to not pad.", nameof(padLength));
+            }
+            string bin = GetBinaryString(inputFormat, input, truncateToWidthBits);
+            int rem = bin.Length % 8;
+            int truncates = rem > 0 ? 8 - rem : 0;
+            if (truncates > 0)
+            {
+                bin = bin.PadLeft(bin.Length + truncates, '0');
+            }
+            if (padLength.HasValue)
+            {
+                bin = bin.PadLeft(padLength.Value * 8, '0');
+            }
+            byte[] result = new byte[bin.Length / 8];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToByte(bin.Substring(i * 8, 8), 2);
+            }
+            return result;
         }
 
         private static ushort BEToUInt16(byte[] input)

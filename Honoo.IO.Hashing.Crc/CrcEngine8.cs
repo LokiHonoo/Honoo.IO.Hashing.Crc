@@ -44,7 +44,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
+            _table = generateTable ? _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = _initParsed;
             _withTable = generateTable;
         }
@@ -73,28 +73,6 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static byte[] GenerateReversedTable(byte polyParsed)
-        {
-            byte[] table = new byte[256];
-            for (int i = 0; i < 256; i++)
-            {
-                byte data = (byte)i;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((data & 1) == 1)
-                    {
-                        data = (byte)((data >> 1) ^ polyParsed);
-                    }
-                    else
-                    {
-                        data >>= 1;
-                    }
-                }
-                table[i] = data;
-            }
-            return table;
-        }
-
         internal static byte[] GenerateTable(byte polyParsed)
         {
             byte[] table = new byte[256];
@@ -110,6 +88,28 @@ namespace Honoo.IO.Hashing
                     else
                     {
                         data <<= 1;
+                    }
+                }
+                table[i] = data;
+            }
+            return table;
+        }
+
+        internal static byte[] GenerateTableRef(byte polyParsed)
+        {
+            byte[] table = new byte[256];
+            for (int i = 0; i < 256; i++)
+            {
+                byte data = (byte)i;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((data & 1) == 1)
+                    {
+                        data = (byte)((data >> 1) ^ polyParsed);
+                    }
+                    else
+                    {
+                        data >>= 1;
                     }
                 }
                 table[i] = data;
@@ -244,12 +244,12 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            _crc = (byte)((_crc << 8) ^ _table[(_crc & 0xFF) ^ input]);
+            _crc = (byte)((_crc << 8) ^ _table[_crc ^ input]);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            _crc = (byte)((_crc >> 8) ^ _table[(_crc & 0xFF) ^ input]);
+            _crc = (byte)((_crc >> 8) ^ _table[_crc ^ input]);
         }
 
         #endregion Update byte
@@ -307,94 +307,94 @@ namespace Honoo.IO.Hashing
             {
                 while (length >= 32)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[8]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[9]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[10]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[11]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[12]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[13]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[14]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[15]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[16]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[17]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[18]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[19]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[20]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[21]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[22]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[23]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[24]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[25]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[26]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[27]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[28]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[29]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[30]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[31]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[7]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[8]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[9]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[10]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[11]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[12]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[13]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[14]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[15]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[16]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[17]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[18]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[19]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[20]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[21]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[22]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[23]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[24]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[25]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[26]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[27]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[28]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[29]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[30]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[31]]);
                     inputPointer += 32;
                     length -= 32;
                 }
                 if (length >= 16)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[8]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[9]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[10]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[11]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[12]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[13]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[14]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[15]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[7]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[8]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[9]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[10]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[11]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[12]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[13]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[14]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[15]]);
                     inputPointer += 16;
                     length -= 16;
                 }
                 if (length >= 8)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[7]]);
                     inputPointer += 8;
                     length -= 8;
                 }
                 if (length >= 4)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[3]]);
                     inputPointer += 4;
                     length -= 4;
                 }
                 if (length >= 2)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[1]]);
                     inputPointer += 2;
                     length -= 2;
                 }
                 if (length > 0)
                 {
-                    _crc = (byte)((_crc << 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
+                    _crc = (byte)((_crc << 8) ^ tablePointer[_crc ^ inputPointer[0]]);
                 }
             }
         }
@@ -405,94 +405,94 @@ namespace Honoo.IO.Hashing
             {
                 while (length >= 32)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[8]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[9]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[10]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[11]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[12]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[13]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[14]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[15]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[16]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[17]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[18]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[19]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[20]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[21]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[22]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[23]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[24]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[25]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[26]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[27]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[28]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[29]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[30]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[31]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[7]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[8]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[9]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[10]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[11]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[12]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[13]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[14]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[15]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[16]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[17]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[18]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[19]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[20]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[21]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[22]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[23]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[24]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[25]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[26]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[27]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[28]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[29]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[30]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[31]]);
                     inputPointer += 32;
                     length -= 32;
                 }
                 if (length >= 16)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[8]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[9]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[10]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[11]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[12]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[13]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[14]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[15]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[7]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[8]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[9]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[10]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[11]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[12]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[13]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[14]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[15]]);
                     inputPointer += 16;
                     length -= 16;
                 }
                 if (length >= 8)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[4]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[5]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[6]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[7]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[3]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[4]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[5]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[6]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[7]]);
                     inputPointer += 8;
                     length -= 8;
                 }
                 if (length >= 4)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[3]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[1]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[2]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[3]]);
                     inputPointer += 4;
                     length -= 4;
                 }
                 if (length >= 2)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[1]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[1]]);
                     inputPointer += 2;
                     length -= 2;
                 }
                 if (length > 0)
                 {
-                    _crc = (byte)((_crc >> 8) ^ tablePointer[(_crc & 0xFF) ^ inputPointer[0]]);
+                    _crc = (byte)((_crc >> 8) ^ tablePointer[_crc ^ inputPointer[0]]);
                 }
             }
         }

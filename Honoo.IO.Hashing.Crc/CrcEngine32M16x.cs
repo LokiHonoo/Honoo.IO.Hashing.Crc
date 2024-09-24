@@ -2,23 +2,23 @@
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngine64 : CrcEngine
+    internal sealed class CrcEngine32M16x : CrcEngine
     {
         #region Members
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
-        private readonly CrcCore _core = CrcCore.UInt64;
-        private readonly ulong _initParsed;
+        private readonly CrcCore _core = CrcCore.UInt32;
+        private readonly uint _initParsed;
         private readonly int _moves;
-        private readonly ulong _polyParsed;
+        private readonly uint _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly ulong[] _table;
+        private readonly uint[] _table;
         private readonly int _width;
         private readonly bool _withTable;
-        private readonly ulong _xoroutParsed;
-        private ulong _crc;
+        private readonly uint _xoroutParsed;
+        private uint _crc;
         internal override int ChecksumByteLength => _checksumByteLength;
         internal override CrcCore Core => _core;
         internal override int Width => _width;
@@ -29,18 +29,18 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine64(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool generateTable)
+        internal CrcEngine32M16x(int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool generateTable)
         {
-            if (width <= 0 || width > 64)
+            if (width <= 0 || width > 32)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 64.", nameof(width));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(width));
             }
             _width = width;
             _refin = refin;
             _refout = refout;
             _checksumByteLength = (int)Math.Ceiling(width / 8d);
             _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 64 - width;
+            _moves = 32 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
@@ -49,18 +49,18 @@ namespace Honoo.IO.Hashing
             _withTable = generateTable;
         }
 
-        internal CrcEngine64(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, ulong[] table)
+        internal CrcEngine32M16x(int width, bool refin, bool refout, uint poly, uint init, uint xorout, uint[] table)
         {
-            if (width <= 0 || width > 64)
+            if (width <= 0 || width > 32)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 64.", nameof(width));
+                throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(width));
             }
             _width = width;
             _refin = refin;
             _refout = refout;
             _checksumByteLength = (int)Math.Ceiling(width / 8d);
             _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 64 - width;
+            _moves = 32 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
@@ -73,15 +73,15 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static ulong[] GenerateTable(ulong polyParsed)
+        internal static uint[] GenerateTable(uint polyParsed)
         {
-            ulong[] table = new ulong[256];
+            uint[] table = new uint[256];
             for (int i = 0; i < 256; i++)
             {
-                ulong data = (ulong)i << 56;
+                uint data = (uint)(i << 24);
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((data & 0x8000000000000000) == 0x8000000000000000)
+                    if ((data & 0x80000000) == 0x80000000)
                     {
                         data = (data << 1) ^ polyParsed;
                     }
@@ -95,12 +95,12 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static ulong[] GenerateTableRef(ulong polyParsed)
+        internal static uint[] GenerateTableRef(uint polyParsed)
         {
-            ulong[] table = new ulong[256];
+            uint[] table = new uint[256];
             for (int i = 0; i < 256; i++)
             {
-                ulong data = (ulong)i;
+                uint data = (uint)i;
                 for (int j = 0; j < 8; j++)
                 {
                     if ((data & 1) == 1)
@@ -180,9 +180,9 @@ namespace Honoo.IO.Hashing
         internal override bool ComputeFinal(out uint checksum)
         {
             Finish();
-            checksum = (uint)_crc;
+            checksum = _crc;
             _crc = _initParsed;
-            return _width > 32;
+            return false;
         }
 
         internal override bool ComputeFinal(out ulong checksum)
@@ -225,10 +225,10 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithoutTable(byte input)
         {
-            _crc ^= (ulong)input << 56;
+            _crc ^= (uint)(input << 24);
             for (int j = 0; j < 8; j++)
             {
-                if ((_crc & 0x8000000000000000) == 0x8000000000000000)
+                if ((_crc & 0x80000000U) == 0x80000000U)
                 {
                     _crc = (_crc << 1) ^ _polyParsed;
                 }
@@ -257,7 +257,7 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            _crc = (_crc << 8) ^ _table[(_crc >> 56) ^ input];
+            _crc = (_crc << 8) ^ _table[(_crc >> 24) ^ input];
         }
 
         private void UpdateWithTableRef(byte input)
@@ -316,105 +316,105 @@ namespace Honoo.IO.Hashing
 
         private unsafe void UpdateWithTable(byte* inputPointer, int length)
         {
-            fixed (ulong* tablePointer = _table)
+            fixed (uint* tablePointer = _table)
             {
                 while (length >= 32)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[1]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[2]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[3]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[4]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[5]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[6]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[7]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[8]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[9]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[10]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[11]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[12]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[13]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[14]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[15]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[16]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[17]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[18]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[19]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[20]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[21]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[22]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[23]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[24]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[25]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[26]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[27]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[28]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[29]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[30]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[31]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[1]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[2]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[3]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[4]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[5]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[6]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[7]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[8]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[9]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[10]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[11]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[12]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[13]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[14]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[15]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[16]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[17]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[18]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[19]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[20]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[21]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[22]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[23]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[24]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[25]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[26]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[27]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[28]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[29]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[30]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[31]];
                     inputPointer += 32;
                     length -= 32;
                 }
                 if (length >= 16)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[1]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[2]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[3]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[4]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[5]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[6]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[7]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[8]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[9]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[10]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[11]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[12]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[13]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[14]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[15]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[1]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[2]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[3]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[4]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[5]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[6]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[7]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[8]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[9]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[10]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[11]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[12]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[13]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[14]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[15]];
                     inputPointer += 16;
                     length -= 16;
                 }
                 if (length >= 8)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[1]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[2]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[3]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[4]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[5]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[6]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[7]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[1]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[2]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[3]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[4]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[5]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[6]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[7]];
                     inputPointer += 8;
                     length -= 8;
                 }
                 if (length >= 4)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[1]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[2]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[3]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[1]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[2]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[3]];
                     inputPointer += 4;
                     length -= 4;
                 }
                 if (length >= 2)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[1]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[1]];
                     inputPointer += 2;
                     length -= 2;
                 }
                 if (length > 0)
                 {
-                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 56) ^ inputPointer[0]];
+                    _crc = (_crc << 8) ^ tablePointer[(_crc >> 24) ^ inputPointer[0]];
                 }
             }
         }
 
         private unsafe void UpdateWithTableRef(byte* inputPointer, int length)
         {
-            fixed (ulong* tablePointer = _table)
+            fixed (uint* tablePointer = _table)
             {
                 while (length >= 32)
                 {
@@ -517,9 +517,9 @@ namespace Honoo.IO.Hashing
             _crc = _initParsed;
         }
 
-        private static string GetBinaryString(ulong input, int width)
+        private static string GetBinaryString(uint input, int width)
         {
-            string result = Convert.ToString((long)input, 2).PadLeft(64, '0');
+            string result = Convert.ToString(input, 2).PadLeft(32, '0');
             if (result.Length > width)
             {
                 result = result.Substring(result.Length - width, width);
@@ -527,9 +527,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static string GetHexString(ulong input, int hexLength)
+        private static string GetHexString(uint input, int hexLength)
         {
-            string result = Convert.ToString((long)input, 16).PadLeft(16, '0');
+            string result = Convert.ToString(input, 16).PadLeft(8, '0');
             if (result.Length > hexLength)
             {
                 result = result.Substring(result.Length - hexLength, hexLength);
@@ -537,7 +537,7 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static ulong Parse(ulong input, int moves, bool reverse)
+        private static uint Parse(uint input, int moves, bool reverse)
         {
             if (moves > 0)
             {
@@ -550,18 +550,17 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static ulong Reverse(ulong input)
+        private static uint Reverse(uint input)
         {
-            input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;
-            input = (input & 0x3333333333333333) << 2 | (input >> 2) & 0x3333333333333333;
-            input = (input & 0x0F0F0F0F0F0F0F0F) << 4 | (input >> 4) & 0x0F0F0F0F0F0F0F0F;
-            input = (input & 0x00FF00FF00FF00FF) << 8 | (input >> 8) & 0x00FF00FF00FF00FF;
-            input = (input & 0x0000FFFF0000FFFF) << 16 | (input >> 16) & 0x0000FFFF0000FFFF;
-            input = (input & 0x00000000FFFFFFFF) << 32 | (input >> 32) & 0x00000000FFFFFFFF;
+            input = (input & 0x55555555) << 1 | (input >> 1) & 0x55555555;
+            input = (input & 0x33333333) << 2 | (input >> 2) & 0x33333333;
+            input = (input & 0x0F0F0F0F) << 4 | (input >> 4) & 0x0F0F0F0F;
+            input = (input & 0x00FF00FF) << 8 | (input >> 8) & 0x00FF00FF;
+            input = (input & 0x0000FFFF) << 16 | (input >> 16) & 0x0000FFFF;
             return input;
         }
 
-        private static ulong TruncateLeft(ulong input, int bits)
+        private static uint TruncateLeft(uint input, int bits)
         {
             if (bits > 0)
             {

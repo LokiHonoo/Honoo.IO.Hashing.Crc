@@ -33,7 +33,7 @@ namespace Honoo.IO.Hashing
                                () => { return new Crc82Darc(); });
         }
 
-        private static CrcEngineSharding64 GetEngine()
+        private static CrcEngine128L2 GetEngine()
         {
             //
             // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430;
@@ -41,15 +41,9 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngineSharding64.GenerateReversedTable(new ulong[] { 0x0000000000022080, 0x8A00A2022200C430 });
+                _table = CrcEngine128L2.GenerateTableRef(new ulong[] { 0x0000000000022080, 0x8A00A2022200C430 });
             }
-            return new CrcEngineSharding64(WIDTH,
-                                           REFIN,
-                                           REFOUT,
-                                           new ulong[] { 0x000000000000308C, 0x0111011401440411 },
-                                           new ulong[2],
-                                           new ulong[2],
-                                           _table);
+            return new CrcEngine128L2(WIDTH, REFIN, REFOUT, new ulong[] { 0x000000000000308C, 0x0111011401440411 }, new ulong[2], new ulong[2], _table);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Honoo.IO.Hashing
             //
             if (_table == null)
             {
-                _table = CrcEngine16.GenerateReversedTable(0x2804);
+                _table = CrcEngine16.GenerateTableRef(0x2804);
             }
             return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }

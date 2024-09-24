@@ -47,7 +47,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
+            _table = generateTable ? _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = (uint[])_initParsed.Clone();
             _withTable = generateTable;
         }
@@ -77,30 +77,6 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static uint[][] GenerateReversedTable(uint[] polyParsed)
-        {
-            uint[][] table = new uint[256][];
-            for (int i = 0; i < 256; i++)
-            {
-                uint[] data = new uint[polyParsed.Length];
-                data[data.Length - 1] = (uint)i;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((data[data.Length - 1] & 1) == 1)
-                    {
-                        data = ShiftRight(data, 1);
-                        data = Xor(data, polyParsed);
-                    }
-                    else
-                    {
-                        data = ShiftRight(data, 1);
-                    }
-                }
-                table[i] = data;
-            }
-            return table;
-        }
-
         internal static uint[][] GenerateTable(uint[] polyParsed)
         {
             uint[][] table = new uint[256][];
@@ -118,6 +94,30 @@ namespace Honoo.IO.Hashing
                     else
                     {
                         data = ShiftLeft(data, 1);
+                    }
+                }
+                table[i] = data;
+            }
+            return table;
+        }
+
+        internal static uint[][] GenerateTableRef(uint[] polyParsed)
+        {
+            uint[][] table = new uint[256][];
+            for (int i = 0; i < 256; i++)
+            {
+                uint[] data = new uint[polyParsed.Length];
+                data[data.Length - 1] = (uint)i;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((data[data.Length - 1] & 1) == 1)
+                    {
+                        data = ShiftRight(data, 1);
+                        data = Xor(data, polyParsed);
+                    }
+                    else
+                    {
+                        data = ShiftRight(data, 1);
                     }
                 }
                 table[i] = data;
@@ -301,14 +301,14 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            uint[] match = _table[((_crc[0] >> 24) & 0xFF) ^ input];
+            uint[] match = _table[(_crc[0] >> 24) ^ input];
             _crc = ShiftLeft(_crc, 8);
             _crc = Xor(_crc, match);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            uint[] match = _table[(_crc[_crc.Length - 1] & 0xFF) ^ input];
+            uint[] match = _table[(_crc[_crc.Length - 1] ^ input) & 0xFF];
             _crc = ShiftRight(_crc, 8);
             _crc = Xor(_crc, match);
         }
