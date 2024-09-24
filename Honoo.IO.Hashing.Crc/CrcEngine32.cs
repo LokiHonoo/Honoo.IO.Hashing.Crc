@@ -36,18 +36,17 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(width));
             }
             _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
-            _withTable = generateTable;
-            //
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _moves = 32 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = _initParsed;
+            _withTable = generateTable;
         }
 
         internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout, uint[] table)
@@ -57,18 +56,17 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are between 0 - 32.", nameof(width));
             }
             _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
-            _withTable = table != null;
-            //
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _moves = 32 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = table;
             _crc = _initParsed;
+            _withTable = table != null;
         }
 
         #endregion Construction

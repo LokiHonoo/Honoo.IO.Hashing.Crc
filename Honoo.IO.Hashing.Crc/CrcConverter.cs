@@ -21,7 +21,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
@@ -40,7 +40,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
@@ -53,7 +53,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
@@ -66,7 +66,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
@@ -79,7 +79,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Convert binary(e.g. 0b11110000), hex(e.g. 0xFF55) to the specified format,
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>

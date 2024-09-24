@@ -156,7 +156,7 @@ namespace Test
             Console.WriteLine();
             Do(217,
                false,
-            false,
+               false,
                new CrcParameter(CrcStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
                new CrcParameter(CrcStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
                new CrcParameter(CrcStringFormat.Hex, "0x00000000000000000000000000000000", 217),
@@ -183,7 +183,7 @@ namespace Test
             sb.Append(name.PadRight(27));
             sb.Append("        ");
 
-            sb.Append(hex); 
+            sb.Append(hex);
             sb.Append(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             return sb.ToString();
         }

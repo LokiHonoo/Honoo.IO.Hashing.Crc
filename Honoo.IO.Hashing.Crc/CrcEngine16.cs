@@ -36,18 +36,17 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid width bits length. The allowed values are between 0 - 16.", nameof(width));
             }
             _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
-            _withTable = generateTable;
-            //
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _moves = 16 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = _initParsed;
+            _withTable = generateTable;
         }
 
         internal CrcEngine16(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, ushort[] table)
@@ -57,18 +56,17 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid width bits length. The allowed values are between 0 - 16.", nameof(width));
             }
             _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
-            _withTable = table != null;
-            //
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _moves = 16 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = table;
             _crc = _initParsed;
+            _withTable = table != null;
         }
 
         #endregion Construction

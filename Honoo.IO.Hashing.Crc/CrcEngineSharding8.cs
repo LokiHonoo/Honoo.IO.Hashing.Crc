@@ -38,12 +38,10 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
             }
             _width = width;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             _refin = refin;
             _refout = refout;
-            _withTable = generateTable;
-            //
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
             int rem = width % 8;
             _moves = rem > 0 ? 8 - rem : 0;
             _polyParsed = Parse(poly, _moves, _refin);
@@ -51,6 +49,7 @@ namespace Honoo.IO.Hashing
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = generateTable ? _refin ? GenerateReversedTable(_polyParsed) : GenerateTable(_polyParsed) : null;
             _crc = (byte[])_initParsed.Clone();
+            _withTable = generateTable;
         }
 
         #endregion Construction

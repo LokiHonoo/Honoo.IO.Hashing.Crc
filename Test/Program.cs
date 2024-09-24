@@ -1,5 +1,4 @@
-﻿using Honoo.IO.Hashing;
-using System;
+﻿using System;
 
 namespace Test
 {
