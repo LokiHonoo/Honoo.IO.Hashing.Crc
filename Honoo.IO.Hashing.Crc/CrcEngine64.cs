@@ -273,16 +273,13 @@ namespace Honoo.IO.Hashing
         {
             if (_withTable)
             {
-                if (_refin)
+                fixed (byte* inputPointer = inputBuffer)
                 {
-                    fixed (byte* inputPointer = inputBuffer)
+                    if (_refin)
                     {
                         UpdateWithTableRef(inputPointer, length);
                     }
-                }
-                else
-                {
-                    fixed (byte* inputPointer = inputBuffer)
+                    else
                     {
                         UpdateWithTable(inputPointer, length);
                     }
