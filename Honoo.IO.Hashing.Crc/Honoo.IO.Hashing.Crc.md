@@ -166,14 +166,6 @@ private static void Demo1()
 
 private static void Demo2()
 {
-    var crc = new Crc16Modbus();
-    crc.Update(inputBytes);
-    // The return value length is crc.ChecksumByteLength.
-    byte[] checksum = crc.ComputeFinal(Endian.BigEndian);
-}
-
-private static void Demo3()
-{
     var crc = Crc.Create(CrcName.CRC40_GSM);
     crc.Update(inputBytes);
     // Width is 40 bits, ulong is 64 bits, The truncated is "False".
@@ -183,39 +175,55 @@ private static void Demo3()
     bool truncated = crc.ComputeFinal(out uint checksum);
 }
 
+private static void Demo3()
+{
+    var crc = new Crc16Modbus();
+    crc.Update(inputBytes);
+    // The return value length is crc.ChecksumByteLength.
+    byte[] checksum = crc.ComputeFinal(CrcEndian.BigEndian);
+}
+
 private static void Demo4()
 {
     // Custom width and parameters are supported.
     var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumByteLength];
-    int length = crc.ComputeFinal(Endian.BigEndian, checksum, 0);
+    int length = crc.ComputeFinal(CrcEndian.BigEndian, checksum, 0);
 }
 
 ```
 
 ## SPEED
 
-|algorithm|core|table overhead|speed|
-|:-------:|:--:|:------------:|----:|
-|CRC-32|UInt32|1 KiB|459 MiB/s|
-|CRC-32|UInt32||24 MiB/s|
-|CRC-32|UInt64|2 KiB|459 MiB/s|
-|CRC-32|UInt128L2|4 KiB|139 MiB/s|
-|CRC-32|Sharding8|1 KiB|81 MiB/s|
-|CRC-32|Sharding16|1 KiB|103 MiB/s|
-|CRC-32|Sharding32|1 KiB|134 MiB/s|
-|CRC-32|Sharding64|2 KiB|132 MiB/s|
-|CRC-64/REDIS|UInt64|2 KiB|459 MiB/s|
-|CRC-64/REDIS|Sharding64|2 KiB|132 MiB/s|
-|CRC-82/DARC|UInt128L2|4 KiB|140 MiB/s|
-|CRC-82/DARC|Sharding64|4 KiB|106 MiB/s|
-|CRC-217/CUSTOM|Sharding64|8 KiB|83 MiB/s|
-|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)||1 KiB|394 MiB/s|
-|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)||16 KiB|1628 MiB/s|
-|[HashFunction](https://github.com/brandondahler/Data.HashFunction/)||1 KiB|145 MiB/s|
-|SHA1|system||651 MiB/s|
-|SHA256|system||1885 MiB/s|
+|algorithm|core|table|table overhead|speed|
+|:-------:|:--:|:---:|:------------:|----:|
+|CRC-32|UInt32|Standard|1 KiB|465 MiB/s|
+|CRC-32|UInt32|M16x|16 KiB|2558 MiB/s|
+|CRC-32|UInt32|None||25 MiB/s|
+|-|-|-|-|-|
+|CRC-7|UInt8|Standard|256 B|280 MiB/s|
+|CRC-7|UInt8|Standard|256 B|280 MiB/s|
+|CRC-7|UInt16|Standard|512 B|245 MiB/s|
+|CRC-7|UInt32|Standard|1 KiB|459 MiB/s|
+|CRC-7|UInt64|Standard|2 KiB|465 MiB/s|
+|CRC-7|UInt128L2|Standard|4 KiB|128 MiB/s|
+|CRC-7|Sharding8|Standard|256 B|105 MiB/s|
+|CRC-7|Sharding16|Standard|512 B|106 MiB/s|
+|CRC-7|Sharding32|Standard|1 KiB|107 MiB/s|
+|CRC-7|Sharding64|Standard|2 KiB|108 MiB/s|
+|-|-|-|-|-|
+|CRC-5/ITU|UInt8|M16x|4 KiB|2984 MiB/s|
+|CRC-13/BBC|UInt16|M16x|8 KiB|2558 MiB/s|
+|CRC-24/BLE|UInt32|M16x|16 KiB|2558 MiB/s|
+|CRC-40/GSM|UInt64|M16x|32 KiB|2238 MiB/s|
+|-|-|-|-|-|
+|CRC-82/DARC|UInt128L2|Standard|4 KiB|143 MiB/s|
+|CRC-82/DARC|Sharding64|Standard|4 KiB|106 MiB/s|
+|-|-|-|-|-|
+|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|||1 KiB|398 MiB/s|
+|SHA1|system|||663 MiB/s|
+|SHA256|system|||1885 MiB/s|
 
 ## LICENSE
 

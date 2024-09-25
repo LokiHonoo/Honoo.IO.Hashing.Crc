@@ -17,25 +17,40 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc17CanFd class.
         /// </summary>
-        public Crc17CanFd() : base(DEFAULT_NAME, GetEngine())
+        public Crc17CanFd() : base(DEFAULT_NAME, GetEngine(CrcTable.Standard))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Crc17CanFd class.
+        /// </summary>
+        public Crc17CanFd(CrcTable withTable) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc17CanFd(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), (t) => { return new Crc17CanFd(t); });
         }
 
-        private static CrcEngine32 GetEngine()
+        private static CrcEngine GetEngine(CrcTable withTable)
         {
             //
             // poly = 0x1685B; <<(32-17) = 0xB42D8000;
             //
-            if (_table == null)
+            switch (withTable)
             {
-                _table = CrcEngine32.GenerateTable(0xB42D8000);
+                case CrcTable.Standard:
+                    if (_table == null)
+                    {
+                        _table = CrcEngine32.GenerateTable(0xB42D8000);
+                    }
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+
+                case CrcTable.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+
+                case CrcTable.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
-            return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

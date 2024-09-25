@@ -17,25 +17,40 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Gsm class.
         /// </summary>
-        public Crc3Gsm() : base(DEFAULT_NAME, GetEngine())
+        public Crc3Gsm() : base(DEFAULT_NAME, GetEngine(CrcTable.Standard))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Crc3Gsm class.
+        /// </summary>
+        public Crc3Gsm(CrcTable withTable) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc3Gsm(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), (t) => { return new Crc3Gsm(t); });
         }
 
-        private static CrcEngine8 GetEngine()
+        private static CrcEngine GetEngine(CrcTable withTable)
         {
             //
             // poly = 0x3; <<(8-3) = 0x60;
             //
-            if (_table == null)
+            switch (withTable)
             {
-                _table = CrcEngine8.GenerateTable(0x60);
+                case CrcTable.Standard:
+                    if (_table == null)
+                    {
+                        _table = CrcEngine8.GenerateTable(0x60);
+                    }
+                    return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+
+                case CrcTable.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+
+                case CrcTable.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
-            return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 
@@ -56,26 +71,41 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Rohc class.
         /// </summary>
-        public Crc3Rohc() : base(DEFAULT_NAME, GetEngine())
+        public Crc3Rohc() : base(DEFAULT_NAME, GetEngine(CrcTable.Standard))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Crc3Rohc class.
+        /// </summary>
+        public Crc3Rohc(CrcTable withTable) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), () => { return new Crc3Rohc(); });
+            return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), (t) => { return new Crc3Rohc(t); });
         }
 
-        private static CrcEngine8 GetEngine()
+        private static CrcEngine GetEngine(CrcTable withTable)
         {
             //
             // poly = 0x3; reverse >>(8-3) = 0x6;
             // init = 0x7; reverse >>(8-3) = 0x7;
             //
-            if (_table == null)
+            switch (withTable)
             {
-                _table = CrcEngine8.GenerateTableRef(0x6);
+                case CrcTable.Standard:
+                    if (_table == null)
+                    {
+                        _table = CrcEngine8.GenerateTableRef(0x6);
+                    }
+                    return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+
+                case CrcTable.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+
+                case CrcTable.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
-            return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
         }
     }
 }

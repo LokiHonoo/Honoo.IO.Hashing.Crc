@@ -2,23 +2,23 @@
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngine32M16x : CrcEngine
+    internal sealed class CrcEngine16M16x : CrcEngine
     {
         #region Members
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
-        private readonly uint _initParsed;
+        private readonly ushort _initParsed;
         private readonly int _moves;
-        private readonly uint _polyParsed;
+        private readonly ushort _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
         private readonly int _width;
-        private readonly uint _xoroutParsed;
-        private uint _crc;
-        private uint[] _table;
+        private readonly ushort _xoroutParsed;
+        private ushort _crc;
+        private ushort[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-        internal override CrcCore Core => CrcCore.UInt32;
+        internal override CrcCore Core => CrcCore.UInt16;
         internal override int Width => _width;
         internal override CrcTable WithTable => CrcTable.M16x;
 
@@ -26,18 +26,18 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine32M16x(int width, bool refin, bool refout, uint poly, uint init, uint xorout)
+        internal CrcEngine16M16x(int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout)
         {
-            if (width <= 0 || width > 32)
+            if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
             }
             _width = width;
             _refin = refin;
             _refout = refout;
             _checksumByteLength = (int)Math.Ceiling(width / 8d);
             _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 32 - width;
+            _moves = 16 - width;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
@@ -54,19 +54,19 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static uint[] GenerateTable(uint polyParsed)
+        internal static ushort[] GenerateTable(ushort polyParsed)
         {
-            uint[] table = new uint[256 * 16];
+            ushort[] table = new ushort[256 * 16];
             for (int i = 0; i < 256; i++)
             {
-                uint data = (uint)(i << 24);
+                ushort data = (ushort)(i << 8);
                 for (int k = 0; k < 16; k++)
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        if ((data & 0x80000000) == 0x80000000)
+                        if ((data & 0x8000) == 0x8000)
                         {
-                            data = (data << 1) ^ polyParsed;
+                            data = (ushort)((data << 1) ^ polyParsed);
                         }
                         else
                         {
@@ -79,19 +79,19 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static uint[] GenerateTableRef(uint polyParsed)
+        internal static ushort[] GenerateTableRef(ushort polyParsed)
         {
-            uint[] table = new uint[256 * 16];
+            ushort[] table = new ushort[256 * 16];
             for (int i = 0; i < 256; i++)
             {
-                uint data = (uint)i;
+                ushort data = (ushort)i;
                 for (int k = 0; k < 16; k++)
                 {
                     for (int j = 0; j < 8; j++)
                     {
                         if ((data & 1) == 1)
                         {
-                            data = (data >> 1) ^ polyParsed;
+                            data = (ushort)((data >> 1) ^ polyParsed);
                         }
                         else
                         {
@@ -159,9 +159,9 @@ namespace Honoo.IO.Hashing
         internal override bool ComputeFinal(out ushort checksum)
         {
             Finish();
-            checksum = (ushort)_crc;
+            checksum = _crc;
             _crc = _initParsed;
-            return _width > 16;
+            return false;
         }
 
         internal override bool ComputeFinal(out uint checksum)
@@ -198,12 +198,12 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            _crc = (_crc << 8) ^ _table[(_crc >> 24) ^ input];
+            _crc = (ushort)((_crc << 8) ^ _table[(_crc >> 8) ^ input]);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            _crc = (_crc >> 8) ^ _table[(_crc ^ input) & 0xFF];
+            _crc = (ushort)((_crc >> 8) ^ _table[(_crc ^ input) & 0xFF]);
         }
 
         #endregion Update byte
@@ -227,14 +227,14 @@ namespace Honoo.IO.Hashing
 
         private unsafe void UpdateWithTable(byte* inputP, int length)
         {
-            fixed (uint* tableP = _table)
+            fixed (ushort* tableP = _table)
             {
                 while (length >= 16)
                 {
-                    var a = tableP[(15 * 256) + (((_crc >> 24) & 0xFF) ^ inputP[0])]
-                        ^ tableP[(14 * 256) + (((_crc >> 16) & 0xFF) ^ inputP[1])]
-                        ^ tableP[(13 * 256) + (((_crc >> 8) & 0xFF) ^ inputP[2])]
-                        ^ tableP[(12 * 256) + ((_crc & 0xFF) ^ inputP[3])];
+                    var a = tableP[(15 * 256) + (((_crc >> 8) & 0xFF) ^ inputP[0])]
+                        ^ tableP[(14 * 256) + ((_crc & 0xFF) ^ inputP[1])]
+                        ^ tableP[(13 * 256) + inputP[2]]
+                        ^ tableP[(12 * 256) + inputP[3]];
                     var b = tableP[(11 * 256) + inputP[4]]
                         ^ tableP[(10 * 256) + inputP[5]]
                         ^ tableP[(9 * 256) + inputP[6]]
@@ -247,13 +247,13 @@ namespace Honoo.IO.Hashing
                         ^ tableP[(2 * 256) + inputP[13]]
                         ^ tableP[(1 * 256) + inputP[14]]
                         ^ tableP[(0 * 256) + inputP[15]];
-                    _crc = a ^ b ^ c ^ d;
+                    _crc = (ushort)(a ^ b ^ c ^ d);
                     inputP += 16;
                     length -= 16;
                 }
                 while (length > 0)
                 {
-                    _crc = (_crc << 8) ^ _table[(_crc >> 24) ^ inputP[0]];
+                    _crc = (ushort)((_crc << 8) ^ _table[(_crc >> 8) ^ inputP[0]]);
                     inputP++;
                     length--;
                 }
@@ -262,14 +262,14 @@ namespace Honoo.IO.Hashing
 
         private unsafe void UpdateWithTableRef(byte* inputP, int length)
         {
-            fixed (uint* tableP = _table)
+            fixed (ushort* tableP = _table)
             {
                 while (length >= 16)
                 {
                     var a = tableP[(15 * 256) + ((_crc & 0xFF) ^ inputP[0])]
                         ^ tableP[(14 * 256) + (((_crc >> 8) & 0xFF) ^ inputP[1])]
-                        ^ tableP[(13 * 256) + (((_crc >> 16) & 0xFF) ^ inputP[2])]
-                        ^ tableP[(12 * 256) + (((_crc >> 24) & 0xFF) ^ inputP[3])];
+                        ^ tableP[(13 * 256) + inputP[2]]
+                        ^ tableP[(12 * 256) + inputP[3]];
                     var b = tableP[(11 * 256) + inputP[4]]
                         ^ tableP[(10 * 256) + inputP[5]]
                         ^ tableP[(9 * 256) + inputP[6]]
@@ -282,13 +282,13 @@ namespace Honoo.IO.Hashing
                         ^ tableP[(2 * 256) + inputP[13]]
                         ^ tableP[(1 * 256) + inputP[14]]
                         ^ tableP[(0 * 256) + inputP[15]];
-                    _crc = a ^ b ^ c ^ d;
+                    _crc = (ushort)(a ^ b ^ c ^ d);
                     inputP += 16;
                     length -= 16;
                 }
                 while (length > 0)
                 {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
+                    _crc = (ushort)((_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF]);
                     inputP++;
                     length--;
                 }
@@ -302,9 +302,9 @@ namespace Honoo.IO.Hashing
             _crc = _initParsed;
         }
 
-        private static string GetBinaryString(uint input, int width)
+        private static string GetBinaryString(ushort input, int width)
         {
-            string result = Convert.ToString(input, 2).PadLeft(32, '0');
+            string result = Convert.ToString(input, 2).PadLeft(16, '0');
             if (result.Length > width)
             {
                 result = result.Substring(result.Length - width, width);
@@ -312,9 +312,9 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static string GetHexString(uint input, int hexLength)
+        private static string GetHexString(ushort input, int hexLength)
         {
-            string result = Convert.ToString(input, 16).PadLeft(8, '0');
+            string result = Convert.ToString(input, 16).PadLeft(4, '0');
             if (result.Length > hexLength)
             {
                 result = result.Substring(result.Length - hexLength, hexLength);
@@ -322,11 +322,14 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        private static uint Parse(uint input, int moves, bool reverse)
+        private static ushort Parse(ushort input, int moves, bool reverse)
         {
             if (moves > 0)
             {
                 input <<= moves;
+            }
+            else
+            {
             }
             if (reverse)
             {
@@ -335,17 +338,16 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static uint Reverse(uint input)
+        private static ushort Reverse(ushort input)
         {
-            input = (input & 0x55555555) << 1 | (input >> 1) & 0x55555555;
-            input = (input & 0x33333333) << 2 | (input >> 2) & 0x33333333;
-            input = (input & 0x0F0F0F0F) << 4 | (input >> 4) & 0x0F0F0F0F;
-            input = (input & 0x00FF00FF) << 8 | (input >> 8) & 0x00FF00FF;
-            input = (input & 0x0000FFFF) << 16 | (input >> 16) & 0x0000FFFF;
+            input = (ushort)((input & 0x5555) << 1 | (input >> 1) & 0x5555);
+            input = (ushort)((input & 0x3333) << 2 | (input >> 2) & 0x3333);
+            input = (ushort)((input & 0x0F0F) << 4 | (input >> 4) & 0x0F0F);
+            input = (ushort)((input & 0x00FF) << 8 | (input >> 8) & 0x00FF);
             return input;
         }
 
-        private static uint TruncateLeft(uint input, int bits)
+        private static ushort TruncateLeft(ushort input, int bits)
         {
             if (bits > 0)
             {

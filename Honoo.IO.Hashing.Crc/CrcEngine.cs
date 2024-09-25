@@ -1,13 +1,15 @@
-﻿namespace Honoo.IO.Hashing
+﻿using System;
+
+namespace Honoo.IO.Hashing
 {
-    internal abstract class CrcEngine
+    internal abstract class CrcEngine : IDisposable
     {
         #region Members
 
         internal abstract int ChecksumByteLength { get; }
         internal abstract CrcCore Core { get; }
         internal abstract int Width { get; }
-        internal abstract bool WithTable { get; }
+        internal abstract CrcTable WithTable { get; }
 
         #endregion Members
 
@@ -20,13 +22,36 @@
         {
         }
 
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        ~CrcEngine()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        /// <param name="disposing">Releases unmanaged resources.</param>
+        protected abstract void Dispose(bool disposing);
+
         #endregion Construction
 
         internal abstract object CloneTable();
 
         internal abstract string ComputeFinal(CrcStringFormat outputFormat);
 
-        internal abstract int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset);
+        internal abstract int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
 
         internal abstract bool ComputeFinal(out byte checksum);
 

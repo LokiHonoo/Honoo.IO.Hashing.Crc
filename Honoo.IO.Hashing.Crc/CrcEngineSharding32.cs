@@ -10,32 +10,30 @@ namespace Honoo.IO.Hashing
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
-        private readonly CrcCore _core = CrcCore.Sharding32;
         private readonly uint[] _initParsed;
         private readonly int _moves;
         private readonly uint[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly uint[][] _table;
         private readonly int _width;
-        private readonly bool _withTable;
+        private readonly CrcTable _withTable;
         private readonly uint[] _xoroutParsed;
         private uint[] _crc;
+        private uint[][] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-
-        internal override CrcCore Core => _core;
+        internal override CrcCore Core => CrcCore.Sharding32;
         internal override int Width => _width;
-        internal override bool WithTable => _withTable;
+        internal override CrcTable WithTable => _withTable;
 
         #endregion Members
 
         #region Construction
 
-        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, bool generateTable)
+        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, CrcTable withTable)
         {
             if (width <= 0)
             {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(width));
             }
             _width = width;
             _refin = refin;
@@ -47,30 +45,14 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = generateTable ? _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed) : null;
+            _table = withTable == CrcTable.None ? null : _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
             _crc = (uint[])_initParsed.Clone();
-            _withTable = generateTable;
+            _withTable = withTable;
         }
 
-        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, uint[][] table)
+        protected override void Dispose(bool disposing)
         {
-            if (width <= 0)
-            {
-                throw new ArgumentException("Invalid checkcum size. The allowed values are more than 0.", nameof(width));
-            }
-            _width = width;
-            _refin = refin;
-            _refout = refout;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            int rem = width % 32;
-            _moves = rem > 0 ? 32 - rem : 0;
-            _polyParsed = Parse(poly, _moves, _refin);
-            _initParsed = Parse(init, _moves, _refin);
-            _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = table;
-            _crc = (uint[])_initParsed.Clone();
-            _withTable = table != null;
+            _table = null;
         }
 
         #endregion Construction
@@ -157,10 +139,10 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
-        internal override int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
+        internal override int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             Finish();
-            if (outputEndian == Endian.LittleEndian)
+            if (outputEndian == CrcEndian.LittleEndian)
             {
                 int j = -1;
                 int m = 24;
@@ -233,18 +215,7 @@ namespace Honoo.IO.Hashing
 
         internal override void Update(byte input)
         {
-            if (_withTable)
-            {
-                if (_refin)
-                {
-                    UpdateWithTableRef(input);
-                }
-                else
-                {
-                    UpdateWithTable(input);
-                }
-            }
-            else
+            if (_withTable == CrcTable.None)
             {
                 if (_refin)
                 {
@@ -253,6 +224,17 @@ namespace Honoo.IO.Hashing
                 else
                 {
                     UpdateWithoutTable(input);
+                }
+            }
+            else
+            {
+                if (_refin)
+                {
+                    UpdateWithTableRef(input);
+                }
+                else
+                {
+                    UpdateWithTable(input);
                 }
             }
         }
@@ -317,20 +299,9 @@ namespace Honoo.IO.Hashing
 
         #region Update bytes
 
-        internal override void Update(byte[] inputBuffer, int offset, int length)
+        internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_withTable)
-            {
-                if (_refin)
-                {
-                    UpdateWithTableRef(inputBuffer, offset, length);
-                }
-                else
-                {
-                    UpdateWithTable(inputBuffer, offset, length);
-                }
-            }
-            else
+            if (_withTable == CrcTable.None)
             {
                 if (_refin)
                 {
@@ -339,6 +310,20 @@ namespace Honoo.IO.Hashing
                 else
                 {
                     UpdateWithoutTable(inputBuffer, offset, length);
+                }
+            }
+            else
+            {
+                fixed (byte* inputP = inputBuffer)
+                {
+                    if (_refin)
+                    {
+                        UpdateWithTableRef(inputBuffer, offset, length);
+                    }
+                    else
+                    {
+                        UpdateWithTable(inputBuffer, offset, length);
+                    }
                 }
             }
         }

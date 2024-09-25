@@ -10,7 +10,7 @@ namespace Honoo.IO.Hashing
     {
         #region Delegate
 
-        internal delegate Crc GetAlgorithmCallback();
+        internal delegate Crc GetAlgorithmCallback(CrcTable withTable);
 
         #endregion Delegate
 

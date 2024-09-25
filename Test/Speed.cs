@@ -17,57 +17,62 @@ namespace Test
             new Random().NextBytes(input);
             int times = 5000;
             //
-            Console.WriteLine("|algorithm|core|table overhead|speed|");
-            Console.WriteLine("|:-------:|:--:|:------------:|----:|");
+            Console.WriteLine("|algorithm|core|table|table overhead|speed|");
+            Console.WriteLine("|:-------:|:--:|:---:|:------------:|----:|");
             //
             Crc crc = new Crc32();
             Do(crc, input, times);
-            //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly.ToUInt32(), CrcName.CRC32.Init.ToUInt32(), CrcName.CRC32.Xorout.ToUInt32(), false);
+            crc = new Crc32(CrcTable.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.UInt64);
+            crc = Crc.Create(CrcName.CRC32, CrcTable.None);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.UInt128L2);
+            Console.WriteLine("|-|-|-|-|-|");
+            //
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt8);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt16);
+            Do(crc, input, times);
+             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt32);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt64);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt128L2);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding8);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding16);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding32);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding64);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding8);
+            Console.WriteLine("|-|-|-|-|-|");
+            //
+            crc = new Crc5Itu(CrcTable.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding16);
+            crc = new Crc13bbc(CrcTable.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding32);
+            crc = new Crc24Ble(CrcTable.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.CreateBy(CrcName.CRC32.Name, CrcName.CRC32.Width, CrcName.CRC32.Refin, CrcName.CRC32.Refout, CrcName.CRC32.Poly, CrcName.CRC32.Init, CrcName.CRC32.Xorout, true, CrcCore.Sharding64);
+            crc = new Crc40Gsm(CrcTable.M16x);
             Do(crc, input, times);
             //
-            crc = new Crc64Redis();
-            Do(crc, input, times);
-            //
-            crc = Crc.CreateBy(CrcName.CRC64_REDIS.Name, CrcName.CRC64_REDIS.Width, CrcName.CRC64_REDIS.Refin, CrcName.CRC64_REDIS.Refout, CrcName.CRC64_REDIS.Poly, CrcName.CRC64_REDIS.Init, CrcName.CRC64_REDIS.Xorout, true, CrcCore.Sharding64);
-            Do(crc, input, times);
+            Console.WriteLine("|-|-|-|-|-|");
             //
             crc = new Crc82Darc();
             Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC82_DARC.Name, CrcName.CRC82_DARC.Width, CrcName.CRC82_DARC.Refin, CrcName.CRC82_DARC.Refout, CrcName.CRC82_DARC.Poly, CrcName.CRC82_DARC.Init, CrcName.CRC82_DARC.Xorout, true, CrcCore.Sharding64);
-            Do(crc, input, times);
-            //
-            crc = Crc.CreateBy("CRC-217/CUSTOM",
-                               217,
-                               true,
-                               true,
-                               new CrcParameter(CrcStringFormat.Hex, "0x7204CA357EDF00742A12C562157732D9", 217),
-                               new CrcParameter(CrcStringFormat.Hex, "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 217),
-                               new CrcParameter(CrcStringFormat.Hex, "0x00000000000000000000000000000000", 217),
-                               true,
-                               CrcCore.Sharding64);
+            crc = Crc.CreateBy(CrcName.CRC82_DARC.Name, CrcName.CRC82_DARC.Width, CrcName.CRC82_DARC.Refin, CrcName.CRC82_DARC.Refout, CrcName.CRC82_DARC.Poly, CrcName.CRC82_DARC.Init, CrcName.CRC82_DARC.Xorout, CrcTable.Standard, CrcCore.Sharding64);
             Do(crc, input, times);
             //
             //
             //
+            Console.WriteLine("|-|-|-|-|-|");
             System.IO.Hashing.Crc32 systemIOHashingCrc32 = new();
             _stopwatch.Restart();
             for (int i = 0; i < times; i++)
@@ -76,8 +81,8 @@ namespace Test
                 systemIOHashingCrc32.GetCurrentHash();
             }
             _stopwatch.Stop();
-            double spd = Numeric.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out string unit);
-            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)||1 KiB|" + spd + " " + unit + "|");
+            double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit);
+            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|||1 KiB|" + spd + " " + unit + "|");
             //
             //
             //
@@ -88,8 +93,8 @@ namespace Test
                 forceCrc32.ComputeHash(input);
             }
             _stopwatch.Stop();
-            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)||16 KiB|" + spd + " " + unit + "|");
+            spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[Force.Crc32.Crc32Algorithm](https://github.com/force-net/Crc32.NET)|||16 KiB|" + spd + " " + unit + "|");
             //
             //
             //
@@ -100,8 +105,8 @@ namespace Test
                 hf.ComputeHash(input);
             }
             _stopwatch.Stop();
-            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|[HashFunction](https://github.com/brandondahler/Data.HashFunction/)||1 KiB|" + spd + " " + unit + "|");
+            spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|[HashFunction](https://github.com/brandondahler/Data.HashFunction/)|||1 KiB|" + spd + " " + unit + "|");
             //
             //
             //
@@ -112,8 +117,8 @@ namespace Test
                 sha1.ComputeHash(input);
             }
             _stopwatch.Stop();
-            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA1|system||" + spd + " " + unit + "|");
+            spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|SHA1|system|||" + spd + " " + unit + "|");
             //
             //
             //
@@ -124,8 +129,8 @@ namespace Test
                 sha256.ComputeHash(input);
             }
             _stopwatch.Stop();
-            spd = Numeric.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA256|system||" + spd + " " + unit + "|");
+            spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
+            Console.WriteLine($"|SHA256|system|||" + spd + " " + unit + "|");
         }
 
         private static void Do(Crc crc, byte[] input, int times)
@@ -150,10 +155,10 @@ namespace Test
                 ulong[][] table => GetTableOverhead(table),
                 _ => 0,
             };
-            string overhead = tableOverhead == 0 ? string.Empty : Numeric.GetSize(tableOverhead, Numeric.SizeKilo.Auto, 0, out string unit1).ToString() + " " + unit1;
-            double spd = Numeric.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numeric.SpeedKilo.MiBps, 0, out string unit2);
+            string overhead = tableOverhead == 0 ? string.Empty : Numerics.GetSize(tableOverhead, Numerics.SizeKilo.Auto, 0, out string unit1).ToString() + " " + unit1;
+            double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit2);
 
-            Console.WriteLine($"|{crc.Name}|{crc.Core}|{overhead}|{spd} {unit2}|");
+            Console.WriteLine($"|{crc.Name}|{crc.Core}|{crc.WithTable}|{overhead}|{spd} {unit2}|");
         }
 
         private static int GetTableOverhead(byte[][] table)

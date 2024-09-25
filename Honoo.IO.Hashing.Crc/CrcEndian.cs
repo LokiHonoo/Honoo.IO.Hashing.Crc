@@ -3,7 +3,7 @@
     /// <summary>
     ///
     /// </summary>
-    public enum Endian
+    public enum CrcEndian
     {
         /// <summary>
         ///

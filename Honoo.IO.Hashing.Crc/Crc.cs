@@ -6,12 +6,13 @@ namespace Honoo.IO.Hashing
     /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
     /// <br/>Catalogue of parametrised CRC algorithms: <see href="https://reveng.sourceforge.io/crc-catalogue/all.htm"/>.
     /// </summary>
-    public abstract class Crc
+    public abstract class Crc : IDisposable
     {
         #region Members
 
         private readonly CrcEngine _engine;
         private readonly string _name;
+        private bool _disposed;
 
         /// <summary>
         /// Gets output checksum bytes length.
@@ -36,7 +37,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Gets a value indicating whether the calculate with table.
         /// </summary>
-        public bool WithTable => _engine.WithTable;
+        public CrcTable WithTable => _engine.WithTable;
 
         #endregion Members
 
@@ -46,6 +47,39 @@ namespace Honoo.IO.Hashing
         {
             _name = name;
             _engine = engine;
+        }
+
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        ~Crc()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases resources at the instance.
+        /// </summary>
+        /// <param name="disposing">Releases unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _engine.Dispose();
+                if (disposing)
+                {
+                }
+                _disposed = true;
+            }
         }
 
         #endregion Construction
@@ -62,7 +96,23 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(algorithmName));
             }
-            return algorithmName.GetAlgorithm();
+            return algorithmName.GetAlgorithm(CrcTable.Standard);
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by algorithm name.
+        /// </summary>
+        /// <param name="algorithmName">Crc algorithm name.</param>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static Crc Create(CrcName algorithmName, CrcTable withTable)
+        {
+            if (algorithmName == null)
+            {
+                throw new ArgumentNullException(nameof(algorithmName));
+            }
+            return algorithmName.GetAlgorithm(withTable);
         }
 
         /// <summary>
@@ -74,7 +124,22 @@ namespace Honoo.IO.Hashing
         {
             if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
             {
-                return algorithmName.GetAlgorithm();
+                return algorithmName.GetAlgorithm(CrcTable.Standard);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by algorithm name.
+        /// </summary>
+        /// <param name="mechanism">Crc algorithm name.</param>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc Create(string mechanism, CrcTable withTable)
+        {
+            if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
+            {
+                return algorithmName.GetAlgorithm(withTable);
             }
             return null;
         }
@@ -91,7 +156,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTable withTable = CrcTable.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -108,7 +173,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTable withTable = CrcTable.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -125,7 +190,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTable withTable = CrcTable.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -142,7 +207,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, bool withTable = true)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTable withTable = CrcTable.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -160,7 +225,15 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculate with table.</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool withTable = true, CrcCore core = CrcCore.Auto)
+        public static Crc CreateBy(string name,
+                                   int width,
+                                   bool refin,
+                                   bool refout,
+                                   CrcParameter poly,
+                                   CrcParameter init,
+                                   CrcParameter xorout,
+                                   CrcTable withTable = CrcTable.Standard,
+                                   CrcCore core = CrcCore.Auto)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable, core);
         }
@@ -316,7 +389,7 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
-        public byte[] ComputeFinal(Endian outputEndian)
+        public byte[] ComputeFinal(CrcEndian outputEndian)
         {
             byte[] result = new byte[_engine.ChecksumByteLength];
             ComputeFinal(outputEndian, result, 0);
@@ -332,7 +405,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public int ComputeFinal(Endian outputEndian, byte[] outputBuffer, int outputOffset)
+        public int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             return _engine.ComputeFinal(outputEndian, outputBuffer, outputOffset);
         }
