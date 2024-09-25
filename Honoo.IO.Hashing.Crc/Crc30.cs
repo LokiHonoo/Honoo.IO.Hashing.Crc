@@ -17,14 +17,14 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc30Cdma class.
         /// </summary>
-        public Crc30Cdma() : base(DEFAULT_NAME, GetEngine(CrcTable.Standard))
+        public Crc30Cdma() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the Crc30Cdma class.
         /// </summary>
-        public Crc30Cdma(CrcTable withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc30Cdma(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
@@ -33,7 +33,7 @@ namespace Honoo.IO.Hashing
             return new CrcName(DEFAULT_NAME, WIDTH, REFIN, REFOUT, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), (t) => { return new Crc30Cdma(t); });
         }
 
-        private static CrcEngine GetEngine(CrcTable withTable)
+        private static CrcEngine GetEngine(CrcTableInfo withTable)
         {
             //
             // poly = 0x2030B9C7; <<(32-30) = 0x80C2E71C;
@@ -41,16 +41,16 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTable.Standard:
+                case CrcTableInfo.Standard:
                     if (_table == null)
                     {
                         _table = CrcEngine32.GenerateTable(0x80C2E71C);
                     }
                     return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTable.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
 
-                case CrcTable.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }

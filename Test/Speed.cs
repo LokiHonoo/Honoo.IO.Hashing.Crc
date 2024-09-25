@@ -22,52 +22,52 @@ namespace Test
             //
             Crc crc = new Crc32();
             Do(crc, input, times);
-            crc = new Crc32(CrcTable.M16x);
+            crc = new Crc32(CrcTableInfo.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.Create(CrcName.CRC32, CrcTable.None);
-            Do(crc, input, times);
-            //
-            Console.WriteLine("|-|-|-|-|-|");
-            //
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt8);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt16);
-            Do(crc, input, times);
-             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt32);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt64);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.UInt128L2);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding8);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding16);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding32);
-            Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTable.Standard, CrcCore.Sharding64);
+            crc = Crc.Create(CrcName.CRC32, CrcTableInfo.None);
             Do(crc, input, times);
             //
             Console.WriteLine("|-|-|-|-|-|");
             //
-            crc = new Crc5Itu(CrcTable.M16x);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt8);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt16);
+            Do(crc, input, times);
+             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt32);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt64);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt128L2);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.Sharding8);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.Sharding16);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.Sharding32);
+            Do(crc, input, times);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.Sharding64);
             Do(crc, input, times);
             //
-            crc = new Crc13bbc(CrcTable.M16x);
+            Console.WriteLine("|-|-|-|-|-|");
+            //
+            crc = new Crc5Itu(CrcTableInfo.M16x);
             Do(crc, input, times);
             //
-            crc = new Crc24Ble(CrcTable.M16x);
+            crc = new Crc13bbc(CrcTableInfo.M16x);
             Do(crc, input, times);
             //
-            crc = new Crc40Gsm(CrcTable.M16x);
+            crc = new Crc24Ble(CrcTableInfo.M16x);
+            Do(crc, input, times);
+            //
+            crc = new Crc40Gsm(CrcTableInfo.M16x);
             Do(crc, input, times);
             //
             Console.WriteLine("|-|-|-|-|-|");
             //
             crc = new Crc82Darc();
             Do(crc, input, times);
-            crc = Crc.CreateBy(CrcName.CRC82_DARC.Name, CrcName.CRC82_DARC.Width, CrcName.CRC82_DARC.Refin, CrcName.CRC82_DARC.Refout, CrcName.CRC82_DARC.Poly, CrcName.CRC82_DARC.Init, CrcName.CRC82_DARC.Xorout, CrcTable.Standard, CrcCore.Sharding64);
+            crc = Crc.CreateBy(CrcName.CRC82_DARC.Name, CrcName.CRC82_DARC.Width, CrcName.CRC82_DARC.Refin, CrcName.CRC82_DARC.Refout, CrcName.CRC82_DARC.Poly, CrcName.CRC82_DARC.Init, CrcName.CRC82_DARC.Xorout, CrcTableInfo.Standard, CrcCore.Sharding64);
             Do(crc, input, times);
             //
             //
@@ -158,7 +158,7 @@ namespace Test
             string overhead = tableOverhead == 0 ? string.Empty : Numerics.GetSize(tableOverhead, Numerics.SizeKilo.Auto, 0, out string unit1).ToString() + " " + unit1;
             double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit2);
 
-            Console.WriteLine($"|{crc.Name}|{crc.Core}|{crc.WithTable}|{overhead}|{spd} {unit2}|");
+            Console.WriteLine($"|{crc.Name}|{crc.Core}|{crc.TableInfo}|{overhead}|{spd} {unit2}|");
         }
 
         private static int GetTableOverhead(byte[][] table)

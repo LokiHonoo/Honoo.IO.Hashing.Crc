@@ -8,26 +8,26 @@ namespace Honoo.IO.Hashing
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.UInt32;
         private readonly uint _initParsed;
         private readonly int _moves;
         private readonly uint _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly CrcTableInfo _tableInfo;
         private readonly int _width;
-        private readonly CrcTable _withTable;
         private readonly uint _xoroutParsed;
         private uint _crc;
         private uint[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-        internal override CrcCore Core => CrcCore.UInt32;
+        internal override CrcCore Core => _core;
+        internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
-        internal override CrcTable WithTable => _withTable;
-
         #endregion Members
 
         #region Construction
 
-        internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTable withTable)
+        internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTableInfo tableInfo)
         {
             if (width <= 0 || width > 32)
             {
@@ -42,10 +42,10 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            switch (withTable)
+            switch (tableInfo)
             {
-                case CrcTable.None: _withTable = withTable; break;
-                default: _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed); _withTable = CrcTable.Standard; break;
+                case CrcTableInfo.None: _tableInfo = tableInfo; break;
+                default: _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed); _tableInfo = CrcTableInfo.Standard; break;
             }
             _crc = _initParsed;
         }
@@ -66,7 +66,7 @@ namespace Honoo.IO.Hashing
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = table;
-            _withTable = table == null ? CrcTable.None : CrcTable.Standard;
+            _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
             _crc = _initParsed;
         }
 
@@ -123,9 +123,10 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override object CloneTable()
+        internal override CrcTableData CloneTable()
         {
-            return _table?.Clone();
+            return new CrcTableData(_core, _tableInfo, _table?.Clone());
+
         }
 
         #endregion Table
@@ -205,7 +206,7 @@ namespace Honoo.IO.Hashing
 
         internal override void Update(byte input)
         {
-            if (_withTable == CrcTable.None)
+            if (_tableInfo == CrcTableInfo.None)
             {
                 if (_refin)
                 {
@@ -277,7 +278,7 @@ namespace Honoo.IO.Hashing
 
         internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_withTable == CrcTable.None)
+            if (_tableInfo == CrcTableInfo.None)
             {
                 if (_refin)
                 {

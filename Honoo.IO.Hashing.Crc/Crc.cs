@@ -30,14 +30,14 @@ namespace Honoo.IO.Hashing
         public string Name => _name;
 
         /// <summary>
+        /// Gets a value indicating whether the calculate with table.
+        /// </summary>
+        public CrcTableInfo TableInfo => _engine.TableInfo;
+
+        /// <summary>
         /// Gets crc width in bits.
         /// </summary>
         public int Width => _engine.Width;
-
-        /// <summary>
-        /// Gets a value indicating whether the calculate with table.
-        /// </summary>
-        public CrcTable WithTable => _engine.WithTable;
 
         #endregion Members
 
@@ -96,7 +96,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(algorithmName));
             }
-            return algorithmName.GetAlgorithm(CrcTable.Standard);
+            return algorithmName.GetAlgorithm(CrcTableInfo.Standard);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Honoo.IO.Hashing
         /// <param name="withTable">Calculate with table.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(CrcName algorithmName, CrcTable withTable)
+        public static Crc Create(CrcName algorithmName, CrcTableInfo withTable)
         {
             if (algorithmName == null)
             {
@@ -124,7 +124,7 @@ namespace Honoo.IO.Hashing
         {
             if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
             {
-                return algorithmName.GetAlgorithm(CrcTable.Standard);
+                return algorithmName.GetAlgorithm(CrcTableInfo.Standard);
             }
             return null;
         }
@@ -135,7 +135,7 @@ namespace Honoo.IO.Hashing
         /// <param name="mechanism">Crc algorithm name.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <returns></returns>
-        public static Crc Create(string mechanism, CrcTable withTable)
+        public static Crc Create(string mechanism, CrcTableInfo withTable)
         {
             if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
             {
@@ -156,7 +156,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTable withTable = CrcTable.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -173,7 +173,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTable withTable = CrcTable.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -190,7 +190,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTable withTable = CrcTable.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -207,7 +207,7 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTable withTable = CrcTable.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
         }
@@ -232,7 +232,7 @@ namespace Honoo.IO.Hashing
                                    CrcParameter poly,
                                    CrcParameter init,
                                    CrcParameter xorout,
-                                   CrcTable withTable = CrcTable.Standard,
+                                   CrcTableInfo withTable = CrcTableInfo.Standard,
                                    CrcCore core = CrcCore.Auto)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable, core);
@@ -241,7 +241,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Clone calculation table if exists.
         /// </summary>
-        public object CloneTable()
+        public CrcTableData CloneTable()
         {
             return _engine.CloneTable();
         }
@@ -253,12 +253,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out byte[] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case byte[] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(byte[])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(byte[])}\".");
             }
         }
 
@@ -269,12 +269,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out ushort[] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case ushort[] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(ushort[])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ushort[])}\".");
             }
         }
 
@@ -285,12 +285,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out uint[] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case uint[] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(uint[])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(uint[])}\".");
             }
         }
 
@@ -301,12 +301,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out ulong[] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case ulong[] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(ulong[])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ulong[])}\".");
             }
         }
 
@@ -317,12 +317,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out byte[][] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case byte[][] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(byte[][])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(byte[][])}\".");
             }
         }
 
@@ -333,12 +333,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out ushort[][] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case ushort[][] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(ushort[][])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ushort[][])}\".");
             }
         }
 
@@ -349,12 +349,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out uint[][] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case uint[][] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(uint[][])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(uint[][])}\".");
             }
         }
 
@@ -365,12 +365,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public void CloneTable(out ulong[][] table)
         {
-            object obj = _engine.CloneTable();
-            switch (obj)
+            CrcTableData obj = _engine.CloneTable();
+            switch (obj.Table)
             {
                 case ulong[][] t: table = t; break;
                 case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.GetType()}\" to type \"{typeof(ulong[][])}\".");
+                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ulong[][])}\".");
             }
         }
 

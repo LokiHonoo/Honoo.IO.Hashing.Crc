@@ -20,14 +20,14 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
         /// </summary>
-        public Crc82Darc() : base(DEFAULT_NAME, GetEngine(CrcTable.Standard))
+        public Crc82Darc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
         /// </summary>
-        public Crc82Darc(CrcTable withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc82Darc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
@@ -43,7 +43,7 @@ namespace Honoo.IO.Hashing
                                (t) => { return new Crc82Darc(t); });
         }
 
-        private static CrcEngine128L2 GetEngine(CrcTable withTable)
+        private static CrcEngine128L2 GetEngine(CrcTableInfo withTable)
         {
             //
             // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430;
@@ -51,7 +51,7 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTable.Standard:
+                case CrcTableInfo.Standard:
                     if (_table == null)
                     {
                         _table = CrcEngine128L2.GenerateTableRef(new ulong[] { 0x0000000000022080, 0x8A00A2022200C430 });
@@ -60,7 +60,7 @@ namespace Honoo.IO.Hashing
 
                 //case CrcTable.M16x: return new CrcEngine128L2M16x(WIDTH, REFIN, REFOUT, _poly, _init, _xorout);
 
-                case CrcTable.None: default: return new CrcEngine128L2(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine128L2(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, withTable);
             }
         }
     }

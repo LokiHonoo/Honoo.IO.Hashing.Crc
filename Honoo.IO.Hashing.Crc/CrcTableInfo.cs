@@ -1,9 +1,9 @@
 ﻿namespace Honoo.IO.Hashing
 {
     /// <summary>
-    /// Table settings for CRC calculation.
+    /// Table info for CRC calculation.
     /// </summary>
-    public enum CrcTable
+    public enum CrcTableInfo
     {
         /// <summary>
         /// Table are not used.

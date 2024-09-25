@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 
 namespace Honoo.IO.Hashing
 {
@@ -8,19 +9,21 @@ namespace Honoo.IO.Hashing
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.UInt8;
         private readonly byte _initParsed;
         private readonly int _moves;
         private readonly byte _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly CrcTableInfo _tableInfo = CrcTableInfo.M16x;
         private readonly int _width;
         private readonly byte _xoroutParsed;
         private byte _crc;
         private byte[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-        internal override CrcCore Core => CrcCore.UInt8;
+        internal override CrcCore Core => _core;
+        internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
-        internal override CrcTable WithTable => CrcTable.M16x;
 
         #endregion Members
 
@@ -104,9 +107,9 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override object CloneTable()
+        internal override CrcTableData CloneTable()
         {
-            return _table?.Clone();
+            return new CrcTableData(_core, _tableInfo, _table?.Clone());
         }
 
         #endregion Table

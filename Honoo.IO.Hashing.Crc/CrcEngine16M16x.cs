@@ -8,19 +8,21 @@ namespace Honoo.IO.Hashing
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.UInt16;
         private readonly ushort _initParsed;
         private readonly int _moves;
         private readonly ushort _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly CrcTableInfo _tableInfo = CrcTableInfo.M16x;
         private readonly int _width;
         private readonly ushort _xoroutParsed;
         private ushort _crc;
         private ushort[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-        internal override CrcCore Core => CrcCore.UInt16;
+        internal override CrcCore Core => _core;
+        internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
-        internal override CrcTable WithTable => CrcTable.M16x;
 
         #endregion Members
 
@@ -104,9 +106,10 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override object CloneTable()
+        internal override CrcTableData CloneTable()
         {
-            return _table?.Clone();
+            return new CrcTableData(_core, _tableInfo, _table?.Clone());
+
         }
 
         #endregion Table

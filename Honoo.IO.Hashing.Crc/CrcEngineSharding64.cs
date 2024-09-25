@@ -10,26 +10,26 @@ namespace Honoo.IO.Hashing
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
+        private readonly CrcCore _core = CrcCore.Sharding64;
         private readonly ulong[] _initParsed;
         private readonly int _moves;
         private readonly ulong[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly CrcTableInfo _tableInfo;
         private readonly int _width;
-        private readonly CrcTable _withTable;
         private readonly ulong[] _xoroutParsed;
         private ulong[] _crc;
         private ulong[][] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
-        internal override CrcCore Core => CrcCore.Sharding64;
+        internal override CrcCore Core => _core;
+        internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
-        internal override CrcTable WithTable => _withTable;
-
         #endregion Members
 
         #region Construction
 
-        internal CrcEngineSharding64(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, CrcTable withTable)
+        internal CrcEngineSharding64(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, CrcTableInfo tableInfo)
         {
             if (width <= 0)
             {
@@ -45,9 +45,9 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = withTable == CrcTable.None ? null : _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
+            _table = tableInfo == CrcTableInfo.None ? null : _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
             _crc = (ulong[])_initParsed.Clone();
-            _withTable = withTable;
+            _tableInfo = tableInfo;
         }
 
         protected override void Dispose(bool disposing)
@@ -107,7 +107,7 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override object CloneTable()
+        internal override CrcTableData CloneTable()
         {
             if (_table != null)
             {
@@ -116,9 +116,9 @@ namespace Honoo.IO.Hashing
                 {
                     table.Add((ulong[])item.Clone());
                 }
-                return table.ToArray();
+                return new CrcTableData(_core, _tableInfo, table.ToArray());
             }
-            return null;
+            return new CrcTableData(_core, _tableInfo, null);
         }
 
         #endregion Table
@@ -214,7 +214,7 @@ namespace Honoo.IO.Hashing
 
         internal override void Update(byte input)
         {
-            if (_withTable == CrcTable.None)
+            if (_tableInfo == CrcTableInfo.None)
             {
                 if (_refin)
                 {
@@ -300,7 +300,7 @@ namespace Honoo.IO.Hashing
 
         internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_withTable == CrcTable.None)
+            if (_tableInfo == CrcTableInfo.None)
             {
                 if (_refin)
                 {

@@ -8,8 +8,8 @@ namespace Honoo.IO.Hashing
 
         internal abstract int ChecksumByteLength { get; }
         internal abstract CrcCore Core { get; }
+        internal abstract CrcTableInfo TableInfo { get; }
         internal abstract int Width { get; }
-        internal abstract CrcTable WithTable { get; }
 
         #endregion Members
 
@@ -47,7 +47,7 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
-        internal abstract object CloneTable();
+        internal abstract CrcTableData CloneTable();
 
         internal abstract string ComputeFinal(CrcStringFormat outputFormat);
 

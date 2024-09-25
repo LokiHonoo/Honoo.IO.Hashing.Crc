@@ -136,7 +136,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Gets <see cref="byte"/> value. Throw <see cref="Exception"/> if value's type is not <see cref="byte"/>.
+        /// Gets <see cref="byte"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -144,7 +144,12 @@ namespace Honoo.IO.Hashing
         {
             switch (_valueType)
             {
-                case ValueType.UInt8: return (byte)_value;
+                case ValueType.UInt8:
+                case ValueType.UInt16:
+                case ValueType.UInt32:
+                case ValueType.UInt64: return (byte)_value;
+                case ValueType.BinaryString: return CrcConverter.ToUInt8(CrcStringFormat.Binary, (string)_value, null);
+                case ValueType.HexString: return CrcConverter.ToUInt8(CrcStringFormat.Hex, (string)_value, null);
                 default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
@@ -194,7 +199,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Gets <see cref="ushort"/> value. Throw <see cref="Exception"/> if value's type is not <see cref="ushort"/>.
+        /// Gets <see cref="ushort"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -202,13 +207,18 @@ namespace Honoo.IO.Hashing
         {
             switch (_valueType)
             {
-                case ValueType.UInt16: return (ushort)_value;
+                case ValueType.UInt8:
+                case ValueType.UInt16:
+                case ValueType.UInt32:
+                case ValueType.UInt64: return (ushort)_value;
+                case ValueType.BinaryString: return CrcConverter.ToUInt16(CrcStringFormat.Binary, (string)_value, null);
+                case ValueType.HexString: return CrcConverter.ToUInt16(CrcStringFormat.Hex, (string)_value, null);
                 default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
         /// <summary>
-        /// Gets <see cref="uint"/> value. Throw <see cref="Exception"/> if value's type is not <see cref="uint"/>.
+        /// Gets <see cref="uint"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -216,13 +226,18 @@ namespace Honoo.IO.Hashing
         {
             switch (_valueType)
             {
-                case ValueType.UInt32: return (uint)_value;
+                case ValueType.UInt8:
+                case ValueType.UInt16:
+                case ValueType.UInt32:
+                case ValueType.UInt64: return (uint)_value;
+                case ValueType.BinaryString: return CrcConverter.ToUInt32(CrcStringFormat.Binary, (string)_value, null);
+                case ValueType.HexString: return CrcConverter.ToUInt32(CrcStringFormat.Hex, (string)_value, null);
                 default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
 
         /// <summary>
-        /// Gets <see cref="ulong"/> value. Throw <see cref="Exception"/> if value's type is not <see cref="ulong"/>.
+        /// Gets <see cref="ulong"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -230,7 +245,12 @@ namespace Honoo.IO.Hashing
         {
             switch (_valueType)
             {
+                case ValueType.UInt8:
+                case ValueType.UInt16:
+                case ValueType.UInt32:
                 case ValueType.UInt64: return (ulong)_value;
+                case ValueType.BinaryString: return CrcConverter.ToUInt64(CrcStringFormat.Binary, (string)_value, null);
+                case ValueType.HexString: return CrcConverter.ToUInt64(CrcStringFormat.Hex, (string)_value, null);
                 default: throw new ArithmeticException($"CRC parameter's type is {_value.GetType()}.");
             }
         }
