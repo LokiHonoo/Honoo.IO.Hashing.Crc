@@ -14,11 +14,11 @@ namespace Honoo.IO.Hashing
         private readonly byte _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly byte[] _table;
         private readonly CrcTableInfo _tableInfo = CrcTableInfo.M16x;
         private readonly int _width;
         private readonly byte _xoroutParsed;
         private byte _crc;
-        private byte[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
@@ -45,11 +45,6 @@ namespace Honoo.IO.Hashing
             _xoroutParsed = TruncateLeft(xorout, _moves);
             _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = _initParsed;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _table = null;
         }
 
         #endregion Construction

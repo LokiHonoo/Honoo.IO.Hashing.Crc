@@ -14,11 +14,11 @@ namespace Honoo.IO.Hashing
         private readonly ulong _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly ulong[] _table;
         private readonly CrcTableInfo _tableInfo;
         private readonly int _width;
         private readonly ulong _xoroutParsed;
         private ulong _crc;
-        private ulong[] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
@@ -69,11 +69,6 @@ namespace Honoo.IO.Hashing
             _table = table;
             _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
             _crc = _initParsed;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _table = null;
         }
 
         #endregion Construction

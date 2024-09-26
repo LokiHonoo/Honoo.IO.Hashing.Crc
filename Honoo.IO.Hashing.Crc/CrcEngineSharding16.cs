@@ -16,11 +16,11 @@ namespace Honoo.IO.Hashing
         private readonly ushort[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
+        private readonly ushort[][] _table;
         private readonly CrcTableInfo _tableInfo;
         private readonly int _width;
         private readonly ushort[] _xoroutParsed;
         private ushort[] _crc;
-        private ushort[][] _table;
         internal override int ChecksumByteLength => _checksumByteLength;
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
@@ -73,11 +73,6 @@ namespace Honoo.IO.Hashing
             _table = table;
             _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
             _crc = (ushort[])_initParsed.Clone();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _table = null;
         }
 
         #endregion Construction

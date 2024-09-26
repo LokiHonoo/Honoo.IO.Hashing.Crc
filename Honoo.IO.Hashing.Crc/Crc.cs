@@ -6,13 +6,12 @@ namespace Honoo.IO.Hashing
     /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
     /// <br/>Catalogue of parametrised CRC algorithms: <see href="https://reveng.sourceforge.io/crc-catalogue/all.htm"/>.
     /// </summary>
-    public abstract class Crc : IDisposable
+    public abstract class Crc
     {
         #region Members
 
         private readonly CrcEngine _engine;
         private readonly string _name;
-        private bool _disposed;
 
         /// <summary>
         /// Gets output checksum bytes length.
@@ -47,39 +46,6 @@ namespace Honoo.IO.Hashing
         {
             _name = name;
             _engine = engine;
-        }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        ~Crc()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        /// <param name="disposing">Releases unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                _engine.Dispose();
-                if (disposing)
-                {
-                }
-                _disposed = true;
-            }
         }
 
         #endregion Construction

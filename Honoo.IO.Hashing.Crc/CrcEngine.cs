@@ -2,7 +2,7 @@
 
 namespace Honoo.IO.Hashing
 {
-    internal abstract class CrcEngine : IDisposable
+    internal abstract class CrcEngine
     {
         #region Members
 
@@ -21,29 +21,6 @@ namespace Honoo.IO.Hashing
         protected CrcEngine()
         {
         }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        ~CrcEngine()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases resources at the instance.
-        /// </summary>
-        /// <param name="disposing">Releases unmanaged resources.</param>
-        protected abstract void Dispose(bool disposing);
 
         #endregion Construction
 
