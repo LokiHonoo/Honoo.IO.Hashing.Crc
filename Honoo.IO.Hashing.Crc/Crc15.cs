@@ -12,7 +12,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 15;
         private const ushort XOROUT = 0x0000;
-        private static ushort[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc15 class.
@@ -52,13 +52,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine16.GenerateTable(0x8B32);
+                        _table = CrcEngine32.GenerateTable((uint)0x8B32 << 16);
                     }
-                    return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine16M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }
@@ -75,7 +75,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 15;
         private const ushort XOROUT = 0x0001;
-        private static ushort[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc15Mpt1327 class.
@@ -106,13 +106,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine16.GenerateTable(0xD02A);
+                        _table = CrcEngine32.GenerateTable((uint)0xD02A << 16);
                     }
-                    return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine16M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }

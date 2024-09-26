@@ -12,7 +12,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 5;
         private const byte XOROUT = 0x00;
-        private static byte[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Epc class.
@@ -53,13 +53,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine8.GenerateTable(0x48);
+                        _table = CrcEngine32.GenerateTable((uint)0x48 << 24);
                     }
-                    return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }
@@ -76,7 +76,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 5;
         private const byte XOROUT = 0x00;
-        private static byte[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Itu class.
@@ -116,13 +116,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine8.GenerateTableRef(0x15);
+                        _table = CrcEngine32.GenerateTableRef(0x15);
                     }
-                    return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }
@@ -139,7 +139,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 5;
         private const byte XOROUT = 0x1F;
-        private static byte[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc5Usb class.
@@ -171,13 +171,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine8.GenerateTableRef(0x14);
+                        _table = CrcEngine32.GenerateTableRef(0x14);
                     }
-                    return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }

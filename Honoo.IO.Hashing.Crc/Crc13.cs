@@ -12,7 +12,7 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 13;
         private const ushort XOROUT = 0x0000;
-        private static ushort[] _table;
+        private static uint[] _table;
 
         /// <summary>
         /// Initializes a new instance of the Crc13bbc class.
@@ -43,13 +43,13 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_table == null)
                     {
-                        _table = CrcEngine16.GenerateTable(0xE7A8);
+                        _table = CrcEngine32.GenerateTable((uint)0xE7A8 << 16);
                     }
-                    return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine16M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
-                case CrcTableInfo.None: default: return new CrcEngine16(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
         }
     }
