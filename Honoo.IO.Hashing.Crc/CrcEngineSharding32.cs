@@ -25,6 +25,7 @@ namespace Honoo.IO.Hashing
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
+
         #endregion Members
 
         #region Construction
@@ -45,9 +46,33 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = tableInfo == CrcTableInfo.None ? null : _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
+            switch (tableInfo)
+            {
+                case CrcTableInfo.None: _tableInfo = tableInfo; break;
+                default: _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed); _tableInfo = CrcTableInfo.Standard; break;
+            }
             _crc = (uint[])_initParsed.Clone();
-            _tableInfo = tableInfo;
+        }
+
+        internal CrcEngineSharding32(int width, bool refin, bool refout, uint[] poly, uint[] init, uint[] xorout, uint[][] table)
+        {
+            if (width <= 0)
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(width));
+            }
+            _width = width;
+            _refin = refin;
+            _refout = refout;
+            _checksumByteLength = (int)Math.Ceiling(width / 8d);
+            _checksumHexLength = (int)Math.Ceiling(width / 4d);
+            int rem = width % 32;
+            _moves = rem > 0 ? 32 - rem : 0;
+            _polyParsed = Parse(poly, _moves, _refin);
+            _initParsed = Parse(init, _moves, _refin);
+            _xoroutParsed = TruncateLeft(xorout, _moves);
+            _table = table;
+            _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
+            _crc = (uint[])_initParsed.Clone();
         }
 
         protected override void Dispose(bool disposing)

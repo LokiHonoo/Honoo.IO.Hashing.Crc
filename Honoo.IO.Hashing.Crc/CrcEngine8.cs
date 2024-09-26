@@ -23,6 +23,7 @@ namespace Honoo.IO.Hashing
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
+
         #endregion Members
 
         #region Construction
@@ -126,7 +127,6 @@ namespace Honoo.IO.Hashing
         internal override CrcTableData CloneTable()
         {
             return new CrcTableData(_core, _tableInfo, _table?.Clone());
-
         }
 
         #endregion Table

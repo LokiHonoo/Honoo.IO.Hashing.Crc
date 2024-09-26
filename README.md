@@ -192,6 +192,21 @@ private static void Demo4()
     int length = crc.ComputeFinal(CrcEndian.BigEndian, checksum, 0);
 }
 
+private static void Demo5()
+{
+    // Using stored table.
+     CrcTableData table = crc7.CloneTable();
+     //
+    var crc = Crc.CreateBy(CrcName.CRC7.Name,
+                           CrcName.CRC7.Width,
+                           CrcName.CRC7.Refin, 
+                           CrcName.CRC7.Refout,
+                           CrcName.CRC7.Poly,
+                           CrcName.CRC7.Init,
+                           CrcName.CRC7.Xorout,
+                           table);
+}
+
 ```
 
 ## SPEED

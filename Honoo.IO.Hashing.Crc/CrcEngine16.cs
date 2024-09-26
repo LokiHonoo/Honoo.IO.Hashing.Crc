@@ -127,7 +127,6 @@ namespace Honoo.IO.Hashing
         internal override CrcTableData CloneTable()
         {
             return new CrcTableData(_core, _tableInfo, _table?.Clone());
-
         }
 
         #endregion Table

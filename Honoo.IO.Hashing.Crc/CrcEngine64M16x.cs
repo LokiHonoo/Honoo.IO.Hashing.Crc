@@ -23,11 +23,12 @@ namespace Honoo.IO.Hashing
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;
+
         #endregion Members
 
         #region Construction
 
-        internal CrcEngine64M16x(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout)
+        internal CrcEngine64M16x(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, ulong[] table)
         {
             if (width <= 0 || width > 64)
             {
@@ -42,7 +43,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
+            _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = _initParsed;
         }
 
@@ -108,7 +109,6 @@ namespace Honoo.IO.Hashing
         internal override CrcTableData CloneTable()
         {
             return new CrcTableData(_core, _tableInfo, _table?.Clone());
-
         }
 
         #endregion Table

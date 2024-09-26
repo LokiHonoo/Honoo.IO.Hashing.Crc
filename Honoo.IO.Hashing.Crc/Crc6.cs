@@ -48,7 +48,7 @@ namespace Honoo.IO.Hashing
                     }
                     return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
                 case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
@@ -103,7 +103,7 @@ namespace Honoo.IO.Hashing
                     }
                     return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
                 case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
@@ -157,7 +157,7 @@ namespace Honoo.IO.Hashing
                     }
                     return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
                 case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
@@ -211,7 +211,7 @@ namespace Honoo.IO.Hashing
                     }
                     return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
                 case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }
@@ -274,7 +274,7 @@ namespace Honoo.IO.Hashing
                     }
                     return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
 
-                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
 
                 case CrcTableInfo.None: default: return new CrcEngine8(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
             }

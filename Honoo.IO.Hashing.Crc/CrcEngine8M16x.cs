@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection.Emit;
 
 namespace Honoo.IO.Hashing
 {
@@ -29,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine8M16x(int width, bool refin, bool refout, byte poly, byte init, byte xorout)
+        internal CrcEngine8M16x(int width, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
         {
             if (width <= 0 || width > 8)
             {
@@ -44,7 +43,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed);
+            _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = _initParsed;
         }
 

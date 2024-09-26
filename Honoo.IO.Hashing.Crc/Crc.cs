@@ -239,6 +239,23 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Initializes a new instance of the CrcCustom class.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="table">Calculate with table.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, CrcTableData table)
+        {
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+        }
+
+        /// <summary>
         /// Clone calculation table if exists.
         /// </summary>
         public CrcTableData CloneTable()

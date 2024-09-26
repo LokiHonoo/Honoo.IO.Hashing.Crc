@@ -34,7 +34,7 @@ namespace Test
             Do(crc, input, times);
             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt16);
             Do(crc, input, times);
-             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt32);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt32);
             Do(crc, input, times);
             crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcTableInfo.Standard, CrcCore.UInt64);
             Do(crc, input, times);

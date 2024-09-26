@@ -356,8 +356,10 @@ namespace Test
         {
             Crc crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt8);
             checksums.Add(Calc(crc, input, displayLimit));
+            CrcTableData crcTable1 = crc.CloneTable();
             crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt8);
             checksums.Add(Calc(crc, input, displayLimit));
+            CrcTableData crcTable2 = crc.CloneTable();
             crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt8);
             checksums.Add(Calc(crc, input, displayLimit));
             crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt16);
@@ -400,6 +402,10 @@ namespace Test
             crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding64);
             checksums.Add(Calc(crc, input, displayLimit));
             crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding64);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-CloneTable", widthMax8, refin, refout, poly, init, xorout, crcTable1);
+            checksums.Add(Calc(crc, input, displayLimit));
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-CloneTable", widthMax8, refin, refout, poly, init, xorout, crcTable2);
             checksums.Add(Calc(crc, input, displayLimit));
             //
             if (checksums.Distinct().Count() != 1)
