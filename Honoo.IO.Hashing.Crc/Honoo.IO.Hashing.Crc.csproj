@@ -30,6 +30,10 @@ Crc.CreateBy("CRC-217", 217, true, true, "poly", "init", "xorout");</Description
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<PackageOutputPath>D:\NuGetPackages</PackageOutputPath>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<None Include="Honoo.IO.Hashing.Crc.md">
 			<Pack>True</Pack>
