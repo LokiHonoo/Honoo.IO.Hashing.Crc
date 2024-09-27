@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<TargetFrameworks>net40;net462;netstandard2.0</TargetFrameworks>
 		<PackageId>Honoo.IO.Hashing.Crc</PackageId>
-		<Authors>LokiHonoo</Authors>		
-		<Company>LokiHonoo</Company>
+		<Authors>Loki Honoo</Authors>		
+		<Company>Loki Honoo</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<Copyright>Copyright (C) LokiHonoo 2020. All rights reserved.</Copyright>
+		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
 		<VersionPrefix>1.1.3</VersionPrefix>
