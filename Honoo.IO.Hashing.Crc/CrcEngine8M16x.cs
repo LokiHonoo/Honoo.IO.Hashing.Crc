@@ -101,9 +101,9 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override CrcTableData CloneTable()
+        internal override CrcTable CloneTable()
         {
-            return new CrcTableData(_core, _tableInfo, _table?.Clone());
+            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -281,6 +281,19 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
+        internal static byte Parse(byte input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
+
         internal override void Reset()
         {
             _crc = _initParsed;
@@ -304,19 +317,6 @@ namespace Honoo.IO.Hashing
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
             return result;
-        }
-
-        private static byte Parse(byte input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
         }
 
         private static byte Reverse(byte input)

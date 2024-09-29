@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngine128L2 : CrcEngine
+    internal sealed class CrcEngineSharding16Standard : CrcEngine
     {
         #region Members
 
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
-        private readonly CrcCore _core = CrcCore.UInt128L2;
-        private readonly ulong[] _initParsed;
+        private readonly CrcCore _core = CrcCore.Sharding16;
+        private readonly ushort[] _initParsed;
         private readonly int _moves;
-        private readonly ulong[] _polyParsed;
+        private readonly ushort[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly ulong[][] _table;
-        private readonly CrcTableInfo _tableInfo;
+        private readonly ushort[][] _table;
+        private readonly CrcTableInfo _tableInfo = CrcTableInfo.Standard;
         private readonly int _width;
-        private readonly ulong[] _xoroutParsed;
-        private ulong[] _crc;
+        private readonly ushort[] _xoroutParsed;
+        private ushort[] _crc;
         internal override int ChecksumByteLength => _checksumByteLength;
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
@@ -30,63 +29,40 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine128L2(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, CrcTableInfo tableInfo)
+        internal CrcEngineSharding16Standard(int width, bool refin, bool refout, ushort[] poly, ushort[] init, ushort[] xorout, ushort[][] table)
         {
-            if (width <= 0 || width > 128)
+            if (width <= 0)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 128.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(width));
             }
             _width = width;
             _refin = refin;
             _refout = refout;
             _checksumByteLength = (int)Math.Ceiling(width / 8d);
             _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 128 - width;
+            int rem = width % 16;
+            _moves = rem > 0 ? 16 - rem : 0;
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            switch (tableInfo)
-            {
-                case CrcTableInfo.None: _tableInfo = tableInfo; break;
-                default: _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed); _tableInfo = CrcTableInfo.Standard; break;
-            }
-            _crc = (ulong[])_initParsed.Clone();
-        }
-
-        internal CrcEngine128L2(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout, ulong[][] table)
-        {
-            if (width <= 0 || width > 128)
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 128.", nameof(width));
-            }
-            _width = width;
-            _refin = refin;
-            _refout = refout;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 128 - width;
-            _polyParsed = Parse(poly, _moves, _refin);
-            _initParsed = Parse(init, _moves, _refin);
-            _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = table;
-            _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
-            _crc = (ulong[])_initParsed.Clone();
+            _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
+            _crc = (ushort[])_initParsed.Clone();
         }
 
         #endregion Construction
 
         #region Table
 
-        internal static ulong[][] GenerateTable(ulong[] polyParsed)
+        internal static ushort[][] GenerateTable(ushort[] polyParsed)
         {
-            ulong[][] table = new ulong[256][];
+            ushort[][] table = new ushort[256][];
             for (int i = 0; i < 256; i++)
             {
-                ulong[] data = new ulong[2];
-                data[0] = (ulong)i << 56;
+                ushort[] data = new ushort[polyParsed.Length];
+                data[0] = (ushort)(i << 8);
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((data[0] & 0x8000000000000000) == 0x8000000000000000)
+                    if ((data[0] & 0x8000) == 0x8000)
                     {
                         data = ShiftLeft(data, 1);
                         data = Xor(data, polyParsed);
@@ -101,16 +77,16 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static ulong[][] GenerateTableRef(ulong[] polyParsed)
+        internal static ushort[][] GenerateTableRef(ushort[] polyParsed)
         {
-            ulong[][] table = new ulong[256][];
+            ushort[][] table = new ushort[256][];
             for (int i = 0; i < 256; i++)
             {
-                ulong[] data = new ulong[2];
-                data[1] = (ulong)i;
+                ushort[] data = new ushort[polyParsed.Length];
+                data[data.Length - 1] = (ushort)i;
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((data[1] & 1) == 1)
+                    if ((data[data.Length - 1] & 1) == 1)
                     {
                         data = ShiftRight(data, 1);
                         data = Xor(data, polyParsed);
@@ -125,18 +101,9 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal override CrcTableData CloneTable()
+        internal override CrcTable CloneTable()
         {
-            if (_table != null)
-            {
-                var table = new List<ulong[]>();
-                foreach (ulong[] item in _table)
-                {
-                    table.Add((ulong[])item.Clone());
-                }
-                return new CrcTableData(_core, _tableInfo, table.ToArray());
-            }
-            return new CrcTableData(_core, _tableInfo, null);
+            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -153,7 +120,7 @@ namespace Honoo.IO.Hashing
                 case CrcStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
                 default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
             }
-            _crc = (ulong[])_initParsed.Clone();
+            _crc = (ushort[])_initParsed.Clone();
             return result;
         }
 
@@ -163,13 +130,13 @@ namespace Honoo.IO.Hashing
             if (outputEndian == CrcEndian.LittleEndian)
             {
                 int j = -1;
-                int m = 56;
+                int m = 8;
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    if (i % 8 == 0)
+                    if (i % 2 == 0)
                     {
                         j++;
-                        m = 56;
+                        m = 8;
                     }
                     outputBuffer[i + outputOffset] = (byte)(_crc[j] << m);
                     m -= 8;
@@ -177,11 +144,11 @@ namespace Honoo.IO.Hashing
             }
             else
             {
-                int j = 2;
+                int j = _crc.Length;
                 int m = 0;
                 for (int i = 0; i < _checksumByteLength; i++)
                 {
-                    if (i % 8 == 0)
+                    if (i % 2 == 0)
                     {
                         j--;
                         m = 0;
@@ -190,39 +157,43 @@ namespace Honoo.IO.Hashing
                     m += 8;
                 }
             }
-            _crc = (ulong[])_initParsed.Clone();
+            _crc = (ushort[])_initParsed.Clone();
             return _checksumByteLength;
         }
 
         internal override bool ComputeFinal(out byte checksum)
         {
             Finish();
-            checksum = (byte)_crc[1];
-            _crc = (ulong[])_initParsed.Clone();
+            checksum = (byte)_crc[_crc.Length - 1];
+            _crc = (ushort[])_initParsed.Clone();
             return _width > 8;
         }
 
         internal override bool ComputeFinal(out ushort checksum)
         {
             Finish();
-            checksum = (ushort)_crc[1];
-            _crc = (ulong[])_initParsed.Clone();
+            checksum = _crc[_crc.Length - 1];
+            _crc = (ushort[])_initParsed.Clone();
             return _width > 16;
         }
 
         internal override bool ComputeFinal(out uint checksum)
         {
             Finish();
-            checksum = (uint)_crc[1];
-            _crc = (ulong[])_initParsed.Clone();
+            checksum = _crc[_crc.Length - 1];
+            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFU) << 16;
+            _crc = (ushort[])_initParsed.Clone();
             return _width > 32;
         }
 
         internal override bool ComputeFinal(out ulong checksum)
         {
             Finish();
-            checksum = _crc[1];
-            _crc = (ulong[])_initParsed.Clone();
+            checksum = _crc[_crc.Length - 1];
+            if (_crc.Length > 1) checksum |= (_crc[_crc.Length - 1 - 1] & 0xFFFFUL) << 16;
+            if (_crc.Length > 2) checksum |= (_crc[_crc.Length - 1 - 2] & 0xFFFFUL) << 32;
+            if (_crc.Length > 3) checksum |= (_crc[_crc.Length - 1 - 3] & 0xFFFFUL) << 48;
+            _crc = (ushort[])_initParsed.Clone();
             return _width > 64;
         }
 
@@ -258,11 +229,14 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithoutTable(byte input)
         {
-            _crc[1] ^= 0;
-            _crc[0] ^= (ulong)input << 56;
+            for (int i = _crc.Length - 1; i >= 1; i--)
+            {
+                _crc[i] ^= 0;
+            }
+            _crc[0] ^= (ushort)(input << 8);
             for (int j = 0; j < 8; j++)
             {
-                if ((_crc[0] & 0x8000000000000000) == 0x8000000000000000)
+                if ((_crc[0] & 0x8000) == 0x8000)
                 {
                     _crc = ShiftLeft(_crc, 1);
                     _crc = Xor(_crc, _polyParsed);
@@ -276,11 +250,14 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithoutTableRef(byte input)
         {
-            _crc[0] ^= 0;
-            _crc[1] ^= input;
+            for (int i = 0; i < _crc.Length - 1; i++)
+            {
+                _crc[i] ^= 0;
+            }
+            _crc[_crc.Length - 1] ^= input;
             for (int j = 0; j < 8; j++)
             {
-                if ((_crc[1] & 1) == 1)
+                if ((_crc[_crc.Length - 1] & 1) == 1)
                 {
                     _crc = ShiftRight(_crc, 1);
                     _crc = Xor(_crc, _polyParsed);
@@ -294,14 +271,14 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            ulong[] match = _table[(_crc[0] >> 56) ^ input];
+            ushort[] match = _table[(_crc[0] >> 8) ^ input];
             _crc = ShiftLeft(_crc, 8);
             _crc = Xor(_crc, match);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            ulong[] match = _table[(_crc[1] ^ input) & 0xFF];
+            ushort[] match = _table[(_crc[_crc.Length - 1] ^ input) & 0xFF];
             _crc = ShiftRight(_crc, 8);
             _crc = Xor(_crc, match);
         }
@@ -310,7 +287,7 @@ namespace Honoo.IO.Hashing
 
         #region Update bytes
 
-        internal override void Update(byte[] inputBuffer, int offset, int length)
+        internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
             if (_tableInfo == CrcTableInfo.None)
             {
@@ -325,13 +302,16 @@ namespace Honoo.IO.Hashing
             }
             else
             {
-                if (_refin)
+                fixed (byte* inputP = inputBuffer)
                 {
-                    UpdateWithTableRef(inputBuffer, offset, length);
-                }
-                else
-                {
-                    UpdateWithTable(inputBuffer, offset, length);
+                    if (_refin)
+                    {
+                        UpdateWithTableRef(inputBuffer, offset, length);
+                    }
+                    else
+                    {
+                        UpdateWithTable(inputBuffer, offset, length);
+                    }
                 }
             }
         }
@@ -370,36 +350,7 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal override void Reset()
-        {
-            _crc = (ulong[])_initParsed.Clone();
-        }
-
-        private static string GetBinaryString(ulong[] input, int width)
-        {
-            StringBuilder result = new StringBuilder();
-            result.Append(Convert.ToString((long)input[0], 2).PadLeft(64, '0'));
-            result.Append(Convert.ToString((long)input[1], 2).PadLeft(64, '0'));
-            if (result.Length > width)
-            {
-                result.Remove(0, result.Length - width);
-            }
-            return result.ToString();
-        }
-
-        private static string GetHexString(ulong[] input, int hexLength)
-        {
-            StringBuilder result = new StringBuilder();
-            result.Append(Convert.ToString((long)input[0], 16).PadLeft(16, '0'));
-            result.Append(Convert.ToString((long)input[1], 16).PadLeft(16, '0'));
-            if (result.Length > hexLength)
-            {
-                result.Remove(0, result.Length - hexLength);
-            }
-            return result.ToString();
-        }
-
-        private static ulong[] Parse(ulong[] input, int moves, bool reverse)
+        internal static ushort[] Parse(ushort[] input, int moves, bool reverse)
         {
             if (moves > 0)
             {
@@ -412,56 +363,87 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static ulong Reverse(ulong input)
+        internal override void Reset()
         {
-            input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;
-            input = (input & 0x3333333333333333) << 2 | (input >> 2) & 0x3333333333333333;
-            input = (input & 0x0F0F0F0F0F0F0F0F) << 4 | (input >> 4) & 0x0F0F0F0F0F0F0F0F;
-            input = (input & 0x00FF00FF00FF00FF) << 8 | (input >> 8) & 0x00FF00FF00FF00FF;
-            input = (input & 0x0000FFFF0000FFFF) << 16 | (input >> 16) & 0x0000FFFF0000FFFF;
-            input = (input & 0x00000000FFFFFFFF) << 32 | (input >> 32) & 0x00000000FFFFFFFF;
+            _crc = (ushort[])_initParsed.Clone();
+        }
+
+        private static string GetBinaryString(ushort[] input, int width)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
+            {
+                result.Append(Convert.ToString(input[i], 2).PadLeft(16, '0'));
+            }
+            if (result.Length > width)
+            {
+                result.Remove(0, result.Length - width);
+            }
+            return result.ToString();
+        }
+
+        private static string GetHexString(ushort[] input, int hexLength)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
+            {
+                result.Append(Convert.ToString(input[i], 16).PadLeft(4, '0'));
+            }
+            if (result.Length > hexLength)
+            {
+                result.Remove(0, result.Length - hexLength);
+            }
+            return result.ToString();
+        }
+
+        private static ushort Reverse(ushort input)
+        {
+            input = (ushort)((input & 0x5555) << 1 | (input >> 1) & 0x5555);
+            input = (ushort)((input & 0x3333) << 2 | (input >> 2) & 0x3333);
+            input = (ushort)((input & 0x0F0F) << 4 | (input >> 4) & 0x0F0F);
+            input = (ushort)((input & 0x00FF) << 8 | (input >> 8) & 0x00FF);
             return input;
         }
 
-        private static ulong[] Reverse(ulong[] input)
+        private static ushort[] Reverse(ushort[] input)
         {
-            ulong tmp = Reverse(input[1]);
-            input[1] = Reverse(input[0]);
-            input[0] = tmp;
-            return input;
-        }
-
-        private static ulong[] ShiftLeft(ulong[] input, int bits)
-        {
-            if (bits > 64)
+            ushort tmp;
+            for (int i = 0; i < (int)Math.Ceiling(input.Length / 2d); i++)
             {
-                input[0] = input[1] << (bits - 64);
-                input[1] = 0;
-            }
-            else if (bits > 0)
-            {
-                input[0] = (input[0] << bits) | (input[1] >> (64 - bits));
-                input[1] <<= bits;
+                tmp = Reverse(input[input.Length - 1 - i]);
+                input[input.Length - 1 - i] = Reverse(input[i]);
+                input[i] = tmp;
             }
             return input;
         }
 
-        private static ulong[] ShiftRight(ulong[] input, int bits)
+        private static ushort[] ShiftLeft(ushort[] input, int bits)
         {
-            if (bits > 64)
+            if (bits > 0)
             {
-                input[1] = input[0] >> (bits - 64);
-                input[0] = 0;
+                for (int i = 0; i < input.Length - 1; i++)
+                {
+                    input[i] = (ushort)((input[i] << bits) | (input[i + 1] >> (16 - bits)));
+                }
+                input[input.Length - 1] <<= bits;
             }
-            else if (bits > 0)
+            return input;
+        }
+
+        private static ushort[] ShiftRight(ushort[] input, int bits)
+        {
+            if (bits > 0)
             {
-                input[1] = (input[1] >> bits) | (input[0] << (64 - bits));
+                for (int i = input.Length - 1; i >= 1; i--)
+                {
+                    input[i] = (ushort)((input[i] >> bits) | (input[i - 1] << (16 - bits)));
+                }
                 input[0] >>= bits;
             }
             return input;
         }
 
-        private static ulong[] TruncateLeft(ulong[] input, int bits)
+        private static ushort[] TruncateLeft(ushort[] input, int bits)
         {
             if (bits > 0)
             {
@@ -471,10 +453,12 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
-        private static ulong[] Xor(ulong[] input, ulong[] input2)
+        private static ushort[] Xor(ushort[] input, ushort[] input2)
         {
-            input[0] ^= input2[0];
-            input[1] ^= input2[1];
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] ^= input2[i];
+            }
             return input;
         }
 

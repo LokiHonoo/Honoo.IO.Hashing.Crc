@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Honoo.IO.Hashing
 {
-    internal sealed class CrcEngineSharding8 : CrcEngine
+    internal sealed class CrcEngineSharding8Standard : CrcEngine
     {
         #region Members
 
@@ -15,7 +15,8 @@ namespace Honoo.IO.Hashing
         private readonly byte[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly CrcTableInfo _tableInfo = CrcTableInfo.None;
+        private readonly byte[][] _table;
+        private readonly CrcTableInfo _tableInfo = CrcTableInfo.Standard;
         private readonly int _width;
         private readonly byte[] _xoroutParsed;
         private byte[] _crc;
@@ -28,7 +29,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding8(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout)
+        internal CrcEngineSharding8Standard(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout, byte[][] table)
         {
             if (width <= 0)
             {
@@ -44,6 +45,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
+            _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = (byte[])_initParsed.Clone();
         }
 
@@ -51,9 +53,57 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
+        internal static byte[][] GenerateTable(byte[] polyParsed)
+        {
+            byte[][] table = new byte[256][];
+            for (int i = 0; i < 256; i++)
+            {
+                byte[] data = new byte[polyParsed.Length];
+                data[0] = (byte)i;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((data[0] & 0x80) == 0x80)
+                    {
+                        data = ShiftLeft(data, 1);
+                        data = Xor(data, polyParsed);
+                    }
+                    else
+                    {
+                        data = ShiftLeft(data, 1);
+                    }
+                }
+                table[i] = data;
+            }
+            return table;
+        }
+
+        internal static byte[][] GenerateTableRef(byte[] polyParsed)
+        {
+            byte[][] table = new byte[256][];
+            for (int i = 0; i < 256; i++)
+            {
+                byte[] data = new byte[polyParsed.Length];
+                data[data.Length - 1] = (byte)i;
+                for (int j = 0; j < 8; j++)
+                {
+                    if ((data[data.Length - 1] & 1) == 1)
+                    {
+                        data = ShiftRight(data, 1);
+                        data = Xor(data, polyParsed);
+                    }
+                    else
+                    {
+                        data = ShiftRight(data, 1);
+                    }
+                }
+                table[i] = data;
+            }
+            return table;
+        }
+
         internal override CrcTable CloneTable()
         {
-            return new CrcTable(_tableInfo, _core, null);
+            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -146,54 +196,26 @@ namespace Honoo.IO.Hashing
         {
             if (_refin)
             {
-                UpdateWithoutTableRef(input);
+                UpdateWithTableRef(input);
             }
             else
             {
-                UpdateWithoutTable(input);
+                UpdateWithTable(input);
             }
         }
 
-        private void UpdateWithoutTable(byte input)
+        private void UpdateWithTable(byte input)
         {
-            for (int i = _crc.Length - 1; i >= 1; i--)
-            {
-                _crc[i] ^= 0;
-            }
-            _crc[0] ^= input;
-            for (int j = 0; j < 8; j++)
-            {
-                if ((_crc[0] & 0x80) == 0x80)
-                {
-                    _crc = ShiftLeft(_crc, 1);
-                    _crc = Xor(_crc, _polyParsed);
-                }
-                else
-                {
-                    _crc = ShiftLeft(_crc, 1);
-                }
-            }
+            byte[] match = _table[_crc[0] ^ input];
+            _crc = ShiftLeft(_crc, 8);
+            _crc = Xor(_crc, match);
         }
 
-        private void UpdateWithoutTableRef(byte input)
+        private void UpdateWithTableRef(byte input)
         {
-            for (int i = 0; i < _crc.Length - 1; i++)
-            {
-                _crc[i] ^= 0;
-            }
-            _crc[_crc.Length - 1] ^= input;
-            for (int j = 0; j < 8; j++)
-            {
-                if ((_crc[_crc.Length - 1] & 1) == 1)
-                {
-                    _crc = ShiftRight(_crc, 1);
-                    _crc = Xor(_crc, _polyParsed);
-                }
-                else
-                {
-                    _crc = ShiftRight(_crc, 1);
-                }
-            }
+            byte[] match = _table[_crc[_crc.Length - 1] ^ input];
+            _crc = ShiftRight(_crc, 8);
+            _crc = Xor(_crc, match);
         }
 
         #endregion Update byte
@@ -202,29 +224,32 @@ namespace Honoo.IO.Hashing
 
         internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_refin)
+            fixed (byte* inputP = inputBuffer)
             {
-                UpdateWithoutTableRef(inputBuffer, offset, length);
-            }
-            else
-            {
-                UpdateWithoutTable(inputBuffer, offset, length);
-            }
-        }
-
-        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithoutTable(inputBuffer[i]);
+                if (_refin)
+                {
+                    UpdateWithTableRef(inputBuffer, offset, length);
+                }
+                else
+                {
+                    UpdateWithTable(inputBuffer, offset, length);
+                }
             }
         }
 
-        private void UpdateWithoutTableRef(byte[] inputBuffer, int offset, int length)
+        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
         {
             for (int i = offset; i < offset + length; i++)
             {
-                UpdateWithoutTableRef(inputBuffer[i]);
+                UpdateWithTable(inputBuffer[i]);
+            }
+        }
+
+        private void UpdateWithTableRef(byte[] inputBuffer, int offset, int length)
+        {
+            for (int i = offset; i < offset + length; i++)
+            {
+                UpdateWithTableRef(inputBuffer[i]);
             }
         }
 

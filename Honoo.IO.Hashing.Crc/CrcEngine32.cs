@@ -14,8 +14,7 @@ namespace Honoo.IO.Hashing
         private readonly uint _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly uint[] _table;
-        private readonly CrcTableInfo _tableInfo;
+        private readonly CrcTableInfo _tableInfo = CrcTableInfo.None;
         private readonly int _width;
         private readonly uint _xoroutParsed;
         private uint _crc;
@@ -28,7 +27,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTableInfo tableInfo)
+        internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout)
         {
             if (width <= 0 || width > 32)
             {
@@ -43,31 +42,6 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
-            switch (tableInfo)
-            {
-                case CrcTableInfo.None: _tableInfo = tableInfo; break;
-                default: _table = _refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed); _tableInfo = CrcTableInfo.Standard; break;
-            }
-            _crc = _initParsed;
-        }
-
-        internal CrcEngine32(int width, bool refin, bool refout, uint poly, uint init, uint xorout, uint[] table)
-        {
-            if (width <= 0 || width > 32)
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
-            }
-            _width = width;
-            _refin = refin;
-            _refout = refout;
-            _checksumByteLength = (int)Math.Ceiling(width / 8d);
-            _checksumHexLength = (int)Math.Ceiling(width / 4d);
-            _moves = 32 - width;
-            _polyParsed = Parse(poly, _moves, _refin);
-            _initParsed = Parse(init, _moves, _refin);
-            _xoroutParsed = TruncateLeft(xorout, _moves);
-            _table = table;
-            _tableInfo = table == null ? CrcTableInfo.None : CrcTableInfo.Standard;
             _crc = _initParsed;
         }
 
@@ -75,53 +49,9 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static uint[] GenerateTable(uint polyParsed)
+        internal override CrcTable CloneTable()
         {
-            uint[] table = new uint[256];
-            for (int i = 0; i < 256; i++)
-            {
-                uint data = (uint)(i << 24);
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((data & 0x80000000) == 0x80000000)
-                    {
-                        data = (data << 1) ^ polyParsed;
-                    }
-                    else
-                    {
-                        data <<= 1;
-                    }
-                }
-                table[i] = data;
-            }
-            return table;
-        }
-
-        internal static uint[] GenerateTableRef(uint polyParsed)
-        {
-            uint[] table = new uint[256];
-            for (int i = 0; i < 256; i++)
-            {
-                uint data = (uint)i;
-                for (int j = 0; j < 8; j++)
-                {
-                    if ((data & 1) == 1)
-                    {
-                        data = (data >> 1) ^ polyParsed;
-                    }
-                    else
-                    {
-                        data >>= 1;
-                    }
-                }
-                table[i] = data;
-            }
-            return table;
-        }
-
-        internal override CrcTableData CloneTable()
-        {
-            return new CrcTableData(_core, _tableInfo, _table?.Clone());
+            return new CrcTable(_tableInfo, _core, null);
         }
 
         #endregion Table
@@ -201,27 +131,13 @@ namespace Honoo.IO.Hashing
 
         internal override void Update(byte input)
         {
-            if (_tableInfo == CrcTableInfo.None)
+            if (_refin)
             {
-                if (_refin)
-                {
-                    UpdateWithoutTableRef(input);
-                }
-                else
-                {
-                    UpdateWithoutTable(input);
-                }
+                UpdateWithoutTableRef(input);
             }
             else
             {
-                if (_refin)
-                {
-                    UpdateWithTableRef(input);
-                }
-                else
-                {
-                    UpdateWithTable(input);
-                }
+                UpdateWithoutTable(input);
             }
         }
 
@@ -257,46 +173,19 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private void UpdateWithTable(byte input)
-        {
-            _crc = (_crc << 8) ^ _table[(_crc >> 24) ^ input];
-        }
-
-        private void UpdateWithTableRef(byte input)
-        {
-            _crc = (_crc >> 8) ^ _table[(_crc ^ input) & 0xFF];
-        }
-
         #endregion Update byte
 
         #region Update bytes
 
         internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_tableInfo == CrcTableInfo.None)
+            if (_refin)
             {
-                if (_refin)
-                {
-                    UpdateWithoutTableRef(inputBuffer, offset, length);
-                }
-                else
-                {
-                    UpdateWithoutTable(inputBuffer, offset, length);
-                }
+                UpdateWithoutTableRef(inputBuffer, offset, length);
             }
             else
             {
-                fixed (byte* inputP = inputBuffer)
-                {
-                    if (_refin)
-                    {
-                        UpdateWithTableRef(inputP, length);
-                    }
-                    else
-                    {
-                        UpdateWithTable(inputP, length);
-                    }
-                }
+                UpdateWithoutTable(inputBuffer, offset, length);
             }
         }
 
@@ -316,203 +205,20 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private unsafe void UpdateWithTable(byte* inputP, int length)
-        {
-            fixed (uint* tableP = _table)
-            {
-                while (length >= 32)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[3]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[4]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[5]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[6]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[7]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[8]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[9]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[10]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[11]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[12]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[13]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[14]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[15]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[16]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[17]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[18]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[19]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[20]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[21]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[22]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[23]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[24]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[25]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[26]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[27]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[28]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[29]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[30]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[31]];
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[3]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[4]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[5]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[6]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[7]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[8]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[9]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[10]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[11]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[12]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[13]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[14]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[15]];
-                    inputP += 16;
-                    length -= 16;
-                }
-                if (length >= 8)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[3]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[4]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[5]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[6]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[7]];
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[3]];
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[1]];
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 24) ^ inputP[0]];
-                }
-            }
-        }
-
-        private unsafe void UpdateWithTableRef(byte* inputP, int length)
-        {
-            fixed (uint* tableP = _table)
-            {
-                while (length >= 32)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[4]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[5]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[6]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[7]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[8]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[9]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[10]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[11]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[12]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[13]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[14]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[15]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[16]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[17]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[18]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[19]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[20]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[21]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[22]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[23]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[24]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[25]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[26]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[27]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[28]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[29]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[30]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[31]) & 0xFF];
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[4]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[5]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[6]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[7]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[8]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[9]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[10]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[11]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[12]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[13]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[14]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[15]) & 0xFF];
-                    inputP += 16;
-                    length -= 16;
-                }
-                if (length >= 8)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[4]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[5]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[6]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[7]) & 0xFF];
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                }
-            }
-        }
-
         #endregion Update bytes
+
+        internal static uint Parse(uint input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
 
         internal override void Reset()
         {
@@ -537,19 +243,6 @@ namespace Honoo.IO.Hashing
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
             return result;
-        }
-
-        private static uint Parse(uint input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
         }
 
         private static uint Reverse(uint input)

@@ -158,6 +158,13 @@ namespace Test
                         checksums.Add(hex);
                         Console.ResetColor();
                     }
+                    if (name == "CRC-64/WE")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(Calc(System.Data.HashFunction.CRC.CRCFactory.Instance.Create(System.Data.HashFunction.CRC.CRCConfig.CRC64_WE), "HashFunction", input, out string hex));
+                        checksums.Add(hex);
+                        Console.ResetColor();
+                    }
                 }
                 var poly = new CrcParameter(CrcStringFormat.Hex, alg.Poly, alg.Width);
                 var init = new CrcParameter(CrcStringFormat.Hex, alg.Init, alg.Width);
@@ -316,30 +323,29 @@ namespace Test
             else if (width <= 16) core = CrcCore.UInt16;
             else if (width <= 32) core = CrcCore.UInt32;
             else if (width <= 64) core = CrcCore.UInt64;
-            else if (width <= 128) core = CrcCore.UInt128L2;
-            else core = CrcCore.Sharding64;
-            Crc crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, CrcTableInfo.Standard, core);
+            else core = CrcCore.Sharding32;
+            Crc crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, width, refin, poly, core));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, CrcTableInfo.M16x, core);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.M16x, width, refin, poly, core));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, CrcTableInfo.None, core);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-{core}", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, width, refin, poly, core));
             checksums.Add(Calc(crc, input, displayLimit));
             //
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding8);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, width, refin, poly, CrcCore.Sharding8));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding8);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding8", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, width, refin, poly, CrcCore.Sharding8));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding16);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, width, refin, poly, CrcCore.Sharding16));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding16);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding16", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, width, refin, poly, CrcCore.Sharding16));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding32);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, width, refin, poly, CrcCore.Sharding32));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding32);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding32", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, width, refin, poly, CrcCore.Sharding32));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding64);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, width, refin, poly, CrcCore.Sharding64));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding64);
+            crc = Crc.CreateBy($"CRC-{width}/CUSTUM-Sharding64", width, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, width, refin, poly, CrcCore.Sharding64));
             checksums.Add(Calc(crc, input, displayLimit));
             //
             if (checksums.Distinct().Count() != 1)
@@ -354,58 +360,46 @@ namespace Test
 
         private static void Do2(int widthMax8, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, byte[] input, IList<string> checksums, int displayLimit)
         {
-            Crc crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt8);
+            Crc crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly.ToByte(), init.ToByte(), xorout.ToByte(), new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly.ToByte()));
             checksums.Add(Calc(crc, input, displayLimit));
-            CrcTableData crcTable1 = crc.CloneTable();
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt8);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly.ToByte(), init.ToByte(), xorout.ToByte(), new CrcTable(CrcTableInfo.M16x, widthMax8, refin, poly.ToByte()));
             checksums.Add(Calc(crc, input, displayLimit));
-            CrcTableData crcTable2 = crc.CloneTable();
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt8);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt8", widthMax8, refin, refout, poly.ToByte(), init.ToByte(), xorout.ToByte(), new CrcTable(CrcTableInfo.None, widthMax8, refin, poly.ToByte()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt16);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly.ToUInt16(), init.ToUInt16(), xorout.ToUInt16(), new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly.ToUInt16()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt16);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly.ToUInt16(), init.ToUInt16(), xorout.ToUInt16(), new CrcTable(CrcTableInfo.M16x, widthMax8, refin, poly.ToUInt16()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt16);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt16", widthMax8, refin, refout, poly.ToUInt16(), init.ToUInt16(), xorout.ToUInt16(), new CrcTable(CrcTableInfo.None, widthMax8, refin, poly.ToUInt16()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt32);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly.ToUInt32(), init.ToUInt32(), xorout.ToUInt32(), new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly.ToUInt32()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt32);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly.ToUInt32(), init.ToUInt32(), xorout.ToUInt32(), new CrcTable(CrcTableInfo.M16x, widthMax8, refin, poly.ToUInt32()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt32);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt32", widthMax8, refin, refout, poly.ToUInt32(), init.ToUInt32(), xorout.ToUInt32(), new CrcTable(CrcTableInfo.None, widthMax8, refin, poly.ToUInt32()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt64);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly.ToUInt64(), init.ToUInt64(), xorout.ToUInt64(), new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly.ToUInt64()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt64);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly.ToUInt64(), init.ToUInt64(), xorout.ToUInt64(), new CrcTable(CrcTableInfo.M16x, widthMax8, refin, poly.ToUInt64()));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt64);
-            checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt128L2", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.UInt128L2);
-            checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt128L2", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.M16x, CrcCore.UInt128L2);
-            checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt128L2", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.UInt128L2);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-UInt64", widthMax8, refin, refout, poly.ToUInt64(), init.ToUInt64(), xorout.ToUInt64(), new CrcTable(CrcTableInfo.None, widthMax8, refin, poly.ToUInt64()));
             checksums.Add(Calc(crc, input, displayLimit));
 
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding8);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding8", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly, CrcCore.Sharding8));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding8", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding8);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding8", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, widthMax8, refin, poly, CrcCore.Sharding8));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding16);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding16", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly, CrcCore.Sharding16));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding16", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding16);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding16", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, widthMax8, refin, poly, CrcCore.Sharding16));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding32", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding32);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding32", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly, CrcCore.Sharding32));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding32", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding32);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding32", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, widthMax8, refin, poly, CrcCore.Sharding32));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.Standard, CrcCore.Sharding64);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.Standard, widthMax8, refin, poly, CrcCore.Sharding64));
             checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, CrcTableInfo.None, CrcCore.Sharding64);
-            checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-CloneTable", widthMax8, refin, refout, poly, init, xorout, crcTable1);
-            checksums.Add(Calc(crc, input, displayLimit));
-            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-CloneTable", widthMax8, refin, refout, poly, init, xorout, crcTable2);
+            crc = Crc.CreateBy($"CRC-{widthMax8}/CUSTUM-Sharding64", widthMax8, refin, refout, poly, init, xorout, new CrcTable(CrcTableInfo.None, widthMax8, refin, poly, CrcCore.Sharding64));
             checksums.Add(Calc(crc, input, displayLimit));
             //
             if (checksums.Distinct().Count() != 1)

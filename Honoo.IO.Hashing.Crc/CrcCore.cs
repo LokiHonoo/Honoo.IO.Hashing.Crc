@@ -32,11 +32,6 @@
         UInt64,
 
         /// <summary>
-        /// Use 128 bits (link 2 UInt64) calculation core. The allowed width bits are between 0 - 128.
-        /// </summary>
-        UInt128L2,
-
-        /// <summary>
         /// Use 8 bits shardings calculation core. The allowed width bits are more than 0.
         /// </summary>
         Sharding8,

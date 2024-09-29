@@ -12,10 +12,10 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 82;
         private const string XOROUT = "0x000000000000000000000";
-        private static readonly ulong[] _init = new ulong[2];
-        private static readonly ulong[] _poly = new ulong[] { 0x000000000000308C, 0x0111011401440411 };
-        private static readonly ulong[] _xorout = new ulong[2];
-        private static ulong[][] _table;
+        private static readonly uint[] _init = new uint[3];
+        private static readonly uint[] _poly = new uint[] { 0x0000308C, 0x01110114, 0x01440411 };
+        private static readonly uint[] _xorout = new uint[3];
+        private static uint[][] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
@@ -43,7 +43,7 @@ namespace Honoo.IO.Hashing
                                (t) => { return new Crc82Darc(t); });
         }
 
-        private static CrcEngine128L2 GetEngine(CrcTableInfo withTable)
+        private static CrcEngine GetEngine(CrcTableInfo withTable)
         {
             //
             // poly = 0x0308C0111011401440411; reverse >>(96-82) = 0x220808A00A2022200C430;
@@ -52,15 +52,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine128L2.GenerateTableRef(new ulong[] { 0x0000000000022080, 0x8A00A2022200C430 });
+                        _tableStandard = CrcEngineSharding32Standard.GenerateTableRef(new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 });
                     }
-                    return new CrcEngine128L2(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, _table);
+                    return new CrcEngineSharding32Standard(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, _tableStandard);
 
-                //case CrcTable.M16x: return new CrcEngine128L2M16x(WIDTH, REFIN, REFOUT, _poly, _init, _xorout);
+                //case CrcTableInfo.M16x:
+                //    if (_tableM16x == null)
+                //    {
+                //        _tableM16x = CrcEngineSharding32M16x.GenerateTableRef(new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 });
+                //    }
+                //    return new CrcEngineSharding32M16x(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine128L2(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, withTable);
+                default: return new CrcEngineSharding32(WIDTH, REFIN, REFOUT, _poly, _init, _xorout);
             }
         }
     }

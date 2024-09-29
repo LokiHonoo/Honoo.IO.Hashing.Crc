@@ -12,7 +12,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24 class.
@@ -51,15 +52,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x864CFB00);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x864CFB00);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x864CFB00);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -76,7 +82,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Ble class.
@@ -106,15 +113,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTableRef(0xDA6000);
+                        _tableStandard = CrcEngine32Standard.GenerateTableRef(0xDA6000);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTableRef(0xDA6000);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -131,7 +143,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayA class.
@@ -161,15 +174,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x5D6DCB00);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x5D6DCB00);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x5D6DCB00);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -186,7 +204,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayB class.
@@ -216,15 +235,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x5D6DCB00);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x5D6DCB00);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x5D6DCB00);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -241,7 +265,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0xFFFFFF;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Interlaken class.
@@ -271,15 +296,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x328B6300);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x328B6300);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x328B6300);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -296,7 +326,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24LteA class.
@@ -325,15 +356,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x864CFB00);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x864CFB00);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x864CFB00);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -350,7 +386,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0x000000;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24LteB class.
@@ -379,15 +416,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x80006300);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x80006300);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x80006300);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }
@@ -404,7 +446,8 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 24;
         private const uint XOROUT = 0xFFFFFF;
-        private static uint[] _table;
+        private static uint[] _tableM16x;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc24Os9 class.
@@ -434,15 +477,20 @@ namespace Honoo.IO.Hashing
             switch (withTable)
             {
                 case CrcTableInfo.Standard:
-                    if (_table == null)
+                    if (_tableStandard == null)
                     {
-                        _table = CrcEngine32.GenerateTable(0x80006300);
+                        _tableStandard = CrcEngine32Standard.GenerateTable(0x80006300);
                     }
-                    return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table);
+                    return new CrcEngine32Standard(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableStandard);
 
-                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, null);
+                case CrcTableInfo.M16x:
+                    if (_tableM16x == null)
+                    {
+                        _tableM16x = CrcEngine32M16x.GenerateTable(0x80006300);
+                    }
+                    return new CrcEngine32M16x(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _tableM16x);
 
-                case CrcTableInfo.None: default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, withTable);
+                default: return new CrcEngine32(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT);
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Honoo.IO.Hashing
+﻿namespace Honoo.IO.Hashing
 {
     internal abstract class CrcEngine
     {
@@ -15,16 +13,13 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        /// <summary>
-        /// Initializes a new instance of the CrcEngine class.
-        /// </summary>
-        protected CrcEngine()
+        internal CrcEngine()
         {
         }
 
         #endregion Construction
 
-        internal abstract CrcTableData CloneTable();
+        internal abstract CrcTable CloneTable();
 
         internal abstract string ComputeFinal(CrcStringFormat outputFormat);
 

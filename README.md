@@ -186,58 +186,41 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom width and parameters are supported.
-    var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex");
+    var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, true, true, "polyHex", "initHex", "xoroutHex", CrcTable);
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumByteLength];
     int length = crc.ComputeFinal(CrcEndian.BigEndian, checksum, 0);
-}
-
-private static void Demo5()
-{
-    // Using stored table.
-     CrcTableData table = crc7.CloneTable();
-     //
-    var crc = Crc.CreateBy(CrcName.CRC7.Name,
-                           CrcName.CRC7.Width,
-                           CrcName.CRC7.Refin, 
-                           CrcName.CRC7.Refout,
-                           CrcName.CRC7.Poly,
-                           CrcName.CRC7.Init,
-                           CrcName.CRC7.Xorout,
-                           table);
 }
 
 ```
 
 ## SPEED
 
+AMD5700X DDR4-3600
+
 |algorithm|core|table|table overhead|speed|
 |:-------:|:--:|:---:|:------------:|----:|
-|CRC-32|UInt32|Standard|1 KiB|465 MiB/s|
-|CRC-32|UInt32|M16x|16 KiB|2558 MiB/s|
-|CRC-32|UInt32|None||25 MiB/s|
+|CRC-32|UInt32|Standard|1 KiB|543 MiB/s|
+|CRC-32|UInt32|M16x|16 KiB|3581 MiB/s|
+|CRC-32|UInt32|None||40 MiB/s|
 |-|-|-|-|-|
-|CRC-7|UInt8|Standard|256 B|280 MiB/s|
-|CRC-7|UInt16|Standard|512 B|245 MiB/s|
-|CRC-7|UInt32|Standard|1 KiB|459 MiB/s|
-|CRC-7|UInt64|Standard|2 KiB|465 MiB/s|
-|CRC-7|UInt128L2|Standard|4 KiB|128 MiB/s|
-|CRC-7|Sharding8|Standard|256 B|105 MiB/s|
-|CRC-7|Sharding16|Standard|512 B|106 MiB/s|
-|CRC-7|Sharding32|Standard|1 KiB|107 MiB/s|
-|CRC-7|Sharding64|Standard|2 KiB|108 MiB/s|
+|CRC-7|UInt8|Standard|256 B|338 MiB/s|
+|CRC-7|UInt16|Standard|512 B|261 MiB/s|
+|CRC-7|UInt32|Standard|1 KiB|543 MiB/s|
+|CRC-7|UInt64|Standard|2 KiB|543 MiB/s|
+|CRC-7|Sharding8|Standard|256 B|132 MiB/s|
+|CRC-7|Sharding16|Standard|512 B|143 MiB/s|
+|CRC-7|Sharding32|Standard|1 KiB|139 MiB/s|
+|CRC-7|Sharding64|Standard|2 KiB|140 MiB/s|
 |-|-|-|-|-|
-|CRC-5/ITU|UInt8|M16x|4 KiB|2984 MiB/s|
-|CRC-13/BBC|UInt16|M16x|8 KiB|2558 MiB/s|
-|CRC-24/BLE|UInt32|M16x|16 KiB|2558 MiB/s|
-|CRC-40/GSM|UInt64|M16x|32 KiB|2238 MiB/s|
+|CRC-5/ITU|UInt32|M16x|16 KiB|3581 MiB/s|
+|CRC-13/BBC|UInt32|M16x|16 KiB|3581 MiB/s|
+|CRC-24/BLE|UInt32|M16x|16 KiB|3255 MiB/s|
+|CRC-40/GSM|UInt64|M16x|32 KiB|2984 MiB/s|
 |-|-|-|-|-|
-|CRC-82/DARC|UInt128L2|Standard|4 KiB|143 MiB/s|
-|CRC-82/DARC|Sharding64|Standard|4 KiB|106 MiB/s|
-|-|-|-|-|-|
-|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|||1 KiB|398 MiB/s|
-|SHA1|system|||663 MiB/s|
-|SHA256|system|||1885 MiB/s|
+|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|||1 KiB|437 MiB/s|
+|SHA1|system|||814 MiB/s|
+|SHA256|system|||2106 MiB/s|
 
 ## LICENSE
 

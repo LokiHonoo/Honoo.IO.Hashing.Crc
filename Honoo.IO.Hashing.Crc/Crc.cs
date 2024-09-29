@@ -50,6 +50,8 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
+        #region Create
+
         /// <summary>
         /// Creates an instance of the algorithm by algorithm name.
         /// </summary>
@@ -120,11 +122,11 @@ namespace Honoo.IO.Hashing
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
-        /// <param name="withTable">Calculate with table.</param>
+        /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
         }
 
         /// <summary>
@@ -137,11 +139,11 @@ namespace Honoo.IO.Hashing
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
-        /// <param name="withTable">Calculate with table.</param>
+        /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
         }
 
         /// <summary>
@@ -154,11 +156,11 @@ namespace Honoo.IO.Hashing
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
-        /// <param name="withTable">Calculate with table.</param>
+        /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
         }
 
         /// <summary>
@@ -171,37 +173,11 @@ namespace Honoo.IO.Hashing
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
-        /// <param name="withTable">Calculate with table.</param>
+        /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTableInfo withTable = CrcTableInfo.Standard)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the CrcCustom class.
-        /// </summary>
-        /// <param name="name">Custom name.</param>
-        /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
-        /// <param name="poly">Polynomials value.</param>
-        /// <param name="init">Initialization value.</param>
-        /// <param name="xorout">Output xor value.</param>
-        /// <param name="withTable">Calculate with table.</param>
-        /// <param name="core">Use the specified CRC calculation core.</param>
-        /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name,
-                                   int width,
-                                   bool refin,
-                                   bool refout,
-                                   CrcParameter poly,
-                                   CrcParameter init,
-                                   CrcParameter xorout,
-                                   CrcTableInfo withTable = CrcTableInfo.Standard,
-                                   CrcCore core = CrcCore.Auto)
-        {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, withTable, core);
+            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
         }
 
         /// <summary>
@@ -216,146 +192,24 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, CrcTableData table)
+        public static Crc CreateBy(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, CrcTable table)
         {
             return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
         }
 
+        #endregion Create
+
+        #region Table
+
         /// <summary>
         /// Clone calculation table if exists.
         /// </summary>
-        public CrcTableData CloneTable()
+        public CrcTable CloneTable()
         {
             return _engine.CloneTable();
         }
 
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out byte[] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case byte[] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(byte[])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out ushort[] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case ushort[] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ushort[])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out uint[] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case uint[] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(uint[])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out ulong[] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case ulong[] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ulong[])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out byte[][] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case byte[][] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(byte[][])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out ushort[][] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case ushort[][] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ushort[][])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out uint[][] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case uint[][] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(uint[][])}\".");
-            }
-        }
-
-        /// <summary>
-        /// Clone calculation table if exists.
-        /// </summary>
-        /// <param name="table">a cloned table.</param>
-        /// <exception cref="Exception"></exception>
-        public void CloneTable(out ulong[][] table)
-        {
-            CrcTableData obj = _engine.CloneTable();
-            switch (obj.Table)
-            {
-                case ulong[][] t: table = t; break;
-                case null: table = null; break;
-                default: throw new InvalidCastException($"Cannot convert type \"{obj.Table.GetType()}\" to type \"{typeof(ulong[][])}\".");
-            }
-        }
+        #endregion Table
 
         /// <summary>
         /// Computes checksum and reset the calculator. The return value is "Binary String" or "Hex String".
