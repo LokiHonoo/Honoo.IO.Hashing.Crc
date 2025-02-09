@@ -201,6 +201,14 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
+        ///// <summary>
+        ///// Release all stored tables, and CRC of instantiation can no longer be used.
+        ///// </summary>
+        //public static void Release()
+        //{
+        //    // 缓存全部算法的表占用 2M 内存，似乎没必要清理？
+        //}
+
         /// <summary>
         /// Clone calculation table if exists.
         /// </summary>

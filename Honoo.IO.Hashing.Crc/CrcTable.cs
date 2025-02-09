@@ -34,7 +34,7 @@ namespace Honoo.IO.Hashing
         #region Construction
 
         /// <summary>
-        /// Initializes a new instance of the CrcUInt8Table class.
+        /// Initializes a new instance of the CrcTable class. Table using by UInt8 calculation.
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 8.</param>
@@ -68,7 +68,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Initializes a new instance of the CrcUInt16Table class.
+        /// Initializes a new instance of the CrcTable class. Table using by UInt16 calculation.
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 16.</param>
@@ -102,7 +102,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Initializes a new instance of the CrcUInt32Table class.
+        /// Initializes a new instance of the CrcTable class. Table using by UInt32 calculation.
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 32.</param>
@@ -136,7 +136,7 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Initializes a new instance of the CrcUInt64Table class.
+        /// Initializes a new instance of the CrcTable class. Table using by UInt64 calculation.
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 64.</param>
