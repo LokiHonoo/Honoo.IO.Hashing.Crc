@@ -200,17 +200,18 @@ namespace Honoo.IO.Hashing
             {
                 if (_refin)
                 {
-                    UpdateWithTableRef(inputP, length);
+                    UpdateWithTableRef(inputP, offset, length);
                 }
                 else
                 {
-                    UpdateWithTable(inputP, length);
+                    UpdateWithTable(inputP, offset, length);
                 }
             }
         }
 
-        private unsafe void UpdateWithTable(byte* inputP, int length)
+        private unsafe void UpdateWithTable(byte* inputP, int offset, int length)
         {
+            inputP += offset;
             fixed (byte* tableP = _table)
             {
                 while (length >= 16)
@@ -244,8 +245,9 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private unsafe void UpdateWithTableRef(byte* inputP, int length)
+        private unsafe void UpdateWithTableRef(byte* inputP, int offset, int length)
         {
+            inputP += offset;
             fixed (byte* tableP = _table)
             {
                 while (length >= 16)

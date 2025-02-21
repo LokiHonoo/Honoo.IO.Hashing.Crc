@@ -203,69 +203,13 @@ namespace Honoo.IO.Hashing
 
         internal override void Update(byte input)
         {
-            if (_tableInfo == CrcTableInfo.None)
+            if (_refin)
             {
-                if (_refin)
-                {
-                    UpdateWithoutTableRef(input);
-                }
-                else
-                {
-                    UpdateWithoutTable(input);
-                }
+                UpdateWithTableRef(input);
             }
             else
             {
-                if (_refin)
-                {
-                    UpdateWithTableRef(input);
-                }
-                else
-                {
-                    UpdateWithTable(input);
-                }
-            }
-        }
-
-        private void UpdateWithoutTable(byte input)
-        {
-            for (int i = _crc.Length - 1; i >= 1; i--)
-            {
-                _crc[i] ^= 0;
-            }
-            _crc[0] ^= (ushort)(input << 8);
-            for (int j = 0; j < 8; j++)
-            {
-                if ((_crc[0] & 0x8000) == 0x8000)
-                {
-                    _crc = ShiftLeft(_crc, 1);
-                    _crc = Xor(_crc, _polyParsed);
-                }
-                else
-                {
-                    _crc = ShiftLeft(_crc, 1);
-                }
-            }
-        }
-
-        private void UpdateWithoutTableRef(byte input)
-        {
-            for (int i = 0; i < _crc.Length - 1; i++)
-            {
-                _crc[i] ^= 0;
-            }
-            _crc[_crc.Length - 1] ^= input;
-            for (int j = 0; j < 8; j++)
-            {
-                if ((_crc[_crc.Length - 1] & 1) == 1)
-                {
-                    _crc = ShiftRight(_crc, 1);
-                    _crc = Xor(_crc, _polyParsed);
-                }
-                else
-                {
-                    _crc = ShiftRight(_crc, 1);
-                }
+                UpdateWithTable(input);
             }
         }
 
@@ -289,46 +233,16 @@ namespace Honoo.IO.Hashing
 
         internal override unsafe void Update(byte[] inputBuffer, int offset, int length)
         {
-            if (_tableInfo == CrcTableInfo.None)
+            fixed (byte* inputP = inputBuffer)
             {
                 if (_refin)
                 {
-                    UpdateWithoutTableRef(inputBuffer, offset, length);
+                    UpdateWithTableRef(inputBuffer, offset, length);
                 }
                 else
                 {
-                    UpdateWithoutTable(inputBuffer, offset, length);
+                    UpdateWithTable(inputBuffer, offset, length);
                 }
-            }
-            else
-            {
-                fixed (byte* inputP = inputBuffer)
-                {
-                    if (_refin)
-                    {
-                        UpdateWithTableRef(inputBuffer, offset, length);
-                    }
-                    else
-                    {
-                        UpdateWithTable(inputBuffer, offset, length);
-                    }
-                }
-            }
-        }
-
-        private void UpdateWithoutTable(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithoutTable(inputBuffer[i]);
-            }
-        }
-
-        private void UpdateWithoutTableRef(byte[] inputBuffer, int offset, int length)
-        {
-            for (int i = offset; i < offset + length; i++)
-            {
-                UpdateWithoutTableRef(inputBuffer[i]);
             }
         }
 
