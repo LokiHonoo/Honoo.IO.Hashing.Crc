@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net40;net462;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
 		<PackageId>Honoo.IO.Hashing.Crc</PackageId>
 		<Authors>Loki Honoo</Authors>		
 		<Company>Loki Honoo</Company>		
 		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
-		<VersionPrefix>1.2.0</VersionPrefix>
+		<VersionPrefix>1.2.2</VersionPrefix>
 		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Fat-Table are supported for speed up.
 Crc3, Crc4, Crc5, Crc6, Crc7, Crc8, Crc10, Crc11, Crc12, Crc13, Crc14, Crc15, Crc16, Crc17, Crc21, Crc24, Crc30, Crc31, Crc32, Crc40, Crc64, Crc82 and Custom width and parameters are supported. 
 
 Crc.Create("crc32");
 Crc.Create(CrcName.CRC40_GSM);
-Crc.CreateBy("CRC-217", 217, true, true, "poly", "init", "xorout");</Description>
+Crc.CreateBy("CRC-217/CUSTOM", 217, poly, init, xorout, true, true, table);</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/LokiHonoo/Honoo.IO.Hashing.Crc</RepositoryUrl>

@@ -19,8 +19,7 @@ namespace Honoo.IO.Hashing
         public CrcCore Core => _core;
 
         /// <summary>
-        /// Gets table. Type maybe <see langword="byte[]"/>, <see langword="ushort[]"/>, <see langword="uint[]"/>, <see langword="ulong[]"/>,
-        /// <see langword="byte[][]"/>, <see langword="ushort[][]"/>, <see langword="uint[][]"/>, <see langword="ulong[][]"/>.
+        /// Gets table. Type maybe <see langword="byte[]"/>, <see langword="ushort[]"/>, <see langword="uint[]"/>, <see langword="ulong[]"/>.
         /// </summary>
         public object Table => _table;
 
@@ -38,10 +37,10 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 8.</param>
-        /// <param name="refin">Reflects input value.</param>
         /// <param name="poly">Polynomials value.</param>
+        /// <param name="refin">Reflects input value.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, bool refin, byte poly)
+        public CrcTable(CrcTableInfo tableInfo, int width, byte poly, bool refin)
         {
             if (width <= 0 || width > 8)
             {
@@ -50,18 +49,8 @@ namespace Honoo.IO.Hashing
             switch (tableInfo)
             {
                 case CrcTableInfo.None: default: break;
-                case CrcTableInfo.Standard:
-                    {
-                        byte polyParsed = CrcEngine8Standard.Parse(poly, 8 - width, refin);
-                        _table = refin ? CrcEngine8Standard.GenerateTableRef(polyParsed) : CrcEngine8Standard.GenerateTable(polyParsed);
-                        break;
-                    }
-                case CrcTableInfo.M16x:
-                    {
-                        byte polyParsed = CrcEngine8M16x.Parse(poly, 8 - width, refin);
-                        _table = refin ? CrcEngine8M16x.GenerateTableRef(polyParsed) : CrcEngine8M16x.GenerateTable(polyParsed);
-                        break;
-                    }
+                case CrcTableInfo.Standard: _table = CrcEngine8Standard.GenerateTable(width, poly, refin); break;
+                case CrcTableInfo.M16x: _table = CrcEngine8M16x.GenerateTable(width, poly, refin); break;
             }
             _tableInfo = tableInfo;
             _core = CrcCore.UInt8;
@@ -72,10 +61,10 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 16.</param>
-        /// <param name="refin">Reflects input value.</param>
         /// <param name="poly">Polynomials value.</param>
+        /// <param name="refin">Reflects input value.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, bool refin, ushort poly)
+        public CrcTable(CrcTableInfo tableInfo, int width, ushort poly, bool refin)
         {
             if (width <= 0 || width > 16)
             {
@@ -84,18 +73,8 @@ namespace Honoo.IO.Hashing
             switch (tableInfo)
             {
                 case CrcTableInfo.None: default: break;
-                case CrcTableInfo.Standard:
-                    {
-                        ushort polyParsed = CrcEngine16Standard.Parse(poly, 16 - width, refin);
-                        _table = refin ? CrcEngine16Standard.GenerateTableRef(polyParsed) : CrcEngine16Standard.GenerateTable(polyParsed);
-                        break;
-                    }
-                case CrcTableInfo.M16x:
-                    {
-                        ushort polyParsed = CrcEngine16M16x.Parse(poly, 16 - width, refin);
-                        _table = refin ? CrcEngine16M16x.GenerateTableRef(polyParsed) : CrcEngine16M16x.GenerateTable(polyParsed);
-                        break;
-                    }
+                case CrcTableInfo.Standard: _table = CrcEngine16Standard.GenerateTable(width, poly, refin); break;
+                case CrcTableInfo.M16x: _table = CrcEngine16M16x.GenerateTable(width, poly, refin); break;
             }
             _tableInfo = tableInfo;
             _core = CrcCore.UInt16;
@@ -106,10 +85,10 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 32.</param>
-        /// <param name="refin">Reflects input value.</param>
         /// <param name="poly">Polynomials value.</param>
+        /// <param name="refin">Reflects input value.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, bool refin, uint poly)
+        public CrcTable(CrcTableInfo tableInfo, int width, uint poly, bool refin)
         {
             if (width <= 0 || width > 32)
             {
@@ -118,18 +97,8 @@ namespace Honoo.IO.Hashing
             switch (tableInfo)
             {
                 case CrcTableInfo.None: default: break;
-                case CrcTableInfo.Standard:
-                    {
-                        uint polyParsed = CrcEngine32Standard.Parse(poly, 32 - width, refin);
-                        _table = refin ? CrcEngine32Standard.GenerateTableRef(polyParsed) : CrcEngine32Standard.GenerateTable(polyParsed);
-                        break;
-                    }
-                case CrcTableInfo.M16x:
-                    {
-                        uint polyParsed = CrcEngine32M16x.Parse(poly, 32 - width, refin);
-                        _table = refin ? CrcEngine32M16x.GenerateTableRef(polyParsed) : CrcEngine32M16x.GenerateTable(polyParsed);
-                        break;
-                    }
+                case CrcTableInfo.Standard: _table = CrcEngine32Standard.GenerateTable(width, poly, refin); break;
+                case CrcTableInfo.M16x: _table = CrcEngine32M16x.GenerateTable(width, poly, refin); break;
             }
             _tableInfo = tableInfo;
             _core = CrcCore.UInt32;
@@ -140,10 +109,10 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 64.</param>
-        /// <param name="refin">Reflects input value.</param>
         /// <param name="poly">Polynomials value.</param>
+        /// <param name="refin">Reflects input value.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, bool refin, ulong poly)
+        public CrcTable(CrcTableInfo tableInfo, int width, ulong poly, bool refin)
         {
             if (width <= 0 || width > 64)
             {
@@ -152,18 +121,8 @@ namespace Honoo.IO.Hashing
             switch (tableInfo)
             {
                 case CrcTableInfo.None: default: break;
-                case CrcTableInfo.Standard:
-                    {
-                        ulong polyParsed = CrcEngine64Standard.Parse(poly, 64 - width, refin);
-                        _table = refin ? CrcEngine64Standard.GenerateTableRef(polyParsed) : CrcEngine64Standard.GenerateTable(polyParsed);
-                        break;
-                    }
-                case CrcTableInfo.M16x:
-                    {
-                        ulong polyParsed = CrcEngine64M16x.Parse(poly, 64 - width, refin);
-                        _table = refin ? CrcEngine64M16x.GenerateTableRef(polyParsed) : CrcEngine64M16x.GenerateTable(polyParsed);
-                        break;
-                    }
+                case CrcTableInfo.Standard: _table = CrcEngine64Standard.GenerateTable(width, poly, refin); break;
+                case CrcTableInfo.M16x: _table = CrcEngine64M16x.GenerateTable(width, poly, refin); break;
             }
             _tableInfo = tableInfo;
             _core = CrcCore.UInt64;
@@ -174,11 +133,11 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="tableInfo">Calculate with table.</param>
         /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
-        /// <param name="refin">Reflects input value.</param>
         /// <param name="polyParameter">Polynomials value.</param>
+        /// <param name="refin">Reflects input value.</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, bool refin, CrcParameter polyParameter, CrcCore core)
+        public CrcTable(CrcTableInfo tableInfo, int width, CrcParameter polyParameter, bool refin, CrcCore core)
         {
             if (width <= 0)
             {
@@ -207,8 +166,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
                                 }
                                 byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                byte polyParsed = CrcEngine8Standard.Parse(poly, 8 - width, refin);
-                                _table = refin ? CrcEngine8Standard.GenerateTableRef(polyParsed) : CrcEngine8Standard.GenerateTable(polyParsed);
+                                _table = CrcEngine8Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                         case CrcTableInfo.M16x:
@@ -218,8 +176,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
                                 }
                                 byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                byte polyParsed = CrcEngine8M16x.Parse(poly, 8 - width, refin);
-                                _table = refin ? CrcEngine8M16x.GenerateTableRef(polyParsed) : CrcEngine8M16x.GenerateTable(polyParsed);
+                                _table = CrcEngine8M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -236,8 +193,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
                                 }
                                 ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ushort polyParsed = CrcEngine16Standard.Parse(poly, 16 - width, refin);
-                                _table = refin ? CrcEngine16Standard.GenerateTableRef(polyParsed) : CrcEngine16Standard.GenerateTable(polyParsed);
+                                _table = CrcEngine16Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                         case CrcTableInfo.M16x:
@@ -247,8 +203,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
                                 }
                                 ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ushort polyParsed = CrcEngine16M16x.Parse(poly, 16 - width, refin);
-                                _table = refin ? CrcEngine16M16x.GenerateTableRef(polyParsed) : CrcEngine16M16x.GenerateTable(polyParsed);
+                                _table = CrcEngine16M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -265,8 +220,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
                                 }
                                 uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                uint polyParsed = CrcEngine32Standard.Parse(poly, 32 - width, refin);
-                                _table = refin ? CrcEngine32Standard.GenerateTableRef(polyParsed) : CrcEngine32Standard.GenerateTable(polyParsed);
+                                _table = CrcEngine32Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                         case CrcTableInfo.M16x:
@@ -276,8 +230,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
                                 }
                                 uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                uint polyParsed = CrcEngine32M16x.Parse(poly, 32 - width, refin);
-                                _table = refin ? CrcEngine32M16x.GenerateTableRef(polyParsed) : CrcEngine32M16x.GenerateTable(polyParsed);
+                                _table = CrcEngine32M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -294,8 +247,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
                                 }
                                 ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ulong polyParsed = CrcEngine64Standard.Parse(poly, 64 - width, refin);
-                                _table = refin ? CrcEngine64Standard.GenerateTableRef(polyParsed) : CrcEngine64Standard.GenerateTable(polyParsed);
+                                _table = CrcEngine64Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                         case CrcTableInfo.M16x:
@@ -305,8 +257,7 @@ namespace Honoo.IO.Hashing
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
                                 }
                                 ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ulong polyParsed = CrcEngine64M16x.Parse(poly, 64 - width, refin);
-                                _table = refin ? CrcEngine64M16x.GenerateTableRef(polyParsed) : CrcEngine64M16x.GenerateTable(polyParsed);
+                                _table = CrcEngine64M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -319,11 +270,8 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                int rem = width % 8;
-                                int moves = rem > 0 ? 8 - rem : 0;
                                 byte[] poly = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                byte[] polyParsed = CrcEngineSharding8Standard.Parse(poly, moves, refin);
-                                _table = refin ? CrcEngineSharding8Standard.GenerateTableRef(polyParsed) : CrcEngineSharding8Standard.GenerateTable(polyParsed);
+                                _table = CrcEngineSharding8Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -336,11 +284,8 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                int rem = width % 16;
-                                int moves = rem > 0 ? 16 - rem : 0;
                                 ushort[] poly = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ushort[] polyParsed = CrcEngineSharding16Standard.Parse(poly, moves, refin);
-                                _table = refin ? CrcEngineSharding16Standard.GenerateTableRef(polyParsed) : CrcEngineSharding16Standard.GenerateTable(polyParsed);
+                                _table = CrcEngineSharding16Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -354,11 +299,8 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                int rem = width % 32;
-                                int moves = rem > 0 ? 32 - rem : 0;
                                 uint[] poly = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                uint[] polyParsed = CrcEngineSharding32Standard.Parse(poly, moves, refin);
-                                _table = refin ? CrcEngineSharding32Standard.GenerateTableRef(polyParsed) : CrcEngineSharding32Standard.GenerateTable(polyParsed);
+                                _table = CrcEngineSharding32Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }
@@ -371,11 +313,8 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                int rem = width % 64;
-                                int moves = rem > 0 ? 64 - rem : 0;
                                 ulong[] poly = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                                ulong[] polyParsed = CrcEngineSharding64Standard.Parse(poly, moves, refin);
-                                _table = refin ? CrcEngineSharding64Standard.GenerateTableRef(polyParsed) : CrcEngineSharding64Standard.GenerateTable(polyParsed);
+                                _table = CrcEngineSharding64Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
                     }

@@ -7,6 +7,7 @@ namespace Honoo.IO.Hashing
     {
         #region Members
 
+        private readonly int _calculationLength;
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
         private readonly CrcCore _core = CrcCore.Sharding8;
@@ -15,7 +16,7 @@ namespace Honoo.IO.Hashing
         private readonly byte[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly byte[][] _table;
+        private readonly byte[] _table;
         private readonly CrcTableInfo _tableInfo = CrcTableInfo.Standard;
         private readonly int _width;
         private readonly byte[] _xoroutParsed;
@@ -29,7 +30,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding8Standard(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout, byte[][] table)
+        internal CrcEngineSharding8Standard(int width, byte[] poly, byte[] init, byte[] xorout, bool refin, bool refout, byte[] table)
         {
             if (width <= 0)
             {
@@ -45,6 +46,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
+            _calculationLength = _polyParsed.Length;
             _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = (byte[])_initParsed.Clone();
         }
@@ -53,9 +55,23 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static byte[][] GenerateTable(byte[] polyParsed)
+        internal static byte[] GenerateTable(int width, byte[] poly, bool refin)
         {
-            byte[][] table = new byte[256][];
+            int rem = width % 8;
+            int moves = rem > 0 ? 8 - rem : 0;
+            byte[] polyParsed = Parse(poly, moves, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
+
+        private static byte[] GenerateTable(byte[] polyParsed)
+        {
+            int l = polyParsed.Length;
+            byte[] table = new byte[256 * l];
             for (int i = 0; i < 256; i++)
             {
                 byte[] data = new byte[polyParsed.Length];
@@ -72,14 +88,18 @@ namespace Honoo.IO.Hashing
                         data = ShiftLeft(data, 1);
                     }
                 }
-                table[i] = data;
+                for (int m = 0; m < data.Length; m++)
+                {
+                    table[i * l + m] = data[m];
+                }
             }
             return table;
         }
 
-        internal static byte[][] GenerateTableRef(byte[] polyParsed)
+        private static byte[] GenerateTableRef(byte[] polyParsed)
         {
-            byte[][] table = new byte[256][];
+            int l = polyParsed.Length;
+            byte[] table = new byte[256 * l];
             for (int i = 0; i < 256; i++)
             {
                 byte[] data = new byte[polyParsed.Length];
@@ -96,14 +116,12 @@ namespace Honoo.IO.Hashing
                         data = ShiftRight(data, 1);
                     }
                 }
-                table[i] = data;
+                for (int m = 0; m < data.Length; m++)
+                {
+                    table[i * l + m] = data[m];
+                }
             }
             return table;
-        }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -206,16 +224,16 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            byte[] match = _table[_crc[0] ^ input];
+            int index = (_crc[0] ^ input) * _calculationLength;
             _crc = ShiftLeft(_crc, 8);
-            _crc = Xor(_crc, match);
+            _crc = Xor(_crc, _table, index);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            byte[] match = _table[_crc[_crc.Length - 1] ^ input];
+            int index = (_crc[_crc.Length - 1] ^ input) * _calculationLength;
             _crc = ShiftRight(_crc, 8);
-            _crc = Xor(_crc, match);
+            _crc = Xor(_crc, _table, index);
         }
 
         #endregion Update byte
@@ -228,45 +246,90 @@ namespace Honoo.IO.Hashing
             {
                 if (_refin)
                 {
-                    UpdateWithTableRef(inputBuffer, offset, length);
+                    UpdateWithTableRef(inputP, offset, length);
                 }
                 else
                 {
-                    UpdateWithTable(inputBuffer, offset, length);
+                    UpdateWithTable(inputP, offset, length);
                 }
             }
         }
 
-        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        private unsafe void UpdateWithTable(byte* inputP, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            inputP += offset;
+            fixed (byte* tableP = _table)
+            fixed (byte* crc = _crc)
             {
-                UpdateWithTable(inputBuffer[i]);
+                int index;
+                while (length >= 16)
+                {
+                    index = (crc[0] ^ inputP[0]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[1]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[2]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[3]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[4]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[5]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[6]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[7]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[8]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[9]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[10]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[11]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[12]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[13]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[14]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (crc[0] ^ inputP[15]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP += 16;
+                    length -= 16;
+                }
+                while (length > 0)
+                {
+                    index = (crc[0] ^ inputP[0]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP++;
+                    length--;
+                }
             }
         }
 
-        private void UpdateWithTableRef(byte[] inputBuffer, int offset, int length)
+        private unsafe void UpdateWithTableRef(byte* inputP, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            inputP += offset;
+            fixed (byte* tableP = _table)
+            fixed (byte* crc = _crc)
             {
-                UpdateWithTableRef(inputBuffer[i]);
+                int index;
+                while (length >= 16)
+                {
+                    index = (_crc[_crc.Length - 1] ^ inputP[0]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[1]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[2]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[3]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[4]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[5]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[6]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[7]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[8]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[9]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[10]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[11]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[12]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[13]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[14]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = (_crc[_crc.Length - 1] ^ inputP[15]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP += 16;
+                    length -= 16;
+                }
+                while (length > 0)
+                {
+                    index = (_crc[_crc.Length - 1] ^ inputP[0]) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP++;
+                    length--;
+                }
             }
         }
 
         #endregion Update bytes
-
-        internal static byte[] Parse(byte[] input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input = ShiftLeft(input, moves);
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
 
         internal override void Reset()
         {
@@ -301,6 +364,19 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
+        private static byte[] Parse(byte[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input = ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
+
         private static byte Reverse(byte input)
         {
             input = (byte)((input & 0x55) << 1 | (input >> 1) & 0x55);
@@ -331,6 +407,19 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
+        private static unsafe byte* ShiftLeft(byte* input, int bits, int calculationLength)
+        {
+            if (bits > 0)
+            {
+                for (int i = 0; i < calculationLength - 1; i++)
+                {
+                    input[i] = (byte)((input[i] << bits) | (input[i + 1] >> (8 - bits)));
+                }
+                input[calculationLength - 1] <<= bits;
+            }
+            return input;
+        }
+
         private static byte[] ShiftRight(byte[] input, int bits)
         {
             for (int i = input.Length - 1; i >= 1; i--)
@@ -338,6 +427,19 @@ namespace Honoo.IO.Hashing
                 input[i] = (byte)((input[i] >> bits) | (input[i - 1] << (8 - bits)));
             }
             input[0] >>= bits;
+            return input;
+        }
+
+        private static unsafe byte* ShiftRight(byte* input, int bits, int calculationLength)
+        {
+            if (bits > 0)
+            {
+                for (int i = calculationLength - 1; i >= 1; i--)
+                {
+                    input[i] = (byte)((input[i] >> bits) | (input[i - 1] << (8 - bits)));
+                }
+                input[0] >>= bits;
+            }
             return input;
         }
 
@@ -356,6 +458,24 @@ namespace Honoo.IO.Hashing
             for (int i = 0; i < input.Length; i++)
             {
                 input[i] ^= input2[i];
+            }
+            return input;
+        }
+
+        private static byte[] Xor(byte[] input, byte[] input2, int input2Offset)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] ^= input2[input2Offset + i];
+            }
+            return input;
+        }
+
+        private static unsafe byte* Xor(byte* input, byte* input2, int input2Offset, int calculationLength)
+        {
+            for (int i = 0; i < calculationLength; i++)
+            {
+                input[i] ^= input2[input2Offset + i];
             }
             return input;
         }

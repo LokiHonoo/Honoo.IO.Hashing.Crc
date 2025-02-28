@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding16(int width, bool refin, bool refout, ushort[] poly, ushort[] init, ushort[] xorout)
+        internal CrcEngineSharding16(int width, ushort[] poly, ushort[] init, ushort[] xorout, bool refin, bool refout)
         {
             if (width <= 0)
             {
@@ -239,19 +239,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static ushort[] Parse(ushort[] input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input = ShiftLeft(input, moves);
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = (ushort[])_initParsed.Clone();
@@ -285,6 +272,18 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
+        private static ushort[] Parse(ushort[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input = ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
         private static ushort Reverse(ushort input)
         {
             input = (ushort)((input & 0x5555) << 1 | (input >> 1) & 0x5555);

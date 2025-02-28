@@ -15,7 +15,7 @@ namespace Honoo.IO.Hashing
         private static readonly uint[] _init = new uint[3];
         private static readonly uint[] _poly = new uint[] { 0x0000308C, 0x01110114, 0x01440411 };
         private static readonly uint[] _xorout = new uint[3];
-        private static uint[][] _tableStandard;
+        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
@@ -35,11 +35,11 @@ namespace Honoo.IO.Hashing
         {
             return new CrcName(DEFAULT_NAME,
                                WIDTH,
-                               REFIN,
-                               REFOUT,
                                new CrcParameter(CrcStringFormat.Hex, POLY, WIDTH),
                                new CrcParameter(CrcStringFormat.Hex, INIT, WIDTH),
                                new CrcParameter(CrcStringFormat.Hex, XOROUT, WIDTH),
+                               REFIN,
+                               REFOUT,
                                (t) => { return new Crc82Darc(t); });
         }
 
@@ -54,9 +54,9 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_tableStandard == null)
                     {
-                        _tableStandard = CrcEngineSharding32Standard.GenerateTableRef(new uint[] { 0x00022080, 0x8A00A202, 0x2200C430 });
+                        _tableStandard = CrcEngineSharding32Standard.GenerateTable(WIDTH, _poly, REFIN);
                     }
-                    return new CrcEngineSharding32Standard(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, _tableStandard);
+                    return new CrcEngineSharding32Standard(WIDTH, _poly, _init, _xorout, REFIN, REFOUT, _tableStandard);
 
                 //case CrcTableInfo.M16x:
                 //    if (_tableM16x == null)
@@ -65,7 +65,7 @@ namespace Honoo.IO.Hashing
                 //    }
                 //    return new CrcEngineSharding32M16x(WIDTH, REFIN, REFOUT, _poly, _init, _xorout, _tableM16x);
 
-                default: return new CrcEngineSharding32(WIDTH, REFIN, REFOUT, _poly, _init, _xorout);
+                default: return new CrcEngineSharding32(WIDTH, _poly, _init, _xorout, REFIN, REFOUT);
             }
         }
     }

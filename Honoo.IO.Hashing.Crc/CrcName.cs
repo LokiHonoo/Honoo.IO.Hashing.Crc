@@ -724,15 +724,15 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcName(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, GetAlgorithmCallback getAlgorithm)
+        internal CrcName(string name, int width, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool refin, bool refout, GetAlgorithmCallback getAlgorithm)
         {
             _name = name;
             _width = width;
-            _refin = refin;
-            _refout = refout;
             _poly = poly;
             _init = init;
             _xorout = xorout;
+            _refin = refin;
+            _refout = refout;
             _getAlgorithm = getAlgorithm;
         }
 

@@ -7,6 +7,7 @@ namespace Honoo.IO.Hashing
     {
         #region Members
 
+        private readonly int _calculationLength;
         private readonly int _checksumByteLength;
         private readonly int _checksumHexLength;
         private readonly CrcCore _core = CrcCore.Sharding16;
@@ -15,7 +16,7 @@ namespace Honoo.IO.Hashing
         private readonly ushort[] _polyParsed;
         private readonly bool _refin;
         private readonly bool _refout;
-        private readonly ushort[][] _table;
+        private readonly ushort[] _table;
         private readonly CrcTableInfo _tableInfo = CrcTableInfo.Standard;
         private readonly int _width;
         private readonly ushort[] _xoroutParsed;
@@ -29,7 +30,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding16Standard(int width, bool refin, bool refout, ushort[] poly, ushort[] init, ushort[] xorout, ushort[][] table)
+        internal CrcEngineSharding16Standard(int width, ushort[] poly, ushort[] init, ushort[] xorout, bool refin, bool refout, ushort[] table)
         {
             if (width <= 0)
             {
@@ -45,6 +46,7 @@ namespace Honoo.IO.Hashing
             _polyParsed = Parse(poly, _moves, _refin);
             _initParsed = Parse(init, _moves, _refin);
             _xoroutParsed = TruncateLeft(xorout, _moves);
+            _calculationLength = _polyParsed.Length;
             _table = table ?? (_refin ? GenerateTableRef(_polyParsed) : GenerateTable(_polyParsed));
             _crc = (ushort[])_initParsed.Clone();
         }
@@ -53,9 +55,23 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static ushort[][] GenerateTable(ushort[] polyParsed)
+        internal static ushort[] GenerateTable(int width, ushort[] poly, bool refin)
         {
-            ushort[][] table = new ushort[256][];
+            int rem = width % 16;
+            int moves = rem > 0 ? 16 - rem : 0;
+            ushort[] polyParsed = Parse(poly, moves, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
+
+        private static ushort[] GenerateTable(ushort[] polyParsed)
+        {
+            int l = polyParsed.Length;
+            ushort[] table = new ushort[256 * l];
             for (int i = 0; i < 256; i++)
             {
                 ushort[] data = new ushort[polyParsed.Length];
@@ -72,14 +88,18 @@ namespace Honoo.IO.Hashing
                         data = ShiftLeft(data, 1);
                     }
                 }
-                table[i] = data;
+                for (int m = 0; m < data.Length; m++)
+                {
+                    table[i * l + m] = data[m];
+                }
             }
             return table;
         }
 
-        internal static ushort[][] GenerateTableRef(ushort[] polyParsed)
+        private static ushort[] GenerateTableRef(ushort[] polyParsed)
         {
-            ushort[][] table = new ushort[256][];
+            int l = polyParsed.Length;
+            ushort[] table = new ushort[256 * l];
             for (int i = 0; i < 256; i++)
             {
                 ushort[] data = new ushort[polyParsed.Length];
@@ -96,14 +116,12 @@ namespace Honoo.IO.Hashing
                         data = ShiftRight(data, 1);
                     }
                 }
-                table[i] = data;
+                for (int m = 0; m < data.Length; m++)
+                {
+                    table[i * l + m] = data[m];
+                }
             }
             return table;
-        }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -215,16 +233,16 @@ namespace Honoo.IO.Hashing
 
         private void UpdateWithTable(byte input)
         {
-            ushort[] match = _table[(_crc[0] >> 8) ^ input];
+            int index = ((_crc[0] >> 8) ^ input) * _calculationLength;
             _crc = ShiftLeft(_crc, 8);
-            _crc = Xor(_crc, match);
+            _crc = Xor(_crc, _table, index);
         }
 
         private void UpdateWithTableRef(byte input)
         {
-            ushort[] match = _table[(_crc[_crc.Length - 1] ^ input) & 0xFF];
+            int index = ((_crc[_crc.Length - 1] ^ input) & 0xFF) * _calculationLength;
             _crc = ShiftRight(_crc, 8);
-            _crc = Xor(_crc, match);
+            _crc = Xor(_crc, _table, index);
         }
 
         #endregion Update byte
@@ -237,45 +255,90 @@ namespace Honoo.IO.Hashing
             {
                 if (_refin)
                 {
-                    UpdateWithTableRef(inputBuffer, offset, length);
+                    UpdateWithTableRef(inputP, offset, length);
                 }
                 else
                 {
-                    UpdateWithTable(inputBuffer, offset, length);
+                    UpdateWithTable(inputP, offset, length);
                 }
             }
         }
 
-        private void UpdateWithTable(byte[] inputBuffer, int offset, int length)
+        private unsafe void UpdateWithTable(byte* inputP, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            inputP += offset;
+            fixed (ushort* tableP = _table)
+            fixed (ushort* crc = _crc)
             {
-                UpdateWithTable(inputBuffer[i]);
+                int index;
+                while (length >= 16)
+                {
+                    index = ((crc[0] >> 8) ^ inputP[0]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[1]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[2]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[3]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[4]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[5]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[6]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[7]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[8]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[9]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[10]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[11]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[12]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[13]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[14]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[0] >> 8) ^ inputP[15]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP += 16;
+                    length -= 16;
+                }
+                while (length > 0)
+                {
+                    index = ((crc[0] >> 8) ^ inputP[0]) * _calculationLength; Xor(ShiftLeft(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP++;
+                    length--;
+                }
             }
         }
 
-        private void UpdateWithTableRef(byte[] inputBuffer, int offset, int length)
+        private unsafe void UpdateWithTableRef(byte* inputP, int offset, int length)
         {
-            for (int i = offset; i < offset + length; i++)
+            inputP += offset;
+            fixed (ushort* tableP = _table)
+            fixed (ushort* crc = _crc)
             {
-                UpdateWithTableRef(inputBuffer[i]);
+                int index;
+                while (length >= 16)
+                {
+                    index = ((crc[_calculationLength - 1] ^ inputP[0]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[1]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[2]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[3]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[4]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[5]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[6]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[7]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[8]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[9]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[10]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[11]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[12]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[13]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[14]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    index = ((crc[_calculationLength - 1] ^ inputP[15]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP += 16;
+                    length -= 16;
+                }
+                while (length > 0)
+                {
+                    index = ((crc[_calculationLength - 1] ^ inputP[0]) & 0xFF) * _calculationLength; Xor(ShiftRight(crc, 8, _calculationLength), tableP, index, _calculationLength);
+                    inputP++;
+                    length--;
+                }
             }
         }
 
         #endregion Update bytes
-
-        internal static ushort[] Parse(ushort[] input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input = ShiftLeft(input, moves);
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
 
         internal override void Reset()
         {
@@ -308,6 +371,19 @@ namespace Honoo.IO.Hashing
                 result.Remove(0, result.Length - hexLength);
             }
             return result.ToString();
+        }
+
+        private static ushort[] Parse(ushort[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input = ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
         }
 
         private static ushort Reverse(ushort input)
@@ -344,11 +420,37 @@ namespace Honoo.IO.Hashing
             return input;
         }
 
+        private static unsafe ushort* ShiftLeft(ushort* input, int bits, int calculationLength)
+        {
+            if (bits > 0)
+            {
+                for (int i = 0; i < calculationLength - 1; i++)
+                {
+                    input[i] = (ushort)((input[i] << bits) | (input[i + 1] >> (16 - bits)));
+                }
+                input[calculationLength - 1] <<= bits;
+            }
+            return input;
+        }
+
         private static ushort[] ShiftRight(ushort[] input, int bits)
         {
             if (bits > 0)
             {
                 for (int i = input.Length - 1; i >= 1; i--)
+                {
+                    input[i] = (ushort)((input[i] >> bits) | (input[i - 1] << (16 - bits)));
+                }
+                input[0] >>= bits;
+            }
+            return input;
+        }
+
+        private static unsafe ushort* ShiftRight(ushort* input, int bits, int calculationLength)
+        {
+            if (bits > 0)
+            {
+                for (int i = calculationLength - 1; i >= 1; i--)
                 {
                     input[i] = (ushort)((input[i] >> bits) | (input[i - 1] << (16 - bits)));
                 }
@@ -372,6 +474,24 @@ namespace Honoo.IO.Hashing
             for (int i = 0; i < input.Length; i++)
             {
                 input[i] ^= input2[i];
+            }
+            return input;
+        }
+
+        private static ushort[] Xor(ushort[] input, ushort[] input2, int input2Offset)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] ^= input2[input2Offset + i];
+            }
+            return input;
+        }
+
+        private static unsafe ushort* Xor(ushort* input, ushort* input2, int input2Offset, int calculationLength)
+        {
+            for (int i = 0; i < calculationLength; i++)
+            {
+                input[i] ^= input2[input2Offset + i];
             }
             return input;
         }

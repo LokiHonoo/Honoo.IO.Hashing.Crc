@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding64(int width, bool refin, bool refout, ulong[] poly, ulong[] init, ulong[] xorout)
+        internal CrcEngineSharding64(int width, ulong[] poly, ulong[] init, ulong[] xorout, bool refin, bool refout)
         {
             if (width <= 0)
             {
@@ -235,19 +235,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static ulong[] Parse(ulong[] input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input = ShiftLeft(input, moves);
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = (ulong[])_initParsed.Clone();
@@ -279,6 +266,19 @@ namespace Honoo.IO.Hashing
                 result.Remove(0, result.Length - hexLength);
             }
             return result.ToString();
+        }
+
+        private static ulong[] Parse(ulong[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input = ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
         }
 
         private static ulong Reverse(ulong input)

@@ -20,39 +20,39 @@ namespace Test
             Console.WriteLine("|algorithm|core|table|table overhead|speed|");
             Console.WriteLine("|:-------:|:--:|:---:|:------------:|----:|");
             //
-            Crc crc = new Crc32();
+            Crc crc = new Crc32(CrcTableInfo.None);
+            Do(crc, input, times);
+            //
+            crc = new Crc32();
             Do(crc, input, times);
             crc = new Crc32(CrcTableInfo.M16x);
             Do(crc, input, times);
             //
-            crc = Crc.Create(CrcName.CRC32, CrcTableInfo.None);
-            Do(crc, input, times);
-            //
             Console.WriteLine("|-|-|-|-|-|");
             //
-            var table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.UInt8);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            var table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.UInt8);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.UInt16);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.UInt16);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.UInt32);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.UInt32);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.UInt64);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.UInt64);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.Sharding8);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.Sharding8);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.Sharding16);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.Sharding16);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.Sharding32);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.Sharding32);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
-            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Poly, CrcCore.Sharding64);
-            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Refin, CrcName.CRC7.Refout, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, table);
+            table = new CrcTable(CrcTableInfo.Standard, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Refin, CrcCore.Sharding64);
+            crc = Crc.CreateBy(CrcName.CRC7.Name, CrcName.CRC7.Width, CrcName.CRC7.Poly, CrcName.CRC7.Init, CrcName.CRC7.Xorout, CrcName.CRC7.Refin, CrcName.CRC7.Refout, table);
             Do(crc, input, times);
             //
             Console.WriteLine("|-|-|-|-|-|");
@@ -68,6 +68,7 @@ namespace Test
             //
             crc = new Crc40Gsm(CrcTableInfo.M16x);
             Do(crc, input, times);
+
             //
             Console.WriteLine("|-|-|-|-|-|");
             System.IO.Hashing.Crc32 systemIOHashingCrc32 = new();
@@ -79,7 +80,7 @@ namespace Test
             }
             _stopwatch.Stop();
             double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit);
-            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|||1 KiB|" + spd + " " + unit + "|");
+            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|hardware|||" + spd + " " + unit + "|");
             //
             //
             //
@@ -107,27 +108,25 @@ namespace Test
             //
             //
             //
-            SHA1 sha1 = SHA1.Create();
             _stopwatch.Restart();
             for (int i = 0; i < times; i++)
             {
-                sha1.ComputeHash(input);
+                SHA1.HashData(input);
             }
             _stopwatch.Stop();
             spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA1|system|||" + spd + " " + unit + "|");
+            Console.WriteLine($"|SHA1|managed|||" + spd + " " + unit + "|");
             //
             //
             //
-            SHA256 sha256 = SHA256.Create();
             _stopwatch.Restart();
             for (int i = 0; i < times; i++)
             {
-                sha256.ComputeHash(input);
+                SHA256.HashData(input);
             }
             _stopwatch.Stop();
             spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA256|system|||" + spd + " " + unit + "|");
+            Console.WriteLine($"|SHA256|managed|||" + spd + " " + unit + "|");
         }
 
         private static void Do(Crc crc, byte[] input, int times)
@@ -145,68 +144,12 @@ namespace Test
                 ushort[] table => table.Length * 2,
                 uint[] table => table.Length * 4,
                 ulong[] table => table.Length * 8,
-                byte[][] table => GetTableOverhead(table),
-                ushort[][] table => GetTableOverhead(table),
-                uint[][] table => GetTableOverhead(table),
-                ulong[][] table => GetTableOverhead(table),
                 _ => 0,
             };
             string overhead = tableOverhead == 0 ? string.Empty : Numerics.GetSize(tableOverhead, Numerics.SizeKilo.Auto, 0, out string unit1).ToString() + " " + unit1;
             double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit2);
 
             Console.WriteLine($"|{crc.Name}|{crc.Core}|{crc.TableInfo}|{overhead}|{spd} {unit2}|");
-        }
-
-        private static int GetTableOverhead(byte[][] table)
-        {
-            int count = 0;
-            foreach (var row in table)
-            {
-                foreach (var col in row)
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        private static int GetTableOverhead(ushort[][] table)
-        {
-            int count = 0;
-            foreach (var row in table)
-            {
-                foreach (var col in row)
-                {
-                    count++;
-                }
-            }
-            return count * 2;
-        }
-
-        private static int GetTableOverhead(uint[][] table)
-        {
-            int count = 0;
-            foreach (var row in table)
-            {
-                foreach (var col in row)
-                {
-                    count++;
-                }
-            }
-            return count * 4;
-        }
-
-        private static int GetTableOverhead(ulong[][] table)
-        {
-            int count = 0;
-            foreach (var row in table)
-            {
-                foreach (var col in row)
-                {
-                    count++;
-                }
-            }
-            return count * 8;
         }
     }
 }

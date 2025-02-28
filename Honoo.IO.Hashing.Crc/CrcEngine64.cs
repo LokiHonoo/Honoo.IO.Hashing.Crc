@@ -27,7 +27,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine64(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout)
+        internal CrcEngine64(int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout)
         {
             if (width <= 0 || width > 64)
             {
@@ -207,19 +207,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static ulong Parse(ulong input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = _initParsed;
@@ -245,6 +232,18 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
+        private static ulong Parse(ulong input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
         private static ulong Reverse(ulong input)
         {
             input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;

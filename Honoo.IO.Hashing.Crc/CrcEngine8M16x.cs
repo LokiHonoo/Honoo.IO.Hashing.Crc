@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine8M16x(int width, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
+        internal CrcEngine8M16x(int width, byte poly, byte init, byte xorout, bool refin, bool refout, byte[] table)
         {
             if (width <= 0 || width > 8)
             {
@@ -51,7 +51,18 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static byte[] GenerateTable(byte polyParsed)
+        internal static byte[] GenerateTable(int width, byte poly, bool refin)
+        {
+            byte polyParsed = Parse(poly, 8 - width, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
+
+        private static byte[] GenerateTable(byte polyParsed)
         {
             byte[] table = new byte[256 * 16];
             for (int i = 0; i < 256; i++)
@@ -70,13 +81,13 @@ namespace Honoo.IO.Hashing
                             data <<= 1;
                         }
                     }
-                    table[(k * 256) + i] = data;
+                    table[k * 256 + i] = data;
                 }
             }
             return table;
         }
 
-        internal static byte[] GenerateTableRef(byte polyParsed)
+        private static byte[] GenerateTableRef(byte polyParsed)
         {
             byte[] table = new byte[256 * 16];
             for (int i = 0; i < 256; i++)
@@ -95,15 +106,10 @@ namespace Honoo.IO.Hashing
                             data >>= 1;
                         }
                     }
-                    table[(k * 256) + i] = data;
+                    table[k * 256 + i] = data;
                 }
             }
             return table;
-        }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -283,19 +289,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static byte Parse(byte input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = _initParsed;
@@ -319,6 +312,19 @@ namespace Honoo.IO.Hashing
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
             return result;
+        }
+
+        private static byte Parse(byte input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
         }
 
         private static byte Reverse(byte input)

@@ -117,16 +117,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 8.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, byte poly, byte init, byte xorout, CrcTable table)
+        public static Crc CreateBy(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         /// <summary>
@@ -134,16 +134,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 16.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ushort poly, ushort init, ushort xorout, CrcTable table)
+        public static Crc CreateBy(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         /// <summary>
@@ -151,16 +151,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 32.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, uint poly, uint init, uint xorout, CrcTable table)
+        public static Crc CreateBy(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         /// <summary>
@@ -168,16 +168,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are between 0 - 64.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, CrcTable table)
+        public static Crc CreateBy(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         /// <summary>
@@ -185,16 +185,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
-        /// <param name="refin">Reflects input value.</param>
-        /// <param name="refout">Reflects output value.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, bool refin, bool refout, CrcParameter poly, CrcParameter init, CrcParameter xorout, CrcTable table)
+        public static Crc CreateBy(string name, int width, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, refin, refout, poly, init, xorout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         #endregion Create
@@ -204,7 +204,7 @@ namespace Honoo.IO.Hashing
         ///// <summary>
         ///// Release all stored tables, and CRC of instantiation can no longer be used.
         ///// </summary>
-        //public static void Release()
+        //public static void ReleaseTableCache()
         //{
         //    // 缓存全部算法的表占用 2M 内存，似乎没必要清理？
         //}

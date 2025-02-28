@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine8Standard(int width, bool refin, bool refout, byte poly, byte init, byte xorout, byte[] table)
+        internal CrcEngine8Standard(int width, byte poly, byte init, byte xorout, bool refin, bool refout, byte[] table)
         {
             if (width <= 0 || width > 8)
             {
@@ -51,7 +51,18 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static byte[] GenerateTable(byte polyParsed)
+        internal static byte[] GenerateTable(int width, byte poly, bool refin)
+        {
+            byte polyParsed = Parse(poly, 8 - width, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
+
+        private static byte[] GenerateTable(byte polyParsed)
         {
             byte[] table = new byte[256];
             for (int i = 0; i < 256; i++)
@@ -73,7 +84,7 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static byte[] GenerateTableRef(byte polyParsed)
+        private static byte[] GenerateTableRef(byte polyParsed)
         {
             byte[] table = new byte[256];
             for (int i = 0; i < 256; i++)
@@ -93,11 +104,6 @@ namespace Honoo.IO.Hashing
                 table[i] = data;
             }
             return table;
-        }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -208,44 +214,7 @@ namespace Honoo.IO.Hashing
             inputP += offset;
             fixed (byte* tableP = _table)
             {
-                while (length >= 32)
-                {
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[3]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[4]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[5]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[6]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[7]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[8]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[9]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[10]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[11]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[12]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[13]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[14]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[15]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[16]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[17]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[18]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[19]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[20]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[21]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[22]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[23]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[24]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[25]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[26]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[27]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[28]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[29]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[30]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[31]]);
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
+                while (length >= 16)
                 {
                     _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
                     _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[1]]);
@@ -266,38 +235,11 @@ namespace Honoo.IO.Hashing
                     inputP += 16;
                     length -= 16;
                 }
-                if (length >= 8)
+                while (length > 0)
                 {
                     _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[3]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[4]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[5]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[6]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[7]]);
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[3]]);
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[1]]);
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (byte)((_crc << 8) ^ tableP[_crc ^ inputP[0]]);
+                    inputP++;
+                    length--;
                 }
             }
         }
@@ -307,44 +249,7 @@ namespace Honoo.IO.Hashing
             inputP += offset;
             fixed (byte* tableP = _table)
             {
-                while (length >= 32)
-                {
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[3]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[4]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[5]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[6]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[7]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[8]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[9]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[10]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[11]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[12]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[13]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[14]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[15]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[16]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[17]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[18]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[19]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[20]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[21]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[22]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[23]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[24]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[25]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[26]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[27]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[28]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[29]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[30]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[31]]);
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
+                while (length >= 16)
                 {
                     _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
                     _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[1]]);
@@ -365,56 +270,16 @@ namespace Honoo.IO.Hashing
                     inputP += 16;
                     length -= 16;
                 }
-                if (length >= 8)
+                while (length > 0)
                 {
                     _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[3]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[4]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[5]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[6]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[7]]);
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[1]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[2]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[3]]);
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[1]]);
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (byte)((_crc >> 8) ^ tableP[_crc ^ inputP[0]]);
+                    inputP++;
+                    length--;
                 }
             }
         }
 
         #endregion Update bytes
-
-        internal static byte Parse(byte input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
 
         internal override void Reset()
         {
@@ -439,6 +304,19 @@ namespace Honoo.IO.Hashing
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
             return result;
+        }
+
+        private static byte Parse(byte input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
         }
 
         private static byte Reverse(byte input)

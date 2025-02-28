@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine64M16x(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, ulong[] table)
+        internal CrcEngine64M16x(int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, ulong[] table)
         {
             if (width <= 0 || width > 64)
             {
@@ -50,8 +50,17 @@ namespace Honoo.IO.Hashing
         #endregion Construction
 
         #region Table
+        internal static ulong[] GenerateTable(int width, ulong poly, bool refin)
+        {
+            ulong polyParsed = Parse(poly, 64 - width, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
 
-        internal static ulong[] GenerateTable(ulong polyParsed)
+        private static ulong[] GenerateTable(ulong polyParsed)
         {
             ulong[] table = new ulong[256 * 16];
             for (int i = 0; i < 256; i++)
@@ -70,13 +79,13 @@ namespace Honoo.IO.Hashing
                             data <<= 1;
                         }
                     }
-                    table[(k * 256) + i] = data;
+                    table[k * 256 + i] = data;
                 }
             }
             return table;
         }
 
-        internal static ulong[] GenerateTableRef(ulong polyParsed)
+        private static ulong[] GenerateTableRef(ulong polyParsed)
         {
             ulong[] table = new ulong[256 * 16];
             for (int i = 0; i < 256; i++)
@@ -95,17 +104,11 @@ namespace Honoo.IO.Hashing
                             data >>= 1;
                         }
                     }
-                    table[(k * 256) + i] = data;
+                    table[k * 256 + i] = data;
                 }
             }
             return table;
         }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
-        }
-
         #endregion Table
 
         #region ComputeFinal
@@ -296,19 +299,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static ulong Parse(ulong input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = _initParsed;
@@ -334,6 +324,18 @@ namespace Honoo.IO.Hashing
             return result;
         }
 
+        private static ulong Parse(ulong input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
         private static ulong Reverse(ulong input)
         {
             input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;

@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngine64Standard(int width, bool refin, bool refout, ulong poly, ulong init, ulong xorout, ulong[] table)
+        internal CrcEngine64Standard(int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, ulong[] table)
         {
             if (width <= 0 || width > 64)
             {
@@ -51,7 +51,18 @@ namespace Honoo.IO.Hashing
 
         #region Table
 
-        internal static ulong[] GenerateTable(ulong polyParsed)
+        internal static ulong[] GenerateTable(int width, ulong poly, bool refin)
+        {
+            ulong polyParsed = Parse(poly, 64 - width, refin);
+            return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
+        }
+
+        internal override CrcTable CloneTable()
+        {
+            return new CrcTable(_tableInfo, _core, _table);
+        }
+
+        private static ulong[] GenerateTable(ulong polyParsed)
         {
             ulong[] table = new ulong[256];
             for (int i = 0; i < 256; i++)
@@ -73,7 +84,7 @@ namespace Honoo.IO.Hashing
             return table;
         }
 
-        internal static ulong[] GenerateTableRef(ulong polyParsed)
+        private static ulong[] GenerateTableRef(ulong polyParsed)
         {
             ulong[] table = new ulong[256];
             for (int i = 0; i < 256; i++)
@@ -93,11 +104,6 @@ namespace Honoo.IO.Hashing
                 table[i] = data;
             }
             return table;
-        }
-
-        internal override CrcTable CloneTable()
-        {
-            return new CrcTable(_tableInfo, _core, _table);
         }
 
         #endregion Table
@@ -221,44 +227,7 @@ namespace Honoo.IO.Hashing
             inputP += offset;
             fixed (ulong* tableP = _table)
             {
-                while (length >= 32)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[3]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[4]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[5]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[6]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[7]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[8]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[9]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[10]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[11]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[12]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[13]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[14]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[15]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[16]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[17]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[18]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[19]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[20]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[21]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[22]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[23]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[24]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[25]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[26]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[27]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[28]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[29]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[30]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[31]];
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
+                while (length >= 16)
                 {
                     _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
                     _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[1]];
@@ -279,38 +248,11 @@ namespace Honoo.IO.Hashing
                     inputP += 16;
                     length -= 16;
                 }
-                if (length >= 8)
+                while (length > 0)
                 {
                     _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[3]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[4]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[5]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[6]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[7]];
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[1]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[2]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[3]];
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[1]];
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (_crc << 8) ^ tableP[(_crc >> 56) ^ inputP[0]];
+                    inputP++;
+                    length--;
                 }
             }
         }
@@ -320,44 +262,7 @@ namespace Honoo.IO.Hashing
             inputP += offset;
             fixed (ulong* tableP = _table)
             {
-                while (length >= 32)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[4]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[5]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[6]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[7]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[8]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[9]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[10]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[11]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[12]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[13]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[14]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[15]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[16]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[17]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[18]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[19]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[20]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[21]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[22]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[23]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[24]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[25]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[26]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[27]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[28]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[29]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[30]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[31]) & 0xFF];
-                    inputP += 32;
-                    length -= 32;
-                }
-                if (length >= 16)
+                while (length >= 16)
                 {
                     _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
                     _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
@@ -378,56 +283,16 @@ namespace Honoo.IO.Hashing
                     inputP += 16;
                     length -= 16;
                 }
-                if (length >= 8)
+                while (length > 0)
                 {
                     _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[4]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[5]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[6]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[7]) & 0xFF];
-                    inputP += 8;
-                    length -= 8;
-                }
-                if (length >= 4)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[2]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[3]) & 0xFF];
-                    inputP += 4;
-                    length -= 4;
-                }
-                if (length >= 2)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[1]) & 0xFF];
-                    inputP += 2;
-                    length -= 2;
-                }
-                if (length > 0)
-                {
-                    _crc = (_crc >> 8) ^ tableP[(_crc ^ inputP[0]) & 0xFF];
+                    inputP++;
+                    length--;
                 }
             }
         }
 
         #endregion Update bytes
-
-        internal static ulong Parse(ulong input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input <<= moves;
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
 
         internal override void Reset()
         {
@@ -452,6 +317,19 @@ namespace Honoo.IO.Hashing
                 result = result.Substring(result.Length - hexLength, hexLength);
             }
             return result;
+        }
+
+        private static ulong Parse(ulong input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input <<= moves;
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
         }
 
         private static ulong Reverse(ulong input)

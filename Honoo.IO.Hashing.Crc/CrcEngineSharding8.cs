@@ -28,7 +28,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcEngineSharding8(int width, bool refin, bool refout, byte[] poly, byte[] init, byte[] xorout)
+        internal CrcEngineSharding8(int width, byte[] poly, byte[] init, byte[] xorout, bool refin, bool refout)
         {
             if (width <= 0)
             {
@@ -230,19 +230,6 @@ namespace Honoo.IO.Hashing
 
         #endregion Update bytes
 
-        internal static byte[] Parse(byte[] input, int moves, bool reverse)
-        {
-            if (moves > 0)
-            {
-                input = ShiftLeft(input, moves);
-            }
-            if (reverse)
-            {
-                input = Reverse(input);
-            }
-            return input;
-        }
-
         internal override void Reset()
         {
             _crc = (byte[])_initParsed.Clone();
@@ -276,6 +263,18 @@ namespace Honoo.IO.Hashing
             return result.ToString();
         }
 
+        private static byte[] Parse(byte[] input, int moves, bool reverse)
+        {
+            if (moves > 0)
+            {
+                input = ShiftLeft(input, moves);
+            }
+            if (reverse)
+            {
+                input = Reverse(input);
+            }
+            return input;
+        }
         private static byte Reverse(byte input)
         {
             input = (byte)((input & 0x55) << 1 | (input >> 1) & 0x55);
