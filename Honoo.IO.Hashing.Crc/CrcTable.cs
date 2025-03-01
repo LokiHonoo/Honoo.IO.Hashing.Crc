@@ -149,7 +149,9 @@ namespace Honoo.IO.Hashing
             }
             if (core == CrcCore.Auto)
             {
-                if (width <= 32) core = CrcCore.UInt32;
+                if (width <= 8) core = CrcCore.UInt8;
+                else if (width <= 16) core = CrcCore.UInt16;
+                else if (width <= 32) core = CrcCore.UInt32;
                 else if (width <= 64) core = CrcCore.UInt64;
                 else core = CrcCore.Sharding32;
             }

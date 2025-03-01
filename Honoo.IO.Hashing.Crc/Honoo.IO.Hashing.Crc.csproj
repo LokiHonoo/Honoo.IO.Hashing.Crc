@@ -8,7 +8,7 @@
 		<Copyright>Copyright (C) Loki Honoo 2020. All rights reserved.</Copyright>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>Honoo.IO.Hashing.Crc.snk</AssemblyOriginatorKeyFile>
-		<VersionPrefix>1.2.2</VersionPrefix>
+		<VersionPrefix>1.2.3</VersionPrefix>
 		<Description>CRC implemenations. CRC name of catalogue(112) are supported. Fat-Table are supported for speed up.
 Crc3, Crc4, Crc5, Crc6, Crc7, Crc8, Crc10, Crc11, Crc12, Crc13, Crc14, Crc15, Crc16, Crc17, Crc21, Crc24, Crc30, Crc31, Crc32, Crc40, Crc64, Crc82 and Custom width and parameters are supported. 
 
