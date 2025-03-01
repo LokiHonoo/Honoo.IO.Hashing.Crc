@@ -180,7 +180,7 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.M16x:
                     if (_tableM16x == null)
                     {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN   );
+                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
@@ -1138,7 +1138,7 @@ namespace Honoo.IO.Hashing
         {
         }
 
-        /// <summary>                       
+        /// <summary>
         /// Initializes a new instance of the Crc8SaeJ1850 class.
         /// </summary>
         public Crc8SaeJ1850(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))

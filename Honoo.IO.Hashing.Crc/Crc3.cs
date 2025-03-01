@@ -52,7 +52,7 @@ namespace Honoo.IO.Hashing
                     if (_tableM16x == null)
                     {
                         _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }   
+                    }
                     return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
@@ -113,7 +113,7 @@ namespace Honoo.IO.Hashing
                     if (_tableM16x == null)
                     {
                         _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }   
+                    }
                     return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);

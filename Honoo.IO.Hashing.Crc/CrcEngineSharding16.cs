@@ -284,6 +284,7 @@ namespace Honoo.IO.Hashing
             }
             return input;
         }
+
         private static ushort Reverse(ushort input)
         {
             input = (ushort)((input & 0x5555) << 1 | (input >> 1) & 0x5555);

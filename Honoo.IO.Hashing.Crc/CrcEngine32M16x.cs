@@ -50,11 +50,13 @@ namespace Honoo.IO.Hashing
         #endregion Construction
 
         #region Table
+
         internal static uint[] GenerateTable(int width, uint poly, bool refin)
         {
             uint polyParsed = Parse(poly, 32 - width, refin);
             return refin ? GenerateTableRef(polyParsed) : GenerateTable(polyParsed);
         }
+
         internal override CrcTable CloneTable()
         {
             return new CrcTable(_tableInfo, _core, _table);
@@ -109,6 +111,7 @@ namespace Honoo.IO.Hashing
             }
             return table;
         }
+
         #endregion Table
 
         #region ComputeFinal
@@ -336,6 +339,7 @@ namespace Honoo.IO.Hashing
             }
             return input;
         }
+
         private static uint Reverse(uint input)
         {
             input = (input & 0x55555555) << 1 | (input >> 1) & 0x55555555;

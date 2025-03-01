@@ -281,6 +281,7 @@ namespace Honoo.IO.Hashing
             }
             return input;
         }
+
         private static uint Reverse(uint input)
         {
             input = (input & 0x55555555) << 1 | (input >> 1) & 0x55555555;

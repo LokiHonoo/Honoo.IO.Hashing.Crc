@@ -244,6 +244,7 @@ namespace Honoo.IO.Hashing
             }
             return input;
         }
+
         private static ulong Reverse(ulong input)
         {
             input = (input & 0x5555555555555555) << 1 | (input >> 1) & 0x5555555555555555;

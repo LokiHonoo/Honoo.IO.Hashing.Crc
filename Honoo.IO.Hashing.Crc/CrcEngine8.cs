@@ -231,6 +231,7 @@ namespace Honoo.IO.Hashing
             }
             return input;
         }
+
         private static byte Reverse(byte input)
         {
             input = (byte)((input & 0x55) << 1 | (input >> 1) & 0x55);

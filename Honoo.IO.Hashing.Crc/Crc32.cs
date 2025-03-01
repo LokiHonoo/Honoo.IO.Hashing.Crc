@@ -113,14 +113,14 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_tableStandard == null)
                     {
-                        _tableStandard = CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN   );
+                        _tableStandard = CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine32Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
 
                 case CrcTableInfo.M16x:
                     if (_tableM16x == null)
                     {
-                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN   );
+                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine32M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
@@ -311,7 +311,7 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.Standard:
                     if (_tableStandard == null)
                     {
-                        _tableStandard = CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN   );
+                        _tableStandard = CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine32Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
 
@@ -525,7 +525,7 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.M16x:
                     if (_tableM16x == null)
                     {
-                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN   );
+                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine32M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
@@ -903,7 +903,7 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.M16x:
                     if (_tableM16x == null)
                     {
-                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN               );
+                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN);
                     }
                     return new CrcEngine32M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
 
