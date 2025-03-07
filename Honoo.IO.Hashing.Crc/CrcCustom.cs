@@ -3,7 +3,7 @@
 namespace Honoo.IO.Hashing
 {
     /// <summary>
-    /// Create crc algorithm used by custom parameters.
+    /// Create CRC algorithm used by custom parameters.
     /// </summary>
     public sealed class CrcCustom : Crc
     {
@@ -89,7 +89,7 @@ namespace Honoo.IO.Hashing
         /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool refin, bool refout, CrcTable table)
+        public CrcCustom(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
             : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
@@ -179,7 +179,7 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static CrcEngine GetEngine(int width, CrcParameter polyParameter, CrcParameter initParameter, CrcParameter xoroutParameter, bool refin, bool refout, CrcTable table)
+        private static CrcEngine GetEngine(int width, CrcValue polyParameter, CrcValue initParameter, CrcValue xoroutParameter, bool refin, bool refout, CrcTable table)
         {
             if (width <= 0)
             {
@@ -209,9 +209,9 @@ namespace Honoo.IO.Hashing
                         {
                             throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
                         }
-                        byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        byte init = CrcConverter.ToUInt8(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        byte xorout = CrcConverter.ToUInt8(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        byte poly = polyParameter.ToUInt8();
+                        byte init = initParameter.ToUInt8();
+                        byte xorout = xoroutParameter.ToUInt8();
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngine8(width, poly, init, xorout, refin, refout);
@@ -226,9 +226,9 @@ namespace Honoo.IO.Hashing
                         {
                             throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
                         }
-                        ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        ushort init = CrcConverter.ToUInt16(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        ushort xorout = CrcConverter.ToUInt16(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort poly = polyParameter.ToUInt16();
+                        ushort init = initParameter.ToUInt16();
+                        ushort xorout = xoroutParameter.ToUInt16();
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngine16(width, poly, init, xorout, refin, refout);
@@ -243,9 +243,9 @@ namespace Honoo.IO.Hashing
                         {
                             throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
                         }
-                        uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        uint init = CrcConverter.ToUInt32(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        uint xorout = CrcConverter.ToUInt32(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        uint poly = polyParameter.ToUInt32();
+                        uint init = initParameter.ToUInt32();
+                        uint xorout = xoroutParameter.ToUInt32();
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngine32(width, poly, init, xorout, refin, refout);
@@ -260,9 +260,9 @@ namespace Honoo.IO.Hashing
                         {
                             throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
                         }
-                        ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        ulong init = CrcConverter.ToUInt64(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        ulong xorout = CrcConverter.ToUInt64(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong poly = polyParameter.ToUInt64();
+                        ulong init = initParameter.ToUInt64();
+                        ulong xorout = xoroutParameter.ToUInt64();
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngine64(width, poly, init, xorout, refin, refout);
@@ -273,9 +273,9 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.Sharding8:
                     {
-                        byte[] poly = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        byte[] init = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        byte[] xorout = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        byte[] poly = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        byte[] init = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        byte[] xorout = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngineSharding8(width, poly, init, xorout, refin, refout);
@@ -286,9 +286,9 @@ namespace Honoo.IO.Hashing
 
                 case CrcCore.Sharding16:
                     {
-                        ushort[] poly = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        ushort[] init = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        ushort[] xorout = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        ushort[] poly = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        ushort[] init = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        ushort[] xorout = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngineSharding16(width, poly, init, xorout, refin, refout);
@@ -299,9 +299,9 @@ namespace Honoo.IO.Hashing
                 case CrcCore.Sharding32:
                 default:
                     {
-                        uint[] poly = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        uint[] init = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        uint[] xorout = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        uint[] poly = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        uint[] init = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        uint[] xorout = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngineSharding32(width, poly, init, xorout, refin, refout);
@@ -311,9 +311,9 @@ namespace Honoo.IO.Hashing
                     }
                 case CrcCore.Sharding64:
                     {
-                        ulong[] poly = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
-                        ulong[] init = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, initParameter.ToString(CrcStringFormat.Hex), width);
-                        ulong[] xorout = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, xoroutParameter.ToString(CrcStringFormat.Hex), width);
+                        ulong[] poly = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        ulong[] init = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
+                        ulong[] xorout = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
                         switch (table.TableInfo)
                         {
                             case CrcTableInfo.None: default: return new CrcEngineSharding64(width, poly, init, xorout, refin, refout);

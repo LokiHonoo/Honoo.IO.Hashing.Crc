@@ -1,18 +1,18 @@
 ﻿namespace Honoo.IO.Hashing
 {
     /// <summary>
-    /// CRC endian.
+    /// Hex case sensitivity.
     /// </summary>
-    public enum CrcEndian
+    public enum CrcCaseSensitivity
     {
         /// <summary>
-        ///
+        /// Upper case.
         /// </summary>
-        BigEndian,
+        Upper,
 
         /// <summary>
-        ///
+        /// Lower case.
         /// </summary>
-        LittleEndian,
+        Lower,
     }
 }

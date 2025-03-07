@@ -161,18 +161,19 @@ private static void Demo1()
     // Update input data.
     crc.Update(inputBytes);
     // The return value is "Hex String".
-    string checksum = crc.ComputeFinal(CrcStringFormat.Hex);
+    string checksum = crc.ComputeFinal().ToHex(CrcCaseSensitivity.Upper);
 }
 
 private static void Demo2()
 {
     var crc = Crc.Create(CrcName.CRC40_GSM, CrcTableInfo.Standard);
-    crc.Update(inputBytes);
-    // Width is 40 bits, ulong is 64 bits, The truncated is "False".
-    bool truncated = crc.ComputeFinal(out ulong checksum);
-    crc.Update(inputBytes);
-    // Width is 40 bits, uint is 32 bits, The truncated is "True".
-    bool truncated = crc.ComputeFinal(out uint checksum);
+    CrcValue checksum = crc.ComputeFinal(inputBytes);
+    // Width is 40 bits, ulong is 64 bits, The value is not truncated.
+    ulong value = checksum.ToUInt64();
+    bool truncated = checksum.ToUInt64(out ulong value);
+    // Width is 40 bits, uint is 32 bits, The value is truncated.
+    ulong value = checksum.ToUInt32();
+    bool truncated = checksum.ToUInt64(out uint value);
 }
 
 private static void Demo3()
@@ -180,7 +181,7 @@ private static void Demo3()
     var crc = new Crc32();
     crc.Update(inputBytes);
     // The return value length is crc.ChecksumByteLength.
-    byte[] checksum = crc.ComputeFinal(CrcEndian.BigEndian);
+    byte[] checksum = crc.ComputeFinal().ToBytes(CrcEndian.BigEndian);
 }
 
 private static void Demo4()
@@ -190,7 +191,7 @@ private static void Demo4()
     var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, poly, init, xorout, true, true, table);
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumByteLength];
-    int length = crc.ComputeFinal(CrcEndian.BigEndian, checksum, 0);
+    int length = crc.ComputeFinal().ToBytes(CrcEndian.BigEndian, checksum, 0);
 }
 
 ```

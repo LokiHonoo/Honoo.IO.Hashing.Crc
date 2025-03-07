@@ -110,71 +110,12 @@ namespace Honoo.IO.Hashing
 
         #region ComputeFinal
 
-        internal override string ComputeFinal(CrcStringFormat outputFormat)
+        internal override CrcValue ComputeFinal()
         {
             Finish();
-            string result;
-            switch (outputFormat)
-            {
-                case CrcStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
-                case CrcStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
-            }
+            var checksum = new CrcUInt32Value(_crc, _width);
             _crc = _initParsed;
-            return result;
-        }
-
-        internal override int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
-        {
-            Finish();
-            if (outputEndian == CrcEndian.LittleEndian)
-            {
-                for (int i = 0; i < _checksumByteLength; i++)
-                {
-                    outputBuffer[i + outputOffset] = (byte)(_crc >> (i * 8));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < _checksumByteLength; i++)
-                {
-                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = (byte)(_crc >> (i * 8));
-                }
-            }
-            _crc = _initParsed;
-            return _checksumByteLength;
-        }
-
-        internal override bool ComputeFinal(out byte checksum)
-        {
-            Finish();
-            checksum = (byte)_crc;
-            _crc = _initParsed;
-            return _width > 8;
-        }
-
-        internal override bool ComputeFinal(out ushort checksum)
-        {
-            Finish();
-            checksum = (ushort)_crc;
-            _crc = _initParsed;
-            return _width > 16;
-        }
-
-        internal override bool ComputeFinal(out uint checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
-        }
-
-        internal override bool ComputeFinal(out ulong checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
+            return checksum;
         }
 
         #endregion ComputeFinal
@@ -297,26 +238,6 @@ namespace Honoo.IO.Hashing
         internal override void Reset()
         {
             _crc = _initParsed;
-        }
-
-        private static string GetBinaryString(uint input, int width)
-        {
-            string result = Convert.ToString(input, 2).PadLeft(32, '0');
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        private static string GetHexString(uint input, int hexLength)
-        {
-            string result = Convert.ToString(input, 16).PadLeft(8, '0');
-            if (result.Length > hexLength)
-            {
-                result = result.Substring(result.Length - hexLength, hexLength);
-            }
-            return result;
         }
 
         private static uint Parse(uint input, int moves, bool reverse)

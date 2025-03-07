@@ -134,8 +134,7 @@ namespace Test
             _stopwatch.Restart();
             for (int i = 0; i < times; i++)
             {
-                crc.Update(input);
-                crc.ComputeFinal(out uint _);
+                crc.ComputeFinal(input);
             }
             _stopwatch.Stop();
             var tableOverhead = crc.CloneTable().Table switch

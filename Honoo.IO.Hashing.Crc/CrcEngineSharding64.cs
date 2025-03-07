@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Honoo.IO.Hashing
 {
@@ -60,87 +59,36 @@ namespace Honoo.IO.Hashing
 
         #region ComputeFinal
 
-        internal override string ComputeFinal(CrcStringFormat outputFormat)
+        internal override CrcValue ComputeFinal()
         {
             Finish();
-            string result;
-            switch (outputFormat)
+            CrcValue result;
+            if (_width > 64)
             {
-                case CrcStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
-                case CrcStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
+                result = new CrcHexValue(CrcConverter.GetHex(_crc, _width, CrcCaseSensitivity.Lower), _width);
             }
-            _crc = (ulong[])_initParsed.Clone();
-            return result;
-        }
-
-        internal override int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
-        {
-            Finish();
-            if (outputEndian == CrcEndian.LittleEndian)
+            else if (_width > 32)
             {
-                int j = -1;
-                int m = 56;
-                for (int i = 0; i < _checksumByteLength; i++)
-                {
-                    if (i % 8 == 0)
-                    {
-                        j++;
-                        m = 56;
-                    }
-                    outputBuffer[i + outputOffset] = (byte)(_crc[j] << m);
-                    m -= 8;
-                }
+                result = new CrcUInt64Value(_crc[_crc.Length - 1], _width);
+            }
+            else if (_width > 16)
+            {
+                result = new CrcUInt32Value((uint)_crc[_crc.Length - 1], _width);
+            }
+            else if (_width > 8)
+            {
+                result = new CrcUInt16Value((ushort)_crc[_crc.Length - 1], _width);
+            }
+            else if (_width > 0)
+            {
+                result = new CrcUInt8Value((byte)_crc[_crc.Length - 1], _width);
             }
             else
             {
-                int j = _crc.Length;
-                int m = 0;
-                for (int i = 0; i < _checksumByteLength; i++)
-                {
-                    if (i % 8 == 0)
-                    {
-                        j--;
-                        m = 0;
-                    }
-                    outputBuffer[_checksumByteLength - 1 - i + outputOffset] = (byte)(_crc[j] >> m);
-                    m += 8;
-                }
+                return null;
             }
             _crc = (ulong[])_initParsed.Clone();
-            return _checksumByteLength;
-        }
-
-        internal override bool ComputeFinal(out byte checksum)
-        {
-            Finish();
-            checksum = (byte)_crc[_crc.Length - 1];
-            _crc = (ulong[])_initParsed.Clone();
-            return _width > 8;
-        }
-
-        internal override bool ComputeFinal(out ushort checksum)
-        {
-            Finish();
-            checksum = (ushort)_crc[_crc.Length - 1];
-            _crc = (ulong[])_initParsed.Clone();
-            return _width > 16;
-        }
-
-        internal override bool ComputeFinal(out uint checksum)
-        {
-            Finish();
-            checksum = (uint)_crc[_crc.Length - 1];
-            _crc = (ulong[])_initParsed.Clone();
-            return _width > 32;
-        }
-
-        internal override bool ComputeFinal(out ulong checksum)
-        {
-            Finish();
-            checksum = _crc[_crc.Length - 1];
-            _crc = (ulong[])_initParsed.Clone();
-            return _width > 64;
+            return result;
         }
 
         #endregion ComputeFinal
@@ -238,34 +186,6 @@ namespace Honoo.IO.Hashing
         internal override void Reset()
         {
             _crc = (ulong[])_initParsed.Clone();
-        }
-
-        private static string GetBinaryString(ulong[] input, int width)
-        {
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < input.Length; i++)
-            {
-                result.Append(Convert.ToString((long)input[i], 2).PadLeft(64, '0'));
-            }
-            if (result.Length > width)
-            {
-                result.Remove(0, result.Length - width);
-            }
-            return result.ToString();
-        }
-
-        private static string GetHexString(ulong[] input, int hexLength)
-        {
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < input.Length; i++)
-            {
-                result.Append(Convert.ToString((long)input[i], 16).PadLeft(16, '0'));
-            }
-            if (result.Length > hexLength)
-            {
-                result.Remove(0, result.Length - hexLength);
-            }
-            return result.ToString();
         }
 
         private static ulong[] Parse(ulong[] input, int moves, bool reverse)

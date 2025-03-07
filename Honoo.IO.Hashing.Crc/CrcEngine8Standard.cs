@@ -110,58 +110,12 @@ namespace Honoo.IO.Hashing
 
         #region ComputeFinal
 
-        internal override string ComputeFinal(CrcStringFormat outputFormat)
+        internal override CrcValue ComputeFinal()
         {
             Finish();
-            string result;
-            switch (outputFormat)
-            {
-                case CrcStringFormat.Binary: result = GetBinaryString(_crc, _width); break;
-                case CrcStringFormat.Hex: result = GetHexString(_crc, _checksumHexLength); break;
-                default: throw new ArgumentException("Invalid crc string format.", nameof(outputFormat));
-            }
+            var checksum = new CrcUInt8Value(_crc, _width);
             _crc = _initParsed;
-            return result;
-        }
-
-        internal override int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
-        {
-            Finish();
-            outputBuffer[outputOffset] = _crc;
-            _crc = _initParsed;
-            return 1;
-        }
-
-        internal override bool ComputeFinal(out byte checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
-        }
-
-        internal override bool ComputeFinal(out ushort checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
-        }
-
-        internal override bool ComputeFinal(out uint checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
-        }
-
-        internal override bool ComputeFinal(out ulong checksum)
-        {
-            Finish();
-            checksum = _crc;
-            _crc = _initParsed;
-            return false;
+            return checksum;
         }
 
         #endregion ComputeFinal
@@ -284,26 +238,6 @@ namespace Honoo.IO.Hashing
         internal override void Reset()
         {
             _crc = _initParsed;
-        }
-
-        private static string GetBinaryString(byte input, int width)
-        {
-            string result = Convert.ToString(input, 2).PadLeft(8, '0');
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        private static string GetHexString(byte input, int hexLength)
-        {
-            string result = Convert.ToString(input, 16).PadLeft(2, '0');
-            if (result.Length > hexLength)
-            {
-                result = result.Substring(result.Length - hexLength, hexLength);
-            }
-            return result;
         }
 
         private static byte Parse(byte input, int moves, bool reverse)

@@ -21,17 +21,7 @@
 
         internal abstract CrcTable CloneTable();
 
-        internal abstract string ComputeFinal(CrcStringFormat outputFormat);
-
-        internal abstract int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
-
-        internal abstract bool ComputeFinal(out byte checksum);
-
-        internal abstract bool ComputeFinal(out ushort checksum);
-
-        internal abstract bool ComputeFinal(out uint checksum);
-
-        internal abstract bool ComputeFinal(out ulong checksum);
+        internal abstract CrcValue ComputeFinal();
 
         internal abstract void Reset();
 

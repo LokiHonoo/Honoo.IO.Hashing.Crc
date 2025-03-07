@@ -8,7 +8,7 @@
         /// <summary>
         /// String e.g. "11110000".
         /// </summary>
-        Binary,
+        Bits,
 
         /// <summary>
         /// String e.g. "FF55".

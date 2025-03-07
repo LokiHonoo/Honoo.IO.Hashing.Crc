@@ -137,7 +137,7 @@ namespace Honoo.IO.Hashing
         /// <param name="refin">Reflects input value.</param>
         /// <param name="core">Use the specified CRC calculation core.</param>
         /// <exception cref="Exception"></exception>
-        public CrcTable(CrcTableInfo tableInfo, int width, CrcParameter polyParameter, bool refin, CrcCore core)
+        public CrcTable(CrcTableInfo tableInfo, int width, CrcValue polyParameter, bool refin, CrcCore core)
         {
             if (width <= 0)
             {
@@ -167,7 +167,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
                                 }
-                                byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                byte poly = polyParameter.ToUInt8();
                                 _table = CrcEngine8Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -177,7 +177,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
                                 }
-                                byte poly = CrcConverter.ToUInt8(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                byte poly = polyParameter.ToUInt8();
                                 _table = CrcEngine8M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -194,7 +194,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
                                 }
-                                ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ushort poly = polyParameter.ToUInt16();
                                 _table = CrcEngine16Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -204,7 +204,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
                                 }
-                                ushort poly = CrcConverter.ToUInt16(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ushort poly = polyParameter.ToUInt16();
                                 _table = CrcEngine16M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -221,7 +221,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
                                 }
-                                uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                uint poly = polyParameter.ToUInt32();
                                 _table = CrcEngine32Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -231,7 +231,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
                                 }
-                                uint poly = CrcConverter.ToUInt32(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                uint poly = polyParameter.ToUInt32();
                                 _table = CrcEngine32M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -248,7 +248,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
                                 }
-                                ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ulong poly = polyParameter.ToUInt64();
                                 _table = CrcEngine64Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -258,7 +258,7 @@ namespace Honoo.IO.Hashing
                                 {
                                     throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
                                 }
-                                ulong poly = CrcConverter.ToUInt64(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ulong poly = polyParameter.ToUInt64();
                                 _table = CrcEngine64M16x.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -272,7 +272,7 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                byte[] poly = CrcConverter.ToUInt8Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                byte[] poly = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
                                 _table = CrcEngineSharding8Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -286,7 +286,7 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                ushort[] poly = CrcConverter.ToUInt16Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ushort[] poly = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
                                 _table = CrcEngineSharding16Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -301,7 +301,7 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                uint[] poly = CrcConverter.ToUInt32Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                uint[] poly = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
                                 _table = CrcEngineSharding32Standard.GenerateTable(width, poly, refin);
                                 break;
                             }
@@ -315,7 +315,7 @@ namespace Honoo.IO.Hashing
                         case CrcTableInfo.Standard:
                         case CrcTableInfo.M16x:
                             {
-                                ulong[] poly = CrcConverter.ToUInt64Array(CrcStringFormat.Hex, polyParameter.ToString(CrcStringFormat.Hex), width);
+                                ulong[] poly = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
                                 _table = CrcEngineSharding64Standard.GenerateTable(width, poly, refin);
                                 break;
                             }

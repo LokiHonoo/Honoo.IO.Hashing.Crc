@@ -675,18 +675,18 @@ namespace Honoo.IO.Hashing
         #region Members
 
         private readonly GetAlgorithmCallback _getAlgorithm;
-        private readonly CrcParameter _init;
+        private readonly CrcValue _init;
         private readonly string _name;
-        private readonly CrcParameter _poly;
+        private readonly CrcValue _poly;
         private readonly bool _refin;
         private readonly bool _refout;
         private readonly int _width;
-        private readonly CrcParameter _xorout;
+        private readonly CrcValue _xorout;
 
         /// <summary>
         /// Gets poly value.
         /// </summary>
-        public CrcParameter Init => _init;
+        public CrcValue Init => _init;
 
         /// <summary>
         /// Gets this algorithm's name.
@@ -696,7 +696,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Gets poly value.
         /// </summary>
-        public CrcParameter Poly => _poly;
+        public CrcValue Poly => _poly;
 
         /// <summary>
         /// Gets refin value.
@@ -716,7 +716,7 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Gets poly value.
         /// </summary>
-        public CrcParameter Xorout => _xorout;
+        public CrcValue Xorout => _xorout;
 
         internal GetAlgorithmCallback GetAlgorithm => _getAlgorithm;
 
@@ -724,7 +724,7 @@ namespace Honoo.IO.Hashing
 
         #region Construction
 
-        internal CrcName(string name, int width, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool refin, bool refout, GetAlgorithmCallback getAlgorithm)
+        internal CrcName(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, GetAlgorithmCallback getAlgorithm)
         {
             _name = name;
             _width = width;

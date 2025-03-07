@@ -35,9 +35,9 @@ namespace Honoo.IO.Hashing
         {
             return new CrcName(DEFAULT_NAME,
                                WIDTH,
-                               new CrcParameter(CrcStringFormat.Hex, POLY, WIDTH),
-                               new CrcParameter(CrcStringFormat.Hex, INIT, WIDTH),
-                               new CrcParameter(CrcStringFormat.Hex, XOROUT, WIDTH),
+                               new CrcHexValue(POLY, WIDTH),
+                               new CrcHexValue(INIT, WIDTH),
+                               new CrcHexValue(XOROUT, WIDTH),
                                REFIN,
                                REFOUT,
                                (t) => { return new Crc82Darc(t); });

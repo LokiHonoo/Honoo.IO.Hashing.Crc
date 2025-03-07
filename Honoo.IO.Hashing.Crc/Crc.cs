@@ -3,7 +3,7 @@
 namespace Honoo.IO.Hashing
 {
     /// <summary>
-    /// Represents the abstract base class from which all implementations of crc algorithms must inherit.
+    /// Represents the abstract base class from which all implementations of CRC algorithms must inherit.
     /// <br/>Catalogue of parametrised CRC algorithms: <see href="https://reveng.sourceforge.io/crc-catalogue/all.htm"/>.
     /// </summary>
     public abstract class Crc
@@ -185,16 +185,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
-        /// <param name="poly">Polynomials value.</param>
-        /// <param name="init">Initialization value.</param>
-        /// <param name="xorout">Output xor value.</param>
+        /// <param name="polyParameter">Polynomials value.</param>
+        /// <param name="initParameter">Initialization value.</param>
+        /// <param name="xoroutParameter">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, CrcParameter poly, CrcParameter init, CrcParameter xorout, bool refin, bool refout, CrcTable table)
+        public static Crc CreateBy(string name, int width, CrcValue polyParameter, CrcValue initParameter, CrcValue xoroutParameter, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
+            return new CrcCustom(name, width, polyParameter, initParameter, xoroutParameter, refin, refout, table);
         }
 
         #endregion Create
@@ -220,87 +220,41 @@ namespace Honoo.IO.Hashing
         #endregion Table
 
         /// <summary>
-        /// Computes checksum and reset the calculator. The return value is "Binary String" or "Hex String".
+        /// Computes checksum and reset the calculator.
         /// </summary>
-        /// <param name="outputFormat">Specifies the type of format for output.</param>
         /// <returns></returns>
-        public string ComputeFinal(CrcStringFormat outputFormat)
+        public CrcValue ComputeFinal()
         {
-            return _engine.ComputeFinal(outputFormat);
+            return _engine.ComputeFinal();
         }
 
         /// <summary>
         /// Computes checksum and reset the calculator.
         /// </summary>
-        /// <param name="outputEndian">Specifies the type of endian for output.</param>
-        /// <returns></returns>
-        public byte[] ComputeFinal(CrcEndian outputEndian)
-        {
-            byte[] result = new byte[_engine.ChecksumByteLength];
-            ComputeFinal(outputEndian, result, 0);
-            return result;
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// <br/>Write to output buffer and return checksum byte length.
-        /// </summary>
-        /// <param name="outputEndian">Specifies the type of endian for output.</param>
-        /// <param name="outputBuffer">Output buffer.</param>
-        /// <param name="outputOffset">Write start offset from buffer.</param>
+        /// <param name="input">Input.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public int ComputeFinal(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
+        public CrcValue ComputeFinal(byte[] input)
         {
-            return _engine.ComputeFinal(outputEndian, outputBuffer, outputOffset);
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            return ComputeFinal(input, 0, input.Length);
         }
 
         /// <summary>
         /// Computes checksum and reset the calculator.
-        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
         /// </summary>
-        /// <param name="checksum">Checksum value.</param>
+        /// <param name="inputBuffer">Input buffer.</param>
+        /// <param name="offset">Read start offset from buffer.</param>
+        /// <param name="length">Read length.</param>
         /// <returns></returns>
-        public bool ComputeFinal(out byte checksum)
+        /// <exception cref="Exception"></exception>
+        public CrcValue ComputeFinal(byte[] inputBuffer, int offset, int length)
         {
-            return _engine.ComputeFinal(out checksum);
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
-        /// </summary>
-        /// <param name="checksum">Checksum value.</param>
-        /// <returns></returns>
-        public bool ComputeFinal(out ushort checksum)
-        {
-            return _engine.ComputeFinal(out checksum);
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
-        /// </summary>
-        /// <param name="checksum">Checksum value.</param>
-        /// <returns></returns>
-        public bool ComputeFinal(out uint checksum)
-        {
-            return _engine.ComputeFinal(out checksum);
-        }
-
-        /// <summary>
-        /// Computes checksum and reset the calculator.
-        /// <br/>Output checksum to the specified format, Truncate bits form header if checksum length is greater than target format.
-        /// Return a <see cref="bool"/> indicating whether the checksum is truncated.
-        /// </summary>
-        /// <param name="checksum">Checksum value.</param>
-        /// <returns></returns>
-        public bool ComputeFinal(out ulong checksum)
-        {
-            return _engine.ComputeFinal(out checksum);
+            _engine.Update(inputBuffer, offset, length);
+            return ComputeFinal();
         }
 
         /// <summary>

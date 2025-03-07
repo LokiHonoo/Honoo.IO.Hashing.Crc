@@ -31,7 +31,7 @@ namespace Honoo.IO.Hashing
 
         internal static CrcName GetAlgorithmName()
         {
-            return new CrcName(DEFAULT_NAME, WIDTH, new CrcParameter(POLY, WIDTH), new CrcParameter(INIT, WIDTH), new CrcParameter(XOROUT, WIDTH), REFIN, REFOUT, (t) => { return new Crc40Gsm(t); });
+            return new CrcName(DEFAULT_NAME, WIDTH, new CrcUInt64Value(POLY, WIDTH), new CrcUInt64Value(INIT, WIDTH), new CrcUInt64Value(XOROUT, WIDTH), REFIN, REFOUT, (t) => { return new Crc40Gsm(t); });
         }
 
         private static CrcEngine GetEngine(CrcTableInfo withTable)
