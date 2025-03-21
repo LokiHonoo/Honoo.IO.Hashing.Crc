@@ -172,8 +172,8 @@ private static void Demo2()
     ulong value = checksum.ToUInt64();
     bool truncated = checksum.ToUInt64(out ulong value);
     // Width is 40 bits, uint is 32 bits, The value is truncated.
-    ulong value = checksum.ToUInt32();
-    bool truncated = checksum.ToUInt64(out uint value);
+    uint value = checksum.ToUInt32();
+    bool truncated = checksum.ToUInt32(out uint value);
 }
 
 private static void Demo3()
