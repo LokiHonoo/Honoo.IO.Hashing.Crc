@@ -179,23 +179,23 @@ namespace Honoo.IO.Hashing
             }
         }
 
-        private static CrcEngine GetEngine(int width, CrcValue polyParameter, CrcValue initParameter, CrcValue xoroutParameter, bool refin, bool refout, CrcTable table)
+        private static CrcEngine GetEngine(int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
         {
             if (width <= 0)
             {
                 throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(width));
             }
-            if (polyParameter is null)
+            if (poly is null)
             {
-                throw new ArgumentNullException(nameof(polyParameter));
+                throw new ArgumentNullException(nameof(poly));
             }
-            if (initParameter is null)
+            if (init is null)
             {
-                throw new ArgumentNullException(nameof(initParameter));
+                throw new ArgumentNullException(nameof(init));
             }
-            if (xoroutParameter is null)
+            if (xorout is null)
             {
-                throw new ArgumentNullException(nameof(xoroutParameter));
+                throw new ArgumentNullException(nameof(xorout));
             }
             if (table is null)
             {
@@ -204,122 +204,106 @@ namespace Honoo.IO.Hashing
             switch (table.Core)
             {
                 case CrcCore.UInt8:
+                    if (width > 8)
                     {
-                        if (width > 8)
-                        {
-                            throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
-                        }
-                        byte poly = polyParameter.ToUInt8();
-                        byte init = initParameter.ToUInt8();
-                        byte xorout = xoroutParameter.ToUInt8();
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngine8(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngine8Standard(width, poly, init, xorout, refin, refout, (byte[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngine8M16x(width, poly, init, xorout, refin, refout, (byte[])table.Table);
-                        }
+                        throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
+                    }
+                    byte poly8 = poly.ToUInt8();
+                    byte init8 = init.ToUInt8();
+                    byte xorout8 = xorout.ToUInt8();
+                    switch (table.TableInfo)
+                    {
+                        case CrcTableInfo.None: default: return new CrcEngine8(width, poly8, init8, xorout8, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngine8Standard(width, poly8, init8, xorout8, refin, refout, (byte[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngine8M16x(width, poly8, init8, xorout8, refin, refout, (byte[])table.Table);
                     }
 
                 case CrcCore.UInt16:
+                    if (width > 16)
                     {
-                        if (width > 16)
-                        {
-                            throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
-                        }
-                        ushort poly = polyParameter.ToUInt16();
-                        ushort init = initParameter.ToUInt16();
-                        ushort xorout = xoroutParameter.ToUInt16();
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngine16(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngine16Standard(width, poly, init, xorout, refin, refout, (ushort[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngine16M16x(width, poly, init, xorout, refin, refout, (ushort[])table.Table);
-                        }
+                        throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
+                    }
+                    ushort poly16 = poly.ToUInt16();
+                    ushort init16 = init.ToUInt16();
+                    ushort xorout16 = xorout.ToUInt16();
+                    switch (table.TableInfo)
+                    {
+                        case CrcTableInfo.None: default: return new CrcEngine16(width, poly16, init16, xorout16, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngine16Standard(width, poly16, init16, xorout16, refin, refout, (ushort[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngine16M16x(width, poly16, init16, xorout16, refin, refout, (ushort[])table.Table);
                     }
 
                 case CrcCore.UInt32:
+                    if (width > 32)
                     {
-                        if (width > 32)
-                        {
-                            throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
-                        }
-                        uint poly = polyParameter.ToUInt32();
-                        uint init = initParameter.ToUInt32();
-                        uint xorout = xoroutParameter.ToUInt32();
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngine32(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngine32Standard(width, poly, init, xorout, refin, refout, (uint[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngine32M16x(width, poly, init, xorout, refin, refout, (uint[])table.Table);
-                        }
+                        throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 32.", nameof(width));
+                    }
+                    uint poly32 = poly.ToUInt32();
+                    uint init32 = init.ToUInt32();
+                    uint xorout32 = xorout.ToUInt32();
+                    switch (table.TableInfo)
+                    {
+                        case CrcTableInfo.None: default: return new CrcEngine32(width, poly32, init32, xorout32, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngine32Standard(width, poly32, init32, xorout32, refin, refout, (uint[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngine32M16x(width, poly32, init32, xorout32, refin, refout, (uint[])table.Table);
                     }
 
                 case CrcCore.UInt64:
+                    if (width > 64)
                     {
-                        if (width > 64)
-                        {
-                            throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
-                        }
-                        ulong poly = polyParameter.ToUInt64();
-                        ulong init = initParameter.ToUInt64();
-                        ulong xorout = xoroutParameter.ToUInt64();
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngine64(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngine64Standard(width, poly, init, xorout, refin, refout, (ulong[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngine64M16x(width, poly, init, xorout, refin, refout, (ulong[])table.Table);
-                        }
+                        throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 64.", nameof(width));
+                    }
+                    ulong poly64 = poly.ToUInt64();
+                    ulong init64 = init.ToUInt64();
+                    ulong xorout64 = xorout.ToUInt64();
+                    switch (table.TableInfo)
+                    {
+                        case CrcTableInfo.None: default: return new CrcEngine64(width, poly64, init64, xorout64, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngine64Standard(width, poly64, init64, xorout64, refin, refout, (ulong[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngine64M16x(width, poly64, init64, xorout64, refin, refout, (ulong[])table.Table);
                     }
 
                 case CrcCore.Sharding8:
+                    byte[] polyA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
+                    byte[] initA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
+                    byte[] xoroutA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
+                    switch (table.TableInfo)
                     {
-                        byte[] poly = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        byte[] init = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        byte[] xorout = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngineSharding8(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngineSharding8Standard(width, poly, init, xorout, refin, refout, (byte[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngineSharding8Standard(width, poly, init, xorout, refin, refout, (byte[])table.Table);
-                        }
+                        case CrcTableInfo.None: default: return new CrcEngineSharding8(width, polyA8, initA8, xoroutA8, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngineSharding8Standard(width, polyA8, initA8, xoroutA8, refin, refout, (byte[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngineSharding8Standard(width, polyA8, initA8, xoroutA8, refin, refout, (byte[])table.Table);
                     }
 
                 case CrcCore.Sharding16:
+                    ushort[] polyA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
+                    ushort[] initA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
+                    ushort[] xoroutA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
+                    switch (table.TableInfo)
                     {
-                        ushort[] poly = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        ushort[] init = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        ushort[] xorout = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngineSharding16(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngineSharding16Standard(width, poly, init, xorout, refin, refout, (ushort[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngineSharding16Standard(width, poly, init, xorout, refin, refout, (ushort[])table.Table);
-                        }
+                        case CrcTableInfo.None: default: return new CrcEngineSharding16(width, polyA16, initA16, xoroutA16, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngineSharding16Standard(width, polyA16, initA16, xoroutA16, refin, refout, (ushort[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngineSharding16Standard(width, polyA16, initA16, xoroutA16, refin, refout, (ushort[])table.Table);
                     }
                 case CrcCore.Sharding32:
                 default:
+                    uint[] polyA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
+                    uint[] initA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
+                    uint[] xoroutA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
+                    switch (table.TableInfo)
                     {
-                        uint[] poly = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        uint[] init = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        uint[] xorout = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngineSharding32(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngineSharding32Standard(width, poly, init, xorout, refin, refout, (uint[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngineSharding32Standard(width, poly, init, xorout, refin, refout, (uint[])table.Table);
-                        }
+                        case CrcTableInfo.None: default: return new CrcEngineSharding32(width, polyA32, initA32, xoroutA32, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngineSharding32Standard(width, polyA32, initA32, xoroutA32, refin, refout, (uint[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngineSharding32Standard(width, polyA32, initA32, xoroutA32, refin, refout, (uint[])table.Table);
                     }
                 case CrcCore.Sharding64:
+                    ulong[] polyA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
+                    ulong[] initA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
+                    ulong[] xoroutA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
+                    switch (table.TableInfo)
                     {
-                        ulong[] poly = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, polyParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        ulong[] init = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, initParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        ulong[] xorout = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, xoroutParameter.ToHex(CrcCaseSensitivity.Lower), width);
-                        switch (table.TableInfo)
-                        {
-                            case CrcTableInfo.None: default: return new CrcEngineSharding64(width, poly, init, xorout, refin, refout);
-                            case CrcTableInfo.Standard: return new CrcEngineSharding64Standard(width, poly, init, xorout, refin, refout, (ulong[])table.Table);
-                            case CrcTableInfo.M16x: return new CrcEngineSharding64Standard(width, poly, init, xorout, refin, refout, (ulong[])table.Table);
-                        }
+                        case CrcTableInfo.None: default: return new CrcEngineSharding64(width, polyA64, initA64, xoroutA64, refin, refout);
+                        case CrcTableInfo.Standard: return new CrcEngineSharding64Standard(width, polyA64, initA64, xoroutA64, refin, refout, (ulong[])table.Table);
+                        case CrcTableInfo.M16x: return new CrcEngineSharding64Standard(width, polyA64, initA64, xoroutA64, refin, refout, (ulong[])table.Table);
                     }
             }
         }

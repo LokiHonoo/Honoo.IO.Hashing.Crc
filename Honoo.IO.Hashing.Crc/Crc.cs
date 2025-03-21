@@ -185,16 +185,16 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="name">Custom name.</param>
         /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
-        /// <param name="polyParameter">Polynomials value.</param>
-        /// <param name="initParameter">Initialization value.</param>
-        /// <param name="xoroutParameter">Output xor value.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, CrcValue polyParameter, CrcValue initParameter, CrcValue xoroutParameter, bool refin, bool refout, CrcTable table)
+        public static Crc CreateBy(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
         {
-            return new CrcCustom(name, width, polyParameter, initParameter, xoroutParameter, refin, refout, table);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, table);
         }
 
         #endregion Create
