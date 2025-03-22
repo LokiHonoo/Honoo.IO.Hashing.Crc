@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc4Interlaken class.
         /// </summary>
-        public Crc4Interlaken() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc4Interlaken(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc4Interlaken class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc4Interlaken(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc4Interlaken Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc4Interlaken(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -79,19 +82,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc4Itu class.
         /// </summary>
-        public Crc4Itu() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc4Itu class.
-        /// </summary>
-        public Crc4Itu(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc4Itu(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc4Itu(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc4Itu Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc4Itu(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

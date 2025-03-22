@@ -16,7 +16,7 @@
         Standard,
 
         /// <summary>
-        /// Use a mult 256 size fat table. Only supported CRC width bits are between 0 - 64.
+        /// Use a mult 256 size fat table. Only supported CRC width bits are between 1 - 64.
         /// Only supported core for <see cref="CrcCore.UInt8"/>, <see cref="CrcCore.UInt16"/>, <see cref="CrcCore.UInt32"/>, <see cref="CrcCore.UInt64"/>.
         /// </summary>
         M16x,

@@ -16,21 +16,24 @@ namespace Honoo.IO.Hashing
         private static ushort[] _tableStandard;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Ccitt class.
-        /// </summary>
-        public Crc16() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the Crc16 class.
         /// </summary>
-        public Crc16(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,19 +90,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Ccitt class.
         /// </summary>
-        public Crc16Ccitt() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Ccitt class.
-        /// </summary>
-        public Crc16Ccitt(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Ccitt(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Ccitt(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Ccitt Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Ccitt(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -156,19 +162,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16CcittFalse class.
         /// </summary>
-        public Crc16CcittFalse() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16CcittFalse class.
-        /// </summary>
-        public Crc16CcittFalse(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16CcittFalse(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16CcittFalse(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16CcittFalse Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16CcittFalse(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -225,15 +234,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Cdma2000 class.
         /// </summary>
-        public Crc16Cdma2000() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Cdma2000(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Cdma2000 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Cdma2000(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Cdma2000 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Cdma2000(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -285,15 +297,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Cms class.
         /// </summary>
-        public Crc16Cms() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Cms(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Cms class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Cms(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Cms Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Cms(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -345,15 +360,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Dds110 class.
         /// </summary>
-        public Crc16Dds110() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Dds110(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Dds110 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Dds110(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Dds110 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Dds110(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -405,19 +423,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16DectR class.
         /// </summary>
-        public Crc16DectR() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16DectR class.
-        /// </summary>
-        public Crc16DectR(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16DectR(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16DectR(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16DectR Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16DectR(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -474,19 +495,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16DectX class.
         /// </summary>
-        public Crc16DectX() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16DectX class.
-        /// </summary>
-        public Crc16DectX(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16DectX(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16DectX(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16DectX Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16DectX(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -543,15 +567,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Dnp class.
         /// </summary>
-        public Crc16Dnp() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Dnp(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Dnp class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Dnp(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Dnp Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Dnp(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -603,15 +630,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16En13757 class.
         /// </summary>
-        public Crc16En13757() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16En13757(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16En13757 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16En13757(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16En13757 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16En13757(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -663,19 +693,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Genibus class.
         /// </summary>
-        public Crc16Genibus() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Genibus class.
-        /// </summary>
-        public Crc16Genibus(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Genibus(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Genibus(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Genibus Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Genibus(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -732,15 +765,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Gsm class.
         /// </summary>
-        public Crc16Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -792,15 +828,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Lj1200 class.
         /// </summary>
-        public Crc16Lj1200() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Lj1200(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Lj1200 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Lj1200(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Lj1200 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Lj1200(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -852,15 +891,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16M17 class.
         /// </summary>
-        public Crc16M17() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16M17(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16M17 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16M17(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16M17 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16M17(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -910,21 +952,24 @@ namespace Honoo.IO.Hashing
         private static ushort[] _tableStandard;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Ibm class.
-        /// </summary>
-        public Crc16Maxim() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the Crc16Maxim class.
         /// </summary>
-        public Crc16Maxim(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Maxim(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Maxim(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Maxim Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Maxim(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -981,15 +1026,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Mcrf4XX class.
         /// </summary>
-        public Crc16Mcrf4XX() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Mcrf4XX(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Mcrf4XX class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Mcrf4XX(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Mcrf4XX Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Mcrf4XX(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1041,19 +1089,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Modbus class.
         /// </summary>
-        public Crc16Modbus() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Modbus class.
-        /// </summary>
-        public Crc16Modbus(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Modbus(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Modbus(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Modbus Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Modbus(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1110,15 +1161,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Nrsc5 class.
         /// </summary>
-        public Crc16Nrsc5() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Nrsc5(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Nrsc5 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Nrsc5(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Nrsc5 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Nrsc5(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1170,19 +1224,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16OpensafetyA class.
         /// </summary>
-        public Crc16OpensafetyA() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16OpensafetyA class.
-        /// </summary>
-        public Crc16OpensafetyA(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16OpensafetyA(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16OpensafetyA(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16OpensafetyA Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16OpensafetyA(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1234,19 +1291,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16OpensafetyB class.
         /// </summary>
-        public Crc16OpensafetyB() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16OpensafetyB class.
-        /// </summary>
-        public Crc16OpensafetyB(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16OpensafetyB(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16OpensafetyB(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16OpensafetyB Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16OpensafetyB(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1298,19 +1358,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Profibus class.
         /// </summary>
-        public Crc16Profibus() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Profibus class.
-        /// </summary>
-        public Crc16Profibus(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Profibus(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Profibus(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Profibus Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Profibus(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1367,15 +1430,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Riello class.
         /// </summary>
-        public Crc16Riello() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Riello(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Riello class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Riello(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Riello Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Riello(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1426,21 +1492,24 @@ namespace Honoo.IO.Hashing
         private static ushort[] _tableStandard;
 
         /// <summary>
-        /// Initializes a new instance of the Crc16AugCcitt class.
-        /// </summary>
-        public Crc16SpiFujitsu() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the Crc16SpiFujitsu class.
         /// </summary>
-        public Crc16SpiFujitsu(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16SpiFujitsu(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16SpiFujitsu(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16SpiFujitsu Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16SpiFujitsu(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1497,15 +1566,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16T10Dif class.
         /// </summary>
-        public Crc16T10Dif() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16T10Dif(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16T10Dif class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16T10Dif(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16T10Dif Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16T10Dif(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1557,15 +1629,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Teledisk class.
         /// </summary>
-        public Crc16Teledisk() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Teledisk(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Teledisk class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Teledisk(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Teledisk Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Teledisk(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1617,15 +1692,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Tms37157 class.
         /// </summary>
-        public Crc16Tms37157() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Tms37157(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Tms37157 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Tms37157(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Tms37157 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Tms37157(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1678,19 +1756,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Umts class.
         /// </summary>
-        public Crc16Umts() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Umts class.
-        /// </summary>
-        public Crc16Umts(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Umts(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Umts(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Umts Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Umts(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1747,15 +1828,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Usb class.
         /// </summary>
-        public Crc16Usb() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Usb(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Usb class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Usb(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Usb Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Usb(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1807,19 +1891,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16X25 class.
         /// </summary>
-        public Crc16X25() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16X25 class.
-        /// </summary>
-        public Crc16X25(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16X25(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16X25(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16X25 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16X25(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1876,19 +1963,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Xmodem class.
         /// </summary>
-        public Crc16Xmodem() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc16Xmodem class.
-        /// </summary>
-        public Crc16Xmodem(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc16Xmodem(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc16Xmodem(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Xmodem Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc16Xmodem(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1945,15 +2035,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc16Xmodem2 class.
         /// </summary>
-        public Crc16Xmodem2() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc16Xmodem2(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc16Xmodem2 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc16Xmodem2(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc16Xmodem2 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc16Xmodem2(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -2005,19 +2098,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the CrcA class.
         /// </summary>
-        public CrcA() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the CrcA class.
-        /// </summary>
-        public CrcA(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public CrcA(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal CrcA(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static CrcA Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new CrcA(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

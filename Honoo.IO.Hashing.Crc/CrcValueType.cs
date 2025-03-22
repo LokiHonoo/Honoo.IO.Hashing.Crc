@@ -27,6 +27,11 @@
         UInt64,
 
         /// <summary>
+        ///
+        /// </summary>
+        BitArray,
+
+        /// <summary>
         /// String e.g. "11110000".
         /// </summary>
         Bits,

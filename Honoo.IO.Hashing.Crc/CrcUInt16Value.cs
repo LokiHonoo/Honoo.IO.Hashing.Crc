@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Honoo.IO.Hashing
 {
@@ -31,21 +32,21 @@ namespace Honoo.IO.Hashing
         /// Initializes a new instance of the CrcUInt16Value class.
         /// </summary>
         /// <param name="value">Value.</param>
-        /// <param name="width">Truncated the value to the specifies crc width. The allowed values are between 0 - 16.</param>
-        public CrcUInt16Value(ushort value, int width)
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 16.</param>
+        public CrcUInt16Value(ushort value, int truncateToWidthBits)
         {
-            if (width <= 0 || width > 16)
+            if (truncateToWidthBits <= 0 || truncateToWidthBits > 16)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 16.", nameof(truncateToWidthBits));
             }
-            int move = 16 - width;
+            int move = 16 - truncateToWidthBits;
             if (move > 0)
             {
                 value = (ushort)(value << move);
                 value = (ushort)(value >> move);
             }
             _value = value;
-            _width = width;
+            _width = truncateToWidthBits;
         }
 
         #endregion Construction
@@ -77,6 +78,15 @@ namespace Honoo.IO.Hashing
         public override int GetHashCode()
         {
             return _valueType.GetHashCode() ^ _width.GetHashCode() ^ _value.GetHashCode();
+        }
+
+        /// <summary>
+        /// Gets <see cref="BitArray"/> value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public override BitArray ToBitArray()
+        {
+            return CrcConverter.GetBitArray(_value, _width);
         }
 
         /// <summary>
@@ -119,7 +129,15 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
+            if (outputBuffer is null)
+            {
+                throw new ArgumentNullException(nameof(outputBuffer));
+            }
             int length = (int)Math.Ceiling(_width / 8d);
+            if (outputOffset < 0 || outputOffset + length > outputBuffer.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(outputOffset));
+            }
             if (outputEndian == CrcEndian.LittleEndian)
             {
                 UInt16ToLE(_value, outputBuffer, outputOffset, length);

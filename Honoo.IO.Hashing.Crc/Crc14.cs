@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc14Darc class.
         /// </summary>
-        public Crc14Darc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc14Darc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc14Darc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc14Darc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc14Darc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc14Darc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -78,15 +81,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc14Gsm class.
         /// </summary>
-        public Crc14Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc14Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc14Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc14Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc14Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc14Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

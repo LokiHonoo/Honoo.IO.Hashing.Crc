@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Honoo.IO.Hashing
 {
@@ -32,6 +33,87 @@ namespace Honoo.IO.Hashing
 
         #endregion Construction
 
+        #region Create
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 8.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(byte value, int truncateToWidthBits)
+        {
+            return new CrcUInt8Value(value, truncateToWidthBits);
+        }
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 64.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(ulong value, int truncateToWidthBits)
+        {
+            return new CrcUInt64Value(value, truncateToWidthBits);
+        }
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 32.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(uint value, int truncateToWidthBits)
+        {
+            return new CrcUInt32Value(value, truncateToWidthBits);
+        }
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 16.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(ushort value, int truncateToWidthBits)
+        {
+            return new CrcUInt16Value(value, truncateToWidthBits);
+        }
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="format">Specifies the type of format for input string.</param>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(CrcStringFormat format, string value, int truncateToWidthBits)
+        {
+            switch (format)
+            {
+                case CrcStringFormat.Bits: return new CrcBitsValue(value, truncateToWidthBits);
+                case CrcStringFormat.Hex: default: return new CrcHexValue(value, truncateToWidthBits);
+            }
+        }
+
+        /// <summary>
+        /// Creates an instance of the value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static CrcValue Create(BitArray value, int truncateToWidthBits)
+        {
+            return new CrcBitArrayValue(value, truncateToWidthBits);
+        }
+
+        #endregion Create
+
         /// <summary>
         /// Determines whether the specified <see cref="CrcValue"/> is equal to the current <see cref="CrcValue"/>.
         /// </summary>
@@ -60,6 +142,12 @@ namespace Honoo.IO.Hashing
         {
             return GetHashCodeProtected();
         }
+
+        /// <summary>
+        /// Gets <see cref="BitArray"/> value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public abstract BitArray ToBitArray();
 
         /// <summary>
         /// Gets <see cref="string"/> as "11110000" value of converted.
@@ -93,7 +181,7 @@ namespace Honoo.IO.Hashing
         public abstract string ToHex(CrcCaseSensitivity caseSensitivity);
 
         /// <summary>
-        /// Method overrided. Return hex <see cref="string"/> of value.
+        /// Method overrided. Return <see langword="hex"/> <see cref="string"/> of value.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -109,6 +197,13 @@ namespace Honoo.IO.Hashing
         public abstract ushort ToUInt16();
 
         /// <summary>
+        /// Gets <see cref="ushort"/> value of converted. It's maybe truncated.
+        /// </summary>
+        /// <returns><see langword="true"/> is the value is truncated.</returns>
+        /// <exception cref="Exception"></exception>
+        public abstract bool ToUInt16(out ushort checksum);
+
+        /// <summary>
         /// Gets <see cref="uint"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
@@ -116,11 +211,25 @@ namespace Honoo.IO.Hashing
         public abstract uint ToUInt32();
 
         /// <summary>
+        /// Gets <see cref="uint"/> value of converted. It's maybe truncated.
+        /// </summary>
+        /// <returns><see langword="true"/> is the value is truncated.</returns>
+        /// <exception cref="Exception"></exception>
+        public abstract bool ToUInt32(out uint checksum);
+
+        /// <summary>
         /// Gets <see cref="ulong"/> value of converted. It's maybe truncated.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public abstract ulong ToUInt64();
+
+        /// <summary>
+        /// Gets <see cref="ulong"/> value of converted. It's maybe truncated.
+        /// </summary>
+        /// <returns><see langword="true"/> is the value is truncated.</returns>
+        /// <exception cref="Exception"></exception>
+        public abstract bool ToUInt64(out ulong checksum);
 
         /// <summary>
         /// Gets <see cref="byte"/> value of converted. It's maybe truncated.
@@ -135,27 +244,6 @@ namespace Honoo.IO.Hashing
         /// <returns><see langword="true"/> is the value is truncated.</returns>
         /// <exception cref="Exception"></exception>
         public abstract bool ToUInt8(out byte checksum);
-
-        /// <summary>
-        /// Gets <see cref="ushort"/> value of converted. It's maybe truncated.
-        /// </summary>
-        /// <returns><see langword="true"/> is the value is truncated.</returns>
-        /// <exception cref="Exception"></exception>
-        public abstract bool ToUInt16(out ushort checksum);
-
-        /// <summary>
-        /// Gets <see cref="uint"/> value of converted. It's maybe truncated.
-        /// </summary>
-        /// <returns><see langword="true"/> is the value is truncated.</returns>
-        /// <exception cref="Exception"></exception>
-        public abstract bool ToUInt32(out uint checksum);
-
-        /// <summary>
-        /// Gets <see cref="ulong"/> value of converted. It's maybe truncated.
-        /// </summary>
-        /// <returns><see langword="true"/> is the value is truncated.</returns>
-        /// <exception cref="Exception"></exception>
-        public abstract bool ToUInt64(out ulong checksum);
 
         /// <summary>
         ///

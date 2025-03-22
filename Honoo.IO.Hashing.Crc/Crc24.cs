@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24 class.
         /// </summary>
-        public Crc24() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc24 class.
-        /// </summary>
-        public Crc24(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc24(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc24(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc24(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -88,15 +91,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Ble class.
         /// </summary>
-        public Crc24Ble() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24Ble(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24Ble class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24Ble(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24Ble Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24Ble(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -149,15 +155,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayA class.
         /// </summary>
-        public Crc24FlexrayA() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24FlexrayA(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24FlexrayA class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24FlexrayA(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24FlexrayA Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24FlexrayA(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -210,15 +219,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24FlexrayB class.
         /// </summary>
-        public Crc24FlexrayB() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24FlexrayB(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24FlexrayB class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24FlexrayB(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24FlexrayB Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24FlexrayB(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -271,15 +283,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Interlaken class.
         /// </summary>
-        public Crc24Interlaken() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24Interlaken(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24Interlaken class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24Interlaken(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24Interlaken Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24Interlaken(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -332,15 +347,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24LteA class.
         /// </summary>
-        public Crc24LteA() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24LteA(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24LteA class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24LteA(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24LteA Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24LteA(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -392,15 +410,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24LteB class.
         /// </summary>
-        public Crc24LteB() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24LteB(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24LteB class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24LteB(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24LteB Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24LteB(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -452,15 +473,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc24Os9 class.
         /// </summary>
-        public Crc24Os9() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc24Os9(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc24Os9 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc24Os9(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc24Os9 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc24Os9(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

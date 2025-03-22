@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc11 class.
         /// </summary>
-        public Crc11() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc11 class.
-        /// </summary>
-        public Crc11(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc11(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc11(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc11 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc11(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -88,15 +91,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc11Umts class.
         /// </summary>
-        public Crc11Umts() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc11Umts(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc11Umts class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc11Umts(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc11Umts Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc11Umts(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

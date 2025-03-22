@@ -32,7 +32,7 @@ namespace Honoo.IO.Hashing
         {
             if (width <= 0 || width > 16)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 16.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 16.", nameof(width));
             }
             _width = width;
             _refin = refin;

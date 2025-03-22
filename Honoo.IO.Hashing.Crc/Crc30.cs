@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc30Cdma class.
         /// </summary>
-        public Crc30Cdma() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc30Cdma(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc30Cdma class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc30Cdma(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc30Cdma Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc30Cdma(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8 class.
         /// </summary>
-        public Crc8() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc8 class.
-        /// </summary>
-        public Crc8(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc8(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc8(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc8(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,15 +90,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Autosar class.
         /// </summary>
-        public Crc8Autosar() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Autosar(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Autosar class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Autosar(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Autosar Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Autosar(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -147,15 +153,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Bluetooth class.
         /// </summary>
-        public Crc8Bluetooth() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Bluetooth(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Bluetooth class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Bluetooth(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Bluetooth Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Bluetooth(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -207,15 +216,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Cdma2000 class.
         /// </summary>
-        public Crc8Cdma2000() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Cdma2000(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Cdma2000 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Cdma2000(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Cdma2000 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Cdma2000(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -267,15 +279,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Darc class.
         /// </summary>
-        public Crc8Darc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Darc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Darc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Darc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Darc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Darc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -327,15 +342,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8DvbS2 class.
         /// </summary>
-        public Crc8DvbS2() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8DvbS2(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8DvbS2 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8DvbS2(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8DvbS2 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8DvbS2(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -387,19 +405,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Ebu class.
         /// </summary>
-        public Crc8Ebu() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc8Ebu class.
-        /// </summary>
-        public Crc8Ebu(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc8Ebu(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc8Ebu(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Ebu Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc8Ebu(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -456,15 +477,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8GsmA class.
         /// </summary>
-        public Crc8GsmA() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8GsmA(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8GsmA class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8GsmA(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8GsmA Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8GsmA(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -516,15 +540,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8GsmB class.
         /// </summary>
-        public Crc8GsmB() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8GsmB(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8GsmB class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8GsmB(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8GsmB Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8GsmB(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -576,15 +603,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Hitag class.
         /// </summary>
-        public Crc8Hitag() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Hitag(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Hitag class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Hitag(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Hitag Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Hitag(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -636,15 +666,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8ICode class.
         /// </summary>
-        public Crc8ICode() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8ICode(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8ICode class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8ICode(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8ICode Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8ICode(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -696,19 +729,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Itu class.
         /// </summary>
-        public Crc8Itu() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc8Itu class.
-        /// </summary>
-        public Crc8Itu(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc8Itu(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc8Itu(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Itu Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc8Itu(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -765,15 +801,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Lte class.
         /// </summary>
-        public Crc8Lte() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Lte(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Lte class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Lte(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Lte Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Lte(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -825,19 +864,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Maxim class.
         /// </summary>
-        public Crc8Maxim() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc8Maxim class.
-        /// </summary>
-        public Crc8Maxim(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc8Maxim(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc8Maxim(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Maxim Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc8Maxim(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -894,15 +936,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8MifareMad class.
         /// </summary>
-        public Crc8MifareMad() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8MifareMad(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8MifareMad class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8MifareMad(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8MifareMad Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8MifareMad(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -954,15 +999,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Nrsc5 class.
         /// </summary>
-        public Crc8Nrsc5() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Nrsc5(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Nrsc5 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Nrsc5(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Nrsc5 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Nrsc5(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1014,15 +1062,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Opensafety class.
         /// </summary>
-        public Crc8Opensafety() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Opensafety(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Opensafety class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Opensafety(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Opensafety Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Opensafety(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1074,15 +1125,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Rohc class.
         /// </summary>
-        public Crc8Rohc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Rohc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Rohc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Rohc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Rohc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Rohc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1134,15 +1188,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8SaeJ1850 class.
         /// </summary>
-        public Crc8SaeJ1850() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8SaeJ1850(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8SaeJ1850 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8SaeJ1850(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8SaeJ1850 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8SaeJ1850(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -1194,15 +1251,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc8Wcdma class.
         /// </summary>
-        public Crc8Wcdma() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc8Wcdma(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc8Wcdma class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc8Wcdma(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc8Wcdma Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc8Wcdma(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

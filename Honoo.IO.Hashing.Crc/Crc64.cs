@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64 class.
         /// </summary>
-        public Crc64() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc64 class.
-        /// </summary>
-        public Crc64(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc64(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc64(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc64(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,15 +90,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64GoIso class.
         /// </summary>
-        public Crc64GoIso() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc64GoIso(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc64GoIso class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc64GoIso(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64GoIso Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc64GoIso(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -147,15 +153,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Ms class.
         /// </summary>
-        public Crc64Ms() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc64Ms(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc64Ms class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc64Ms(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64Ms Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc64Ms(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -207,15 +216,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Redis class.
         /// </summary>
-        public Crc64Redis() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc64Redis(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc64Redis class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc64Redis(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64Redis Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc64Redis(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -267,15 +279,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64We class.
         /// </summary>
-        public Crc64We() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc64We(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc64We class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc64We(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64We Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc64We(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -327,19 +342,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc64Xz class.
         /// </summary>
-        public Crc64Xz() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc64Xz class.
-        /// </summary>
-        public Crc64Xz(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc64Xz(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc64Xz(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc64Xz Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc64Xz(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

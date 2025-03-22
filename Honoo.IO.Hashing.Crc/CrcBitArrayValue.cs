@@ -6,12 +6,12 @@ namespace Honoo.IO.Hashing
     /// <summary>
     /// CRC value.
     /// </summary>
-    public sealed class CrcUInt32Value : CrcValue
+    public sealed class CrcBitArrayValue : CrcValue
     {
         #region Members
 
-        private readonly uint _value;
-        private readonly CrcValueType _valueType = CrcValueType.UInt32;
+        private readonly BitArray _value;
+        private readonly CrcValueType _valueType = CrcValueType.BitArray;
         private readonly int _width;
 
         /// <summary>
@@ -29,34 +29,28 @@ namespace Honoo.IO.Hashing
         #region Construction
 
         /// <summary>
-        /// Initializes a new instance of the CrcUInt32Value class.
+        /// Initializes a new instance of the CrcBitArrayValue class.
         /// </summary>
         /// <param name="value">Value.</param>
-        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 32.</param>
-        public CrcUInt32Value(uint value, int truncateToWidthBits)
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
+        public CrcBitArrayValue(BitArray value, int truncateToWidthBits)
         {
-            if (truncateToWidthBits <= 0 || truncateToWidthBits > 32)
+            if (truncateToWidthBits <= 0)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 32.", nameof(truncateToWidthBits));
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(truncateToWidthBits));
             }
-            int move = 32 - truncateToWidthBits;
-            if (move > 0)
-            {
-                value <<= move;
-                value >>= move;
-            }
-            _value = value;
+            _value = CrcConverter.GetBitArray(value, truncateToWidthBits);
             _width = truncateToWidthBits;
         }
 
         #endregion Construction
 
         /// <summary>
-        /// Determines whether the specified <see cref="CrcUInt32Value"/> is equal to the current <see cref="CrcUInt32Value"/>.
+        /// Determines whether the specified <see cref="CrcBitArrayValue"/> is equal to the current <see cref="CrcBitArrayValue"/>.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(CrcUInt32Value other)
+        public bool Equals(CrcBitArrayValue other)
         {
             return other != null && _valueType == other._valueType && _width == other._width && _value == other._value;
         }
@@ -68,7 +62,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return obj is CrcUInt32Value other && Equals(other);
+            return obj is CrcBitArrayValue other && Equals(other);
         }
 
         /// <summary>
@@ -86,7 +80,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override BitArray ToBitArray()
         {
-            return CrcConverter.GetBitArray(_value, _width);
+            return (BitArray)_value.Clone();
         }
 
         /// <summary>
@@ -106,17 +100,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override byte[] ToBytes(CrcEndian outputEndian)
         {
-            int length = (int)Math.Ceiling(_width / 8d);
-            byte[] output = new byte[length];
-            if (outputEndian == CrcEndian.LittleEndian)
-            {
-                UInt32ToLE(_value, output, 0, length);
-            }
-            else
-            {
-                UInt32ToBE(_value, output, 0, length);
-            }
-            return output;
+            return CrcConverter.GetBytes(_value, _width, outputEndian);
         }
 
         /// <summary>
@@ -129,24 +113,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
-            if (outputBuffer is null)
-            {
-                throw new ArgumentNullException(nameof(outputBuffer));
-            }
-            int length = (int)Math.Ceiling(_width / 8d);
-            if (outputOffset < 0 || outputOffset + length > outputBuffer.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(outputOffset));
-            }
-            if (outputEndian == CrcEndian.LittleEndian)
-            {
-                UInt32ToLE(_value, outputBuffer, outputOffset, length);
-            }
-            else
-            {
-                UInt32ToBE(_value, outputBuffer, outputOffset, length);
-            }
-            return length;
+            return CrcConverter.GetBytes(_value, _width, outputEndian, outputBuffer, outputOffset);
         }
 
         /// <summary>
@@ -166,7 +133,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override ushort ToUInt16()
         {
-            return (ushort)_value;
+            return CrcConverter.GetUInt16(_value, _width);
         }
 
         /// <summary>
@@ -176,7 +143,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt16(out ushort checksum)
         {
-            checksum = (ushort)_value;
+            checksum = CrcConverter.GetUInt16(_value, _width);
             return _width > 16;
         }
 
@@ -187,7 +154,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override uint ToUInt32()
         {
-            return _value;
+            return CrcConverter.GetUInt32(_value, _width);
         }
 
         /// <summary>
@@ -197,7 +164,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt32(out uint checksum)
         {
-            checksum = _value;
+            checksum = CrcConverter.GetUInt32(_value, _width);
             return _width > 32;
         }
 
@@ -208,7 +175,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override ulong ToUInt64()
         {
-            return _value;
+            return CrcConverter.GetUInt64(_value, _width);
         }
 
         /// <summary>
@@ -218,7 +185,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt64(out ulong checksum)
         {
-            checksum = _value;
+            checksum = CrcConverter.GetUInt64(_value, _width);
             return _width > 64;
         }
 
@@ -229,7 +196,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override byte ToUInt8()
         {
-            return (byte)_value;
+            return CrcConverter.GetUInt8(_value, _width);
         }
 
         /// <summary>
@@ -239,7 +206,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt8(out byte checksum)
         {
-            checksum = (byte)_value;
+            checksum = CrcConverter.GetUInt8(_value, _width);
             return _width > 8;
         }
 
@@ -250,7 +217,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         protected override bool EqualsProtected(CrcValue other)
         {
-            if (other is CrcUInt32Value crcValue)
+            if (other is CrcBitArrayValue crcValue)
             {
                 return Equals(crcValue);
             }
@@ -264,58 +231,6 @@ namespace Honoo.IO.Hashing
         protected override int GetHashCodeProtected()
         {
             return GetHashCode();
-        }
-
-        private static void UInt32ToBE(uint input, byte[] outputBuffer, int outputOffset, int outputLength)
-        {
-            if (outputLength == 4)
-            {
-                outputBuffer[outputOffset] = (byte)(input >> 24);
-                outputBuffer[outputOffset + 1] = (byte)(input >> 16);
-                outputBuffer[outputOffset + 2] = (byte)(input >> 8);
-                outputBuffer[outputOffset + 3] = (byte)input;
-            }
-            else if (outputLength == 3)
-            {
-                outputBuffer[outputOffset] = (byte)(input >> 16);
-                outputBuffer[outputOffset + 1] = (byte)(input >> 8);
-                outputBuffer[outputOffset + 2] = (byte)input;
-            }
-            else if (outputLength == 2)
-            {
-                outputBuffer[outputOffset] = (byte)(input >> 8);
-                outputBuffer[outputOffset + 1] = (byte)input;
-            }
-            else
-            {
-                outputBuffer[outputOffset] = (byte)input;
-            }
-        }
-
-        private static void UInt32ToLE(uint input, byte[] outputBuffer, int outputOffset, int outputLength)
-        {
-            if (outputLength == 4)
-            {
-                outputBuffer[outputOffset] = (byte)input;
-                outputBuffer[outputOffset + 1] = (byte)(input >> 8);
-                outputBuffer[outputOffset + 2] = (byte)(input >> 16);
-                outputBuffer[outputOffset + 3] = (byte)(input >> 24);
-            }
-            else if (outputLength == 3)
-            {
-                outputBuffer[outputOffset] = (byte)input;
-                outputBuffer[outputOffset + 1] = (byte)(input >> 8);
-                outputBuffer[outputOffset + 2] = (byte)(input >> 16);
-            }
-            else if (outputLength == 2)
-            {
-                outputBuffer[outputOffset] = (byte)input;
-                outputBuffer[outputOffset + 1] = (byte)(input >> 8);
-            }
-            else
-            {
-                outputBuffer[outputOffset] = (byte)input;
-            }
         }
     }
 }

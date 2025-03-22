@@ -20,15 +20,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc82Darc class.
         /// </summary>
-        public Crc82Darc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc82Darc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc82Darc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc82Darc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc82Darc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc82Darc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

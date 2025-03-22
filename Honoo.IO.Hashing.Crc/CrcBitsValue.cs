@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Honoo.IO.Hashing
 {
@@ -31,15 +32,15 @@ namespace Honoo.IO.Hashing
         /// Initializes a new instance of the CrcBitsValue class.
         /// </summary>
         /// <param name="value">Value.</param>
-        /// <param name="width">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
-        public CrcBitsValue(string value, int width)
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
+        public CrcBitsValue(string value, int truncateToWidthBits)
         {
-            if (width <= 0)
+            if (truncateToWidthBits <= 0)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(truncateToWidthBits));
             }
-            _value = CrcConverter.GetBits(CrcStringFormat.Bits, value, width);
-            _width = width;
+            _value = CrcConverter.GetBits(CrcStringFormat.Bits, value, truncateToWidthBits);
+            _width = truncateToWidthBits;
         }
 
         #endregion Construction
@@ -71,6 +72,15 @@ namespace Honoo.IO.Hashing
         public override int GetHashCode()
         {
             return _valueType.GetHashCode() ^ _width.GetHashCode() ^ _value.GetHashCode();
+        }
+
+        /// <summary>
+        /// Gets <see cref="BitArray"/> value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public override BitArray ToBitArray()
+        {
+            return CrcConverter.GetBitArray(CrcStringFormat.Bits, _value, _width);
         }
 
         /// <summary>

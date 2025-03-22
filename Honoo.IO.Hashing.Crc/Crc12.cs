@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Cdma2000 class.
         /// </summary>
-        public Crc12Cdma2000() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc12Cdma2000(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc12Cdma2000 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc12Cdma2000(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc12Cdma2000 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc12Cdma2000(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -79,19 +82,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Dect class.
         /// </summary>
-        public Crc12Dect() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc12Dect class.
-        /// </summary>
-        public Crc12Dect(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc12Dect(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc12Dect(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc12Dect Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc12Dect(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -148,15 +154,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Gsm class.
         /// </summary>
-        public Crc12Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc12Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc12Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc12Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc12Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc12Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -208,19 +217,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc12Umts class.
         /// </summary>
-        public Crc12Umts() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc12Umts class.
-        /// </summary>
-        public Crc12Umts(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc12Umts(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc12Umts(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc12Umts Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc12Umts(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

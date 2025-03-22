@@ -105,7 +105,7 @@ namespace Honoo.IO.Hashing
                 data[data.Length - 1] = (byte)i;
                 for (int j = 0; j < 8; j++)
                 {
-                    if ((data[data.Length - 1] & 1) == 1)
+                    if ((data[data.Length - 1] & 0x1) == 0x1)
                     {
                         data = ShiftRight(data, 1);
                         data = Xor(data, polyParsed);

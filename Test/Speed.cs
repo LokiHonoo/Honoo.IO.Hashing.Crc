@@ -12,9 +12,10 @@ namespace Test
 
         internal static void Test()
         {
+            var random = new Random();
             int length = 7 * 1024 + 341;
             byte[] input = new byte[length];
-            new Random().NextBytes(input);
+            random.NextBytes(input);
             int times = 5000;
             //
             Console.WriteLine("|algorithm|core|table|table overhead|speed|");
@@ -80,7 +81,7 @@ namespace Test
             }
             _stopwatch.Stop();
             double spd = Numerics.GetSpeed((long)input.Length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out string unit);
-            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|hardware|||" + spd + " " + unit + "|");
+            Console.WriteLine($"|[System.IO.Hashing.Crc32](https://www.nuget.org/packages/System.IO.Hashing/)|cache off|||" + spd + " " + unit + "|");
             //
             //
             //
@@ -115,7 +116,7 @@ namespace Test
             }
             _stopwatch.Stop();
             spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA1|managed|||" + spd + " " + unit + "|");
+            Console.WriteLine($"|SHA1|system|||" + spd + " " + unit + "|");
             //
             //
             //
@@ -126,7 +127,7 @@ namespace Test
             }
             _stopwatch.Stop();
             spd = Numerics.GetSpeed((long)length * times * 1000 / _stopwatch.ElapsedMilliseconds, Numerics.SpeedKilo.MiBps, 0, out unit);
-            Console.WriteLine($"|SHA256|managed|||" + spd + " " + unit + "|");
+            Console.WriteLine($"|SHA256|system|||" + spd + " " + unit + "|");
         }
 
         private static void Do(Crc crc, byte[] input, int times)

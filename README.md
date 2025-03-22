@@ -202,25 +202,25 @@ AMD5700X DDR4-3600
 
 |algorithm|core|table|table overhead|speed|
 |:-------:|:--:|:---:|:------------:|----:|
-|CRC-32|UInt32|None||34 MiB/s|
-|CRC-32|UInt32|Standard|1 KiB|504 MiB/s|
-|CRC-32|UInt32|M16x|16 KiB|3255 MiB/s|
+|CRC-32|UInt32|None||32 MiB/s|
+|CRC-32|UInt32|Standard|1 KiB|551 MiB/s|
+|CRC-32|UInt32|M16x|16 KiB|3184 MiB/s|
 |-|-|-|-|-|
-|CRC-7|UInt8|Standard|256 B|341 MiB/s|
-|CRC-7|UInt16|Standard|512 B|258 MiB/s|
-|CRC-7|UInt32|Standard|1 KiB|551 MiB/s|
+|CRC-7|UInt8|Standard|256 B|335 MiB/s|
+|CRC-7|UInt16|Standard|512 B|254 MiB/s|
+|CRC-7|UInt32|Standard|1 KiB|543 MiB/s|
 |CRC-7|UInt64|Standard|2 KiB|551 MiB/s|
-|CRC-7|Sharding8|Standard|256 B|269 MiB/s|
-|CRC-7|Sharding16|Standard|512 B|240 MiB/s|
-|CRC-7|Sharding32|Standard|1 KiB|242 MiB/s|
-|CRC-7|Sharding64|Standard|2 KiB|239 MiB/s|
+|CRC-7|Sharding8|Standard|256 B|258 MiB/s|
+|CRC-7|Sharding16|Standard|512 B|234 MiB/s|
+|CRC-7|Sharding32|Standard|1 KiB|231 MiB/s|
+|CRC-7|Sharding64|Standard|2 KiB|237 MiB/s|
 |-|-|-|-|-|
-|CRC-5/ITU|UInt8|M16x|4 KiB|3581 MiB/s|
+|CRC-5/ITU|UInt8|M16x|4 KiB|2754 MiB/s|
 |CRC-13/BBC|UInt16|M16x|8 KiB|2984 MiB/s|
 |CRC-24/BLE|UInt32|M16x|16 KiB|3581 MiB/s|
-|CRC-40/GSM|UInt64|M16x|32 KiB|2754 MiB/s|
+|CRC-40/GSM|UInt64|M16x|32 KiB|2984 MiB/s|
 |-|-|-|-|-|
-|SHA1|system|||814 MiB/s|
+|SHA1|system|||796 MiB/s|
 |SHA256|system|||2106 MiB/s|
 
 ## LICENSE

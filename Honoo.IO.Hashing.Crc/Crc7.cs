@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc7 class.
         /// </summary>
-        public Crc7() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc7 class.
-        /// </summary>
-        public Crc7(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc7(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc7(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc7 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc7(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,15 +90,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc7Rohc class.
         /// </summary>
-        public Crc7Rohc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc7Rohc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc7Rohc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc7Rohc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc7Rohc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc7Rohc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -148,15 +154,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc7Umts class.
         /// </summary>
-        public Crc7Umts() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc7Umts(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc7Umts class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc7Umts(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc7Umts Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc7Umts(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

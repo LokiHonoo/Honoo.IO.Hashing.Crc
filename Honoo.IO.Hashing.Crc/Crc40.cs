@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc40Gsm class.
         /// </summary>
-        public Crc40Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc40Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc40Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc40Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc40Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc40Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Honoo.IO.Hashing
 {
@@ -31,21 +32,21 @@ namespace Honoo.IO.Hashing
         /// Initializes a new instance of the CrcUInt8Value class.
         /// </summary>
         /// <param name="value">Value.</param>
-        /// <param name="width">Truncated the value to the specifies crc width. The allowed values are between 0 - 8.</param>
-        public CrcUInt8Value(byte value, int width)
+        /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are between 1 - 8.</param>
+        public CrcUInt8Value(byte value, int truncateToWidthBits)
         {
-            if (width <= 0 || width > 8)
+            if (truncateToWidthBits <= 0 || truncateToWidthBits > 8)
             {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 0 - 8.", nameof(width));
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 8.", nameof(truncateToWidthBits));
             }
-            int move = 8 - width;
+            int move = 8 - truncateToWidthBits;
             if (move > 0)
             {
                 value = (byte)(value << move);
                 value = (byte)(value >> move);
             }
             _value = value;
-            _width = width;
+            _width = truncateToWidthBits;
         }
 
         #endregion Construction
@@ -80,12 +81,48 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Gets <see cref="BitArray"/> value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public override BitArray ToBitArray()
+        {
+            return CrcConverter.GetBitArray(_value, _width);
+        }
+
+        /// <summary>
         /// Gets <see cref="string"/> as "11110000" value of converted.
         /// </summary>
         /// <returns></returns>
         public override string ToBits()
         {
             return CrcConverter.GetBits(_value, _width);
+        }
+
+        /// <summary>
+        /// Gets <see cref="byte"/>[] value of converted.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public byte[] ToBytes()
+        {
+            return new byte[] { _value };
+        }
+
+        /// <summary>
+        /// Write to output buffer and return checksum byte length.
+        /// </summary>
+        /// <param name="outputBuffer">Output buffer.</param>
+        /// <param name="outputOffset">Write start offset from buffer.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public int ToBytes(byte[] outputBuffer, int outputOffset)
+        {
+            if (outputBuffer is null)
+            {
+                throw new ArgumentNullException(nameof(outputBuffer));
+            }
+            outputBuffer[outputOffset] = _value;
+            return 1;
         }
 
         /// <summary>
@@ -109,6 +146,14 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
+            if (outputBuffer is null)
+            {
+                throw new ArgumentNullException(nameof(outputBuffer));
+            }
+            if (outputOffset < 0 || outputOffset >= outputBuffer.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(outputOffset));
+            }
             outputBuffer[outputOffset] = _value;
             return 1;
         }

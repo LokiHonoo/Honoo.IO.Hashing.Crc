@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc21CanFd class.
         /// </summary>
-        public Crc21CanFd() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc21CanFd(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc21CanFd class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc21CanFd(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc21CanFd Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc21CanFd(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

@@ -56,25 +56,10 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by algorithm name.
         /// </summary>
         /// <param name="algorithmName">Crc algorithm name.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static Crc Create(CrcName algorithmName)
-        {
-            if (algorithmName == null)
-            {
-                throw new ArgumentNullException(nameof(algorithmName));
-            }
-            return algorithmName.GetAlgorithm(CrcTableInfo.Standard);
-        }
-
-        /// <summary>
-        /// Creates an instance of the algorithm by algorithm name.
-        /// </summary>
-        /// <param name="algorithmName">Crc algorithm name.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static Crc Create(CrcName algorithmName, CrcTableInfo withTable)
+        public static Crc Create(CrcName algorithmName, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             if (algorithmName == null)
             {
@@ -87,23 +72,9 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by algorithm name.
         /// </summary>
         /// <param name="mechanism">Crc algorithm name.</param>
-        /// <returns></returns>
-        public static Crc Create(string mechanism)
-        {
-            if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
-            {
-                return algorithmName.GetAlgorithm(CrcTableInfo.Standard);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Creates an instance of the algorithm by algorithm name.
-        /// </summary>
-        /// <param name="mechanism">Crc algorithm name.</param>
         /// <param name="withTable">Calculate with table.</param>
         /// <returns></returns>
-        public static Crc Create(string mechanism, CrcTableInfo withTable)
+        public static Crc Create(string mechanism, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
             if (CrcName.TryGetAlgorithmName(mechanism, out CrcName algorithmName))
             {
@@ -116,7 +87,23 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="name">Custom name.</param>
-        /// <param name="width">Crc width in bits. The allowed values are between 0 - 8.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 8.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout)
+        {
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by custom parameters.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 8.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
@@ -133,7 +120,23 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="name">Custom name.</param>
-        /// <param name="width">Crc width in bits. The allowed values are between 0 - 16.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 16.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout)
+        {
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by custom parameters.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 16.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
@@ -150,7 +153,23 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="name">Custom name.</param>
-        /// <param name="width">Crc width in bits. The allowed values are between 0 - 32.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 32.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout)
+        {
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by custom parameters.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 32.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
@@ -167,7 +186,23 @@ namespace Honoo.IO.Hashing
         /// Creates an instance of the algorithm by custom parameters.
         /// </summary>
         /// <param name="name">Custom name.</param>
-        /// <param name="width">Crc width in bits. The allowed values are between 0 - 64.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 64.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout)
+        {
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm by custom parameters.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are between 1 - 64.</param>
         /// <param name="poly">Polynomials value.</param>
         /// <param name="init">Initialization value.</param>
         /// <param name="xorout">Output xor value.</param>
@@ -190,6 +225,22 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <exception cref="Exception"></exception>
+        public static Crc CreateBy(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout)
+        {
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the CrcCustom class.
+        /// </summary>
+        /// <param name="name">Custom name.</param>
+        /// <param name="width">Crc width in bits. The allowed values are more than 0.</param>
+        /// <param name="poly">Polynomials value.</param>
+        /// <param name="init">Initialization value.</param>
+        /// <param name="xorout">Output xor value.</param>
+        /// <param name="refin">Reflects input value.</param>
+        /// <param name="refout">Reflects output value.</param>
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public static Crc CreateBy(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
@@ -200,14 +251,6 @@ namespace Honoo.IO.Hashing
         #endregion Create
 
         #region Table
-
-        ///// <summary>
-        ///// Release all stored tables, and CRC of instantiation can no longer be used.
-        ///// </summary>
-        //public static void ReleaseTableCache()
-        //{
-        //    // 缓存全部算法的表占用 2M 内存，似乎没必要清理？
-        //}
 
         /// <summary>
         /// Clone calculation table if exists.

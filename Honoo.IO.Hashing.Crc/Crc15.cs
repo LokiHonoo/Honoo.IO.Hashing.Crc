@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc15 class.
         /// </summary>
-        public Crc15() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc15 class.
-        /// </summary>
-        public Crc15(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc15(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc15(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc15 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc15(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,15 +90,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc15Mpt1327 class.
         /// </summary>
-        public Crc15Mpt1327() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc15Mpt1327(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc15Mpt1327 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc15Mpt1327(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc15Mpt1327 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc15Mpt1327(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

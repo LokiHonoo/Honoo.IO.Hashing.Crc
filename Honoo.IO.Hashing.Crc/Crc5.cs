@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Epc class.
         /// </summary>
-        public Crc5Epc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc5Epc class.
-        /// </summary>
-        public Crc5Epc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc5Epc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc5Epc(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc5Epc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc5Epc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -88,19 +91,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Itu class.
         /// </summary>
-        public Crc5Itu() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc5Itu class.
-        /// </summary>
-        public Crc5Itu(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc5Itu(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc5Itu(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc5Itu Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc5Itu(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -157,15 +163,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc5Usb class.
         /// </summary>
-        public Crc5Usb() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc5Usb(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc5Usb class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc5Usb(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc5Usb Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc5Usb(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

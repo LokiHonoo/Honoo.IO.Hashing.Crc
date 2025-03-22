@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc31Philips class.
         /// </summary>
-        public Crc31Philips() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc31Philips(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc31Philips class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc31Philips(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc31Philips Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc31Philips(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

@@ -18,19 +18,22 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc10 class.
         /// </summary>
-        public Crc10() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the Crc10 class.
-        /// </summary>
-        public Crc10(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        public Crc10(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         internal Crc10(string alias, CrcTableInfo withTable) : base(alias, GetEngine(withTable))
         {
+        }
+
+        /// <summary>
+        /// Creates an instance of the algorithm.
+        /// </summary>
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc10 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
+        {
+            return new Crc10(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -87,15 +90,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc10Cdma2000 class.
         /// </summary>
-        public Crc10Cdma2000() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc10Cdma2000(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc10Cdma2000 class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc10Cdma2000(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc10Cdma2000 Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc10Cdma2000(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -148,15 +154,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc10Gsm class.
         /// </summary>
-        public Crc10Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc10Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc10Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc10Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc10Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc10Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

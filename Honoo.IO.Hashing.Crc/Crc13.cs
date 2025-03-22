@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc13bbc class.
         /// </summary>
-        public Crc13bbc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc13bbc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc13bbc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc13bbc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc13bbc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc13bbc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()

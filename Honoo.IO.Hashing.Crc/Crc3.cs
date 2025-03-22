@@ -18,15 +18,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Gsm class.
         /// </summary>
-        public Crc3Gsm() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc3Gsm(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc3Gsm class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc3Gsm(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc3Gsm Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc3Gsm(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
@@ -78,15 +81,18 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Initializes a new instance of the Crc3Rohc class.
         /// </summary>
-        public Crc3Rohc() : base(DEFAULT_NAME, GetEngine(CrcTableInfo.Standard))
+        public Crc3Rohc(CrcTableInfo withTable = CrcTableInfo.Standard) : base(DEFAULT_NAME, GetEngine(withTable))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the Crc3Rohc class.
+        /// Creates an instance of the algorithm.
         /// </summary>
-        public Crc3Rohc(CrcTableInfo withTable) : base(DEFAULT_NAME, GetEngine(withTable))
+        /// <param name="withTable">Calculate with table.</param>
+        /// <returns></returns>
+        public static Crc3Rohc Create(CrcTableInfo withTable = CrcTableInfo.Standard)
         {
+            return new Crc3Rohc(withTable);
         }
 
         internal static CrcName GetAlgorithmName()
