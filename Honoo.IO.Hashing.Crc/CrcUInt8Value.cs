@@ -81,6 +81,15 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Gets <see cref="string"/> as "11110000" value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToBinary()
+        {
+            return CrcConverter.GetBinary(_value, _width);
+        }
+
+        /// <summary>
         /// Gets <see cref="BitArray"/> value of converted.
         /// </summary>
         /// <returns></returns>
@@ -90,20 +99,11 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
-        /// Gets <see cref="string"/> as "11110000" value of converted.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToBits()
-        {
-            return CrcConverter.GetBits(_value, _width);
-        }
-
-        /// <summary>
         /// Gets <see cref="byte"/>[] value of converted.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public byte[] ToBytes()
+        public byte[] ToByteArray()
         {
             return new byte[] { _value };
         }
@@ -115,7 +115,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public int ToBytes(byte[] outputBuffer, int outputOffset)
+        public int ToByteArray(byte[] outputBuffer, int outputOffset)
         {
             if (outputBuffer is null)
             {
@@ -131,7 +131,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override byte[] ToBytes(CrcEndian outputEndian)
+        public override byte[] ToByteArray(CrcEndian outputEndian)
         {
             return new byte[] { _value };
         }
@@ -144,7 +144,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
+        public override int ToByteArray(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             if (outputBuffer is null)
             {
@@ -257,7 +257,7 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        protected override bool EqualsProtected(CrcValue other)
+        protected override bool EqualsInternal(CrcValue other)
         {
             if (other is CrcUInt8Value crcValue)
             {
@@ -270,7 +270,7 @@ namespace Honoo.IO.Hashing
         ///
         /// </summary>
         /// <returns></returns>
-        protected override int GetHashCodeProtected()
+        protected override int GetHashCodeInternal()
         {
             return GetHashCode();
         }

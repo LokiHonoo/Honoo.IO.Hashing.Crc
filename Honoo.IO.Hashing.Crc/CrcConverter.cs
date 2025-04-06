@@ -10,6 +10,192 @@ namespace Honoo.IO.Hashing
     public sealed class CrcConverter
     {
         /// <summary>
+        /// Convert binary(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
+        /// </summary>
+        /// <param name="inputFormat">Specifies the type of format for input string.</param>
+        /// <param name="input">Input string.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
+            }
+            if (truncateToWidthBits.HasValue && truncateToWidthBits <= 0)
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            input = input.Trim();
+            StringBuilder bits = new StringBuilder();
+            switch (inputFormat)
+            {
+                case CrcStringFormat.Binary:
+                    if (input.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bits.Append(input, 2, input.Length - 2);
+                    }
+                    else
+                    {
+                        bits.Append(input);
+                    }
+                    break;
+
+                case CrcStringFormat.Hex:
+                    if (input.StartsWith("0x", StringComparison.OrdinalIgnoreCase) || input.StartsWith("&h", StringComparison.OrdinalIgnoreCase))
+                    {
+                        for (int i = 2; i < input.Length; i++)
+                        {
+                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < input.Length; i++)
+                        {
+                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
+                        }
+                    }
+                    break;
+
+                default: throw new ArgumentException("Invalid CRC string format.", nameof(inputFormat));
+            }
+            int width = truncateToWidthBits ?? bits.Length;
+            if (bits.Length > width)
+            {
+                bits.Remove(0, bits.Length - width);
+            }
+            else if (bits.Length < width)
+            {
+                bits.Insert(0, "0", width - bits.Length);
+            }
+            return bits.ToString();
+        }
+
+        /// <summary>
+        /// Convert to the specified format,
+        /// </summary>
+        /// <param name="input">Input value.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(BitArray input, int? truncateToWidthBits)
+        {
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            if (truncateToWidthBits.HasValue && truncateToWidthBits <= 0)
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            StringBuilder bits = new StringBuilder();
+            for (int i = 0; i < input.Length; i++)
+            {
+                bits.Append(input.Get(i) ? '1' : '0');
+            }
+            int width = truncateToWidthBits ?? bits.Length;
+            if (bits.Length > width)
+            {
+                bits.Remove(0, bits.Length - width);
+            }
+            else if (bits.Length < width)
+            {
+                bits.Insert(0, "0", width - bits.Length);
+            }
+            return bits.ToString();
+        }
+
+        /// <summary>
+        /// Convert to the specified format,
+        /// </summary>
+        /// <param name="input">Input value.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 8 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(byte input, int? truncateToWidthBits)
+        {
+            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 8))
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 8 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            string result = Convert.ToString(input, 2).PadLeft(8, '0');
+            int width = truncateToWidthBits ?? result.Length;
+            if (result.Length > width)
+            {
+                result = result.Substring(result.Length - width, width);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert to the specified format,
+        /// </summary>
+        /// <param name="input">Input value.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 16 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(ushort input, int? truncateToWidthBits)
+        {
+            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 16))
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 16 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            string result = Convert.ToString(input, 2).PadLeft(16, '0');
+            int width = truncateToWidthBits ?? result.Length;
+            if (result.Length > width)
+            {
+                result = result.Substring(result.Length - width, width);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert to the specified format,
+        /// </summary>
+        /// <param name="input">Input value.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 32 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(uint input, int? truncateToWidthBits)
+        {
+            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 32))
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 32 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            string result = Convert.ToString(input, 2).PadLeft(32, '0');
+            int width = truncateToWidthBits ?? result.Length;
+            if (result.Length > width)
+            {
+                result = result.Substring(result.Length - width, width);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Convert to the specified format,
+        /// </summary>
+        /// <param name="input">Input value.</param>
+        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 64 or set 'null' to not truncated.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string GetBinary(ulong input, int? truncateToWidthBits)
+        {
+            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 64))
+            {
+                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 64 or set 'null' to not truncated.", nameof(truncateToWidthBits));
+            }
+            string result = Convert.ToString((uint)(input >> 32), 2).PadLeft(32, '0') + Convert.ToString((uint)input, 2).PadLeft(32, '0');
+            int width = truncateToWidthBits ?? result.Length;
+            if (result.Length > width)
+            {
+                result = result.Substring(result.Length - width, width);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Convert to the specified format,
         /// </summary>
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
@@ -31,7 +217,7 @@ namespace Honoo.IO.Hashing
             BitArray bits;
             switch (inputFormat)
             {
-                case CrcStringFormat.Bits:
+                case CrcStringFormat.Binary:
                     if (input.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
                     {
                         bits = new BitArray(input.Length - 2);
@@ -224,218 +410,32 @@ namespace Honoo.IO.Hashing
         /// <param name="inputFormat">Specifies the type of format for input string.</param>
         /// <param name="input">Input string.</param>
         /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                throw new ArgumentException($"\"{nameof(input)}\" can't be null or white space.", nameof(input));
-            }
-            if (truncateToWidthBits.HasValue && truncateToWidthBits <= 0)
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            input = input.Trim();
-            StringBuilder bits = new StringBuilder();
-            switch (inputFormat)
-            {
-                case CrcStringFormat.Bits:
-                    if (input.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
-                    {
-                        bits.Append(input, 2, input.Length - 2);
-                    }
-                    else
-                    {
-                        bits.Append(input);
-                    }
-                    break;
-
-                case CrcStringFormat.Hex:
-                    if (input.StartsWith("0x", StringComparison.OrdinalIgnoreCase) || input.StartsWith("&h", StringComparison.OrdinalIgnoreCase))
-                    {
-                        for (int i = 2; i < input.Length; i++)
-                        {
-                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < input.Length; i++)
-                        {
-                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
-                        }
-                    }
-                    break;
-
-                default: throw new ArgumentException("Invalid CRC string format.", nameof(inputFormat));
-            }
-            int width = truncateToWidthBits ?? bits.Length;
-            if (bits.Length > width)
-            {
-                bits.Remove(0, bits.Length - width);
-            }
-            else if (bits.Length < width)
-            {
-                bits.Insert(0, "0", width - bits.Length);
-            }
-            return bits.ToString();
-        }
-
-        /// <summary>
-        /// Convert to the specified format,
-        /// </summary>
-        /// <param name="input">Input value.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(BitArray input, int? truncateToWidthBits)
-        {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-            if (truncateToWidthBits.HasValue && truncateToWidthBits <= 0)
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            StringBuilder bits = new StringBuilder();
-            for (int i = 0; i < input.Length; i++)
-            {
-                bits.Append(input.Get(i) ? '1' : '0');
-            }
-            int width = truncateToWidthBits ?? bits.Length;
-            if (bits.Length > width)
-            {
-                bits.Remove(0, bits.Length - width);
-            }
-            else if (bits.Length < width)
-            {
-                bits.Insert(0, "0", width - bits.Length);
-            }
-            return bits.ToString();
-        }
-
-        /// <summary>
-        /// Convert to the specified format,
-        /// </summary>
-        /// <param name="input">Input value.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 8 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(byte input, int? truncateToWidthBits)
-        {
-            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 8))
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 8 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            string result = Convert.ToString(input, 2).PadLeft(8, '0');
-            int width = truncateToWidthBits ?? result.Length;
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Convert to the specified format,
-        /// </summary>
-        /// <param name="input">Input value.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 16 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(ushort input, int? truncateToWidthBits)
-        {
-            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 16))
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 16 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            string result = Convert.ToString(input, 2).PadLeft(16, '0');
-            int width = truncateToWidthBits ?? result.Length;
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Convert to the specified format,
-        /// </summary>
-        /// <param name="input">Input value.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 32 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(uint input, int? truncateToWidthBits)
-        {
-            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 32))
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 32 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            string result = Convert.ToString(input, 2).PadLeft(32, '0');
-            int width = truncateToWidthBits ?? result.Length;
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Convert to the specified format,
-        /// </summary>
-        /// <param name="input">Input value.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are between 1 - 64 or set 'null' to not truncated.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string GetBits(ulong input, int? truncateToWidthBits)
-        {
-            if (truncateToWidthBits.HasValue && (truncateToWidthBits <= 0 || truncateToWidthBits > 64))
-            {
-                throw new ArgumentException("Invalid width bits. The allowed values are between 1 - 64 or set 'null' to not truncated.", nameof(truncateToWidthBits));
-            }
-            string result = Convert.ToString((uint)(input >> 32), 2).PadLeft(32, '0') + Convert.ToString((uint)input, 2).PadLeft(32, '0');
-            int width = truncateToWidthBits ?? result.Length;
-            if (result.Length > width)
-            {
-                result = result.Substring(result.Length - width, width);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Convert bits(e.g. 0b11110000 or 11110000), hex(e.g. 0xFF55 or FF55) to the specified format,
-        /// </summary>
-        /// <param name="inputFormat">Specifies the type of format for input string.</param>
-        /// <param name="input">Input string.</param>
-        /// <param name="truncateToWidthBits">Truncated the input to the specifies CRC width in bits. The allowed values are more than 0 or set 'null' to not truncated.</param>
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public static byte[] GetBytes(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, CrcEndian outputEndian)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 8;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            int length = bits.Length / 8;
+            int length = binary.Length / 8;
             byte[] result = new byte[length];
             if (outputEndian == CrcEndian.LittleEndian)
             {
                 for (int i = length - 1; i >= 0; i--)
                 {
-                    result[i] = Convert.ToByte(bits.Substring(i * 8, 8), 2);
+                    result[i] = Convert.ToByte(binary.Substring(i * 8, 8), 2);
                 }
             }
             else
             {
                 for (int i = 0; i < length; i++)
                 {
-                    result[i] = Convert.ToByte(bits.Substring(i * 8, 8), 2);
+                    result[i] = Convert.ToByte(binary.Substring(i * 8, 8), 2);
                 }
             }
             return result;
@@ -462,14 +462,14 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentOutOfRangeException(nameof(outputOffset));
             }
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 8;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            int length = bits.Length / 8;
+            int length = binary.Length / 8;
             if (outputOffset + length > outputBuffer.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(outputOffset));
@@ -478,14 +478,14 @@ namespace Honoo.IO.Hashing
             {
                 for (int i = length + outputOffset - 1; i >= outputOffset; i--)
                 {
-                    outputBuffer[i] = Convert.ToByte(bits.Substring(i * 8, 8), 2);
+                    outputBuffer[i] = Convert.ToByte(binary.Substring(i * 8, 8), 2);
                 }
             }
             else
             {
                 for (int i = outputOffset; i < length + outputOffset; i++)
                 {
-                    outputBuffer[i] = Convert.ToByte(bits.Substring(i * 8, 8), 2);
+                    outputBuffer[i] = Convert.ToByte(binary.Substring(i * 8, 8), 2);
                 }
             }
             return length;
@@ -637,17 +637,17 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public static string GetHex(CrcStringFormat inputFormat, string input, int? truncateToWidthBits, CrcCaseSensitivity caseSensitivity)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 8;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
             StringBuilder result = new StringBuilder();
-            for (int i = 0; i < bits.Length; i += 8)
+            for (int i = 0; i < binary.Length; i += 8)
             {
-                byte b = Convert.ToByte(bits.Substring(i, 8), 2);
+                byte b = Convert.ToByte(binary.Substring(i, 8), 2);
                 result.Append(Convert.ToString(b, 16).PadLeft(2, '0'));
             }
             int length = truncateToWidthBits.HasValue ? (int)Math.Ceiling(truncateToWidthBits.Value / 4d) : result.Length;
@@ -970,68 +970,68 @@ namespace Honoo.IO.Hashing
 
         internal static ushort[] GetUInt16Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 16;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 16;
             int truncates = rem > 0 ? 16 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            ushort[] result = new ushort[bits.Length / 16];
+            ushort[] result = new ushort[binary.Length / 16];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = Convert.ToUInt16(bits.Substring(i * 16, 16), 2);
+                result[i] = Convert.ToUInt16(binary.Substring(i * 16, 16), 2);
             }
             return result;
         }
 
         internal static uint[] GetUInt32Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 32;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 32;
             int truncates = rem > 0 ? 32 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            uint[] result = new uint[bits.Length / 32];
+            uint[] result = new uint[binary.Length / 32];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = Convert.ToUInt32(bits.Substring(i * 32, 32), 2);
+                result[i] = Convert.ToUInt32(binary.Substring(i * 32, 32), 2);
             }
             return result;
         }
 
         internal static ulong[] GetUInt64Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 64;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 64;
             int truncates = rem > 0 ? 64 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            ulong[] result = new ulong[bits.Length / 64];
+            ulong[] result = new ulong[binary.Length / 64];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = Convert.ToUInt64(bits.Substring(i * 64, 64), 2);
+                result[i] = Convert.ToUInt64(binary.Substring(i * 64, 64), 2);
             }
             return result;
         }
 
         internal static byte[] GetUInt8Array(CrcStringFormat inputFormat, string input, int? truncateToWidthBits)
         {
-            string bits = GetBits(inputFormat, input, truncateToWidthBits);
-            int rem = bits.Length % 8;
+            string binary = GetBinary(inputFormat, input, truncateToWidthBits);
+            int rem = binary.Length % 8;
             int truncates = rem > 0 ? 8 - rem : 0;
             if (truncates > 0)
             {
-                bits = bits.PadLeft(bits.Length + truncates, '0');
+                binary = binary.PadLeft(binary.Length + truncates, '0');
             }
-            byte[] result = new byte[bits.Length / 8];
+            byte[] result = new byte[binary.Length / 8];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = Convert.ToByte(bits.Substring(i * 8, 8), 2);
+                result[i] = Convert.ToByte(binary.Substring(i * 8, 8), 2);
             }
             return result;
         }

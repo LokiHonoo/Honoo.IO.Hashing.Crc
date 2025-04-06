@@ -201,10 +201,10 @@ namespace Test
 
         private static string Calc(Crc crc, byte[] input)
         {
-            byte[] checksum1 = crc.ComputeFinal(input, 0, input.Length - 2).ToBytes(CrcEndian.BigEndian);
+            byte[] checksum1 = crc.ComputeFinal(input, 0, input.Length - 2).ToByteArray(CrcEndian.BigEndian);
             string hexU = BitConverter.ToString(checksum1).Replace("-", string.Empty);
             byte[] checksum2 = new byte[crc.ChecksumByteLength];
-            crc.ComputeFinal(input, 0, input.Length - 2).ToBytes(CrcEndian.BigEndian, checksum2, 0);
+            crc.ComputeFinal(input, 0, input.Length - 2).ToByteArray(CrcEndian.BigEndian, checksum2, 0);
             string hexL = BitConverter.ToString(checksum2).Replace("-", string.Empty).ToLowerInvariant();
             for (int k = 0; k < input.Length - 2; k++)
             {
@@ -370,7 +370,7 @@ namespace Test
             //
             var crc = Crc.Create(cn);
             BitArray ba2 = crc.ComputeFinal(input2).ToBitArray();
-            string res2 = CrcConverter.GetBits(ba2, null);
+            string res2 = CrcConverter.GetBinary(ba2, null);
             Console.WriteLine(res2);
             checksums1.Add(res2);
             string res2h = crc.ComputeFinal(input2).ToHex(CrcCaseSensitivity.Lower);
@@ -379,14 +379,14 @@ namespace Test
             crc = Crc.CreateBy(
                 cn.Name,
                 cn.Width,
-                new CrcBitsValue(cn.Poly.ToBits(), cn.Width),
+                new CrcBinaryValue(cn.Poly.ToBinary(), cn.Width),
                 new CrcBitArrayValue(cn.Init.ToBitArray(), cn.Width),
                 new CrcHexValue(cn.Xorout.ToHex(CrcCaseSensitivity.Lower), cn.Width),
                 cn.Refin,
                 cn.Refout,
                 new CrcTable(CrcTableInfo.Standard, cn.Width, cn.Poly, cn.Refin, CrcCore.Sharding32)
                 );
-            string res3 = crc.ComputeFinal(input2).ToBits();
+            string res3 = crc.ComputeFinal(input2).ToBinary();
             Console.WriteLine(res3);
             checksums1.Add(res3);
             string res3h = crc.ComputeFinal(input2).ToHex(CrcCaseSensitivity.Lower);
@@ -417,18 +417,18 @@ namespace Test
             a.Length = 31;
             var b = new CrcBitArrayValue(a, 30);
             var c = new CrcHexValue(b.ToHex(CrcCaseSensitivity.Upper), 30);
-            var d = new CrcBitsValue(c.ToBits(), 30);
+            var d = new CrcBinaryValue(c.ToBinary(), 30);
             for (int i = 1; i < a.Count; i++)
             {
                 Console.Write(a[i] ? 1 : 0);
             }
             Console.WriteLine();
-            Console.WriteLine(b.ToBits());
-            Console.WriteLine(c.ToBits());
-            Console.WriteLine(d.ToBits());
+            Console.WriteLine(b.ToBinary());
+            Console.WriteLine(c.ToBinary());
+            Console.WriteLine(d.ToBinary());
 
             Console.WriteLine(CrcConverter.GetHex(a, 30, CrcCaseSensitivity.Upper));
-            Console.WriteLine(BitConverter.ToString(b.ToBytes(CrcEndian.BigEndian)).Replace("-", ""));
+            Console.WriteLine(BitConverter.ToString(b.ToByteArray(CrcEndian.BigEndian)).Replace("-", ""));
             Console.WriteLine(c.ToHex(CrcCaseSensitivity.Upper));
         }
 

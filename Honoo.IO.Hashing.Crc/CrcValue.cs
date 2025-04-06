@@ -95,7 +95,7 @@ namespace Honoo.IO.Hashing
         {
             switch (format)
             {
-                case CrcStringFormat.Bits: return new CrcBitsValue(value, truncateToWidthBits);
+                case CrcStringFormat.Binary: return new CrcBinaryValue(value, truncateToWidthBits);
                 case CrcStringFormat.Hex: default: return new CrcHexValue(value, truncateToWidthBits);
             }
         }
@@ -121,7 +121,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public bool Equals(CrcValue other)
         {
-            return EqualsProtected(other);
+            return EqualsInternal(other);
         }
 
         /// <summary>
@@ -140,8 +140,14 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return GetHashCodeProtected();
+            return GetHashCodeInternal();
         }
+
+        /// <summary>
+        /// Gets <see cref="string"/> as "11110000" value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string ToBinary();
 
         /// <summary>
         /// Gets <see cref="BitArray"/> value of converted.
@@ -150,18 +156,12 @@ namespace Honoo.IO.Hashing
         public abstract BitArray ToBitArray();
 
         /// <summary>
-        /// Gets <see cref="string"/> as "11110000" value of converted.
-        /// </summary>
-        /// <returns></returns>
-        public abstract string ToBits();
-
-        /// <summary>
         /// Gets <see cref="byte"/>[] value of converted.
         /// </summary>
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public abstract byte[] ToBytes(CrcEndian outputEndian);
+        public abstract byte[] ToByteArray(CrcEndian outputEndian);
 
         /// <summary>
         /// Write to output buffer and return checksum byte length.
@@ -171,7 +171,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public abstract int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
+        public abstract int ToByteArray(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
 
         /// <summary>
         /// Gets <see cref="string"/> as "FF55" value of converted.
@@ -250,12 +250,12 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        protected abstract bool EqualsProtected(CrcValue other);
+        protected abstract bool EqualsInternal(CrcValue other);
 
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        protected abstract int GetHashCodeProtected();
+        protected abstract int GetHashCodeInternal();
     }
 }

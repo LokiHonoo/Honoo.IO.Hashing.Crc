@@ -6,12 +6,12 @@ namespace Honoo.IO.Hashing
     /// <summary>
     /// CRC value.
     /// </summary>
-    public sealed class CrcBitsValue : CrcValue
+    public sealed class CrcBinaryValue : CrcValue
     {
         #region Members
 
         private readonly string _value;
-        private readonly CrcValueType _valueType = CrcValueType.Bits;
+        private readonly CrcValueType _valueType = CrcValueType.Binary;
         private readonly int _width;
 
         /// <summary>
@@ -29,28 +29,28 @@ namespace Honoo.IO.Hashing
         #region Construction
 
         /// <summary>
-        /// Initializes a new instance of the CrcBitsValue class.
+        /// Initializes a new instance of the CrcBinaryValue class.
         /// </summary>
         /// <param name="value">Value.</param>
         /// <param name="truncateToWidthBits">Truncated the value to the specifies crc width. The allowed values are more than 0.</param>
-        public CrcBitsValue(string value, int truncateToWidthBits)
+        public CrcBinaryValue(string value, int truncateToWidthBits)
         {
             if (truncateToWidthBits <= 0)
             {
                 throw new ArgumentException("Invalid width bits. The allowed values are more than 0.", nameof(truncateToWidthBits));
             }
-            _value = CrcConverter.GetBits(CrcStringFormat.Bits, value, truncateToWidthBits);
+            _value = CrcConverter.GetBinary(CrcStringFormat.Binary, value, truncateToWidthBits);
             _width = truncateToWidthBits;
         }
 
         #endregion Construction
 
         /// <summary>
-        /// Determines whether the specified <see cref="CrcBitsValue"/> is equal to the current <see cref="CrcBitsValue"/>.
+        /// Determines whether the specified <see cref="CrcBinaryValue"/> is equal to the current <see cref="CrcBinaryValue"/>.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(CrcBitsValue other)
+        public bool Equals(CrcBinaryValue other)
         {
             return other != null && _valueType == other._valueType && _width == other._width && _value == other._value;
         }
@@ -62,7 +62,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return obj is CrcBitsValue other && Equals(other);
+            return obj is CrcBinaryValue other && Equals(other);
         }
 
         /// <summary>
@@ -75,21 +75,21 @@ namespace Honoo.IO.Hashing
         }
 
         /// <summary>
+        /// Gets <see cref="string"/> as "11110000" value of converted.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToBinary()
+        {
+            return _value;
+        }
+
+        /// <summary>
         /// Gets <see cref="BitArray"/> value of converted.
         /// </summary>
         /// <returns></returns>
         public override BitArray ToBitArray()
         {
-            return CrcConverter.GetBitArray(CrcStringFormat.Bits, _value, _width);
-        }
-
-        /// <summary>
-        /// Gets <see cref="string"/> as "11110000" value of converted.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToBits()
-        {
-            return _value;
+            return CrcConverter.GetBitArray(CrcStringFormat.Binary, _value, _width);
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace Honoo.IO.Hashing
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override byte[] ToBytes(CrcEndian outputEndian)
+        public override byte[] ToByteArray(CrcEndian outputEndian)
         {
-            return CrcConverter.GetBytes(CrcStringFormat.Bits, _value, _width, outputEndian);
+            return CrcConverter.GetBytes(CrcStringFormat.Binary, _value, _width, outputEndian);
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
+        public override int ToByteArray(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
-            return CrcConverter.GetBytes(CrcStringFormat.Bits, _value, _width, outputEndian, outputBuffer, outputOffset);
+            return CrcConverter.GetBytes(CrcStringFormat.Binary, _value, _width, outputEndian, outputBuffer, outputOffset);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Honoo.IO.Hashing
         /// <returns></returns>
         public override string ToHex(CrcCaseSensitivity caseSensitivity)
         {
-            return CrcConverter.GetHex(CrcStringFormat.Bits, _value, _width, caseSensitivity);
+            return CrcConverter.GetHex(CrcStringFormat.Binary, _value, _width, caseSensitivity);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override ushort ToUInt16()
         {
-            return CrcConverter.GetUInt16(CrcStringFormat.Bits, _value, _width);
+            return CrcConverter.GetUInt16(CrcStringFormat.Binary, _value, _width);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt16(out ushort checksum)
         {
-            checksum = CrcConverter.GetUInt16(CrcStringFormat.Bits, _value, _width);
+            checksum = CrcConverter.GetUInt16(CrcStringFormat.Binary, _value, _width);
             return _width > 16;
         }
 
@@ -154,7 +154,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override uint ToUInt32()
         {
-            return CrcConverter.GetUInt32(CrcStringFormat.Bits, _value, _width);
+            return CrcConverter.GetUInt32(CrcStringFormat.Binary, _value, _width);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt32(out uint checksum)
         {
-            checksum = CrcConverter.GetUInt32(CrcStringFormat.Bits, _value, _width);
+            checksum = CrcConverter.GetUInt32(CrcStringFormat.Binary, _value, _width);
             return _width > 32;
         }
 
@@ -175,7 +175,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override ulong ToUInt64()
         {
-            return CrcConverter.GetUInt64(CrcStringFormat.Bits, _value, _width);
+            return CrcConverter.GetUInt64(CrcStringFormat.Binary, _value, _width);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt64(out ulong checksum)
         {
-            checksum = CrcConverter.GetUInt64(CrcStringFormat.Bits, _value, _width);
+            checksum = CrcConverter.GetUInt64(CrcStringFormat.Binary, _value, _width);
             return _width > 64;
         }
 
@@ -196,7 +196,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override byte ToUInt8()
         {
-            return CrcConverter.GetUInt8(CrcStringFormat.Bits, _value, _width);
+            return CrcConverter.GetUInt8(CrcStringFormat.Binary, _value, _width);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public override bool ToUInt8(out byte checksum)
         {
-            checksum = CrcConverter.GetUInt8(CrcStringFormat.Bits, _value, _width);
+            checksum = CrcConverter.GetUInt8(CrcStringFormat.Binary, _value, _width);
             return _width > 8;
         }
 
@@ -215,9 +215,9 @@ namespace Honoo.IO.Hashing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        protected override bool EqualsProtected(CrcValue other)
+        protected override bool EqualsInternal(CrcValue other)
         {
-            if (other is CrcBitsValue crcValue)
+            if (other is CrcBinaryValue crcValue)
             {
                 return Equals(crcValue);
             }
@@ -228,7 +228,7 @@ namespace Honoo.IO.Hashing
         ///
         /// </summary>
         /// <returns></returns>
-        protected override int GetHashCodeProtected()
+        protected override int GetHashCodeInternal()
         {
             return GetHashCode();
         }

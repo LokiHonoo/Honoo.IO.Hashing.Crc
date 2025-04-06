@@ -34,7 +34,7 @@
         /// <summary>
         /// String e.g. "11110000".
         /// </summary>
-        Bits,
+        Binary,
 
         /// <summary>
         /// String e.g. "FF55".
