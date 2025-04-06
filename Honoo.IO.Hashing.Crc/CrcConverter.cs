@@ -28,17 +28,17 @@ namespace Honoo.IO.Hashing
                 throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
             }
             input = input.Trim();
-            StringBuilder bits = new StringBuilder();
+            StringBuilder binary = new StringBuilder();
             switch (inputFormat)
             {
                 case CrcStringFormat.Binary:
                     if (input.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
                     {
-                        bits.Append(input, 2, input.Length - 2);
+                        binary.Append(input, 2, input.Length - 2);
                     }
                     else
                     {
-                        bits.Append(input);
+                        binary.Append(input);
                     }
                     break;
 
@@ -47,30 +47,30 @@ namespace Honoo.IO.Hashing
                     {
                         for (int i = 2; i < input.Length; i++)
                         {
-                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
+                            binary.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
                         }
                     }
                     else
                     {
                         for (int i = 0; i < input.Length; i++)
                         {
-                            bits.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
+                            binary.Append(Convert.ToString(Convert.ToByte(input[i].ToString(), 16), 2).PadLeft(4, '0'));
                         }
                     }
                     break;
 
                 default: throw new ArgumentException("Invalid CRC string format.", nameof(inputFormat));
             }
-            int width = truncateToWidthBits ?? bits.Length;
-            if (bits.Length > width)
+            int width = truncateToWidthBits ?? binary.Length;
+            if (binary.Length > width)
             {
-                bits.Remove(0, bits.Length - width);
+                binary.Remove(0, binary.Length - width);
             }
-            else if (bits.Length < width)
+            else if (binary.Length < width)
             {
-                bits.Insert(0, "0", width - bits.Length);
+                binary.Insert(0, "0", width - binary.Length);
             }
-            return bits.ToString();
+            return binary.ToString();
         }
 
         /// <summary>
@@ -90,21 +90,21 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentException("Invalid width bits. The allowed values are more than 0 or set 'null' to not truncated.", nameof(truncateToWidthBits));
             }
-            StringBuilder bits = new StringBuilder();
+            StringBuilder binary = new StringBuilder();
             for (int i = 0; i < input.Length; i++)
             {
-                bits.Append(input.Get(i) ? '1' : '0');
+                binary.Append(input.Get(i) ? '1' : '0');
             }
-            int width = truncateToWidthBits ?? bits.Length;
-            if (bits.Length > width)
+            int width = truncateToWidthBits ?? binary.Length;
+            if (binary.Length > width)
             {
-                bits.Remove(0, bits.Length - width);
+                binary.Remove(0, binary.Length - width);
             }
-            else if (bits.Length < width)
+            else if (binary.Length < width)
             {
-                bits.Insert(0, "0", width - bits.Length);
+                binary.Insert(0, "0", width - binary.Length);
             }
-            return bits.ToString();
+            return binary.ToString();
         }
 
         /// <summary>
