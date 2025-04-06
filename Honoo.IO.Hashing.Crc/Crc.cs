@@ -93,10 +93,11 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout)
+        public static Crc CreateBy(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, withTable);
         }
 
         /// <summary>
@@ -126,10 +127,11 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout)
+        public static Crc CreateBy(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, withTable);
         }
 
         /// <summary>
@@ -159,10 +161,11 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout)
+        public static Crc CreateBy(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, withTable);
         }
 
         /// <summary>
@@ -192,10 +195,11 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout)
+        public static Crc CreateBy(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, withTable);
         }
 
         /// <summary>
@@ -225,10 +229,11 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public static Crc CreateBy(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout)
+        public static Crc CreateBy(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTableInfo withTable = CrcTableInfo.Standard)
         {
-            return new CrcCustom(name, width, poly, init, xorout, refin, refout);
+            return new CrcCustom(name, width, poly, init, xorout, refin, refout, withTable);
         }
 
         /// <summary>

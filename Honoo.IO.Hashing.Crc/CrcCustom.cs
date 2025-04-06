@@ -19,9 +19,10 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, null))
+        public CrcCustom(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTableInfo withTable)
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, withTable))
         {
         }
 
@@ -38,7 +39,7 @@ namespace Honoo.IO.Hashing
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(string name, int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTable table)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table ?? null))
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
 
@@ -52,9 +53,10 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, null))
+        public CrcCustom(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTableInfo withTable)
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, withTable))
         {
         }
 
@@ -71,7 +73,7 @@ namespace Honoo.IO.Hashing
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(string name, int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTable table)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table ?? null))
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
 
@@ -85,9 +87,10 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, null))
+        public CrcCustom(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTableInfo withTable)
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, withTable))
         {
         }
 
@@ -104,7 +107,7 @@ namespace Honoo.IO.Hashing
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(string name, int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTable table)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table ?? null))
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
 
@@ -118,9 +121,10 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, null))
+        public CrcCustom(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTableInfo withTable)
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, withTable))
         {
         }
 
@@ -137,7 +141,7 @@ namespace Honoo.IO.Hashing
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(string name, int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTable table)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table ?? null))
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
 
@@ -151,9 +155,10 @@ namespace Honoo.IO.Hashing
         /// <param name="xorout">Output xor value.</param>
         /// <param name="refin">Reflects input value.</param>
         /// <param name="refout">Reflects output value.</param>
+        /// <param name="withTable">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
-        public CrcCustom(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, null))
+        public CrcCustom(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTableInfo withTable)
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, withTable))
         {
         }
 
@@ -170,20 +175,24 @@ namespace Honoo.IO.Hashing
         /// <param name="table">Calculate with table.</param>
         /// <exception cref="Exception"></exception>
         public CrcCustom(string name, int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
-            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table ?? null))
+            : base(name, GetEngine(width, poly, init, xorout, refin, refout, table))
         {
         }
 
         #endregion Construction
 
+        private static CrcEngine GetEngine(int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTableInfo withTable)
+        {
+            return GetEngine(width, poly, init, xorout, refin, refout, new CrcTable(withTable, width, poly, refin));
+        }
+
         private static CrcEngine GetEngine(int width, byte poly, byte init, byte xorout, bool refin, bool refout, CrcTable table)
         {
-            CrcTableInfo tableInfo = CrcTableInfo.Standard;
-            if (table != null)
+            if (table is null)
             {
-                tableInfo = table.TableInfo;
+                throw new ArgumentNullException(nameof(table));
             }
-            switch (tableInfo)
+            switch (table.TableInfo)
             {
                 case CrcTableInfo.None:
                 default:
@@ -198,14 +207,18 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static CrcEngine GetEngine(int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTableInfo withTable)
+        {
+            return GetEngine(width, poly, init, xorout, refin, refout, new CrcTable(withTable, width, poly, refin));
+        }
+
         private static CrcEngine GetEngine(int width, ushort poly, ushort init, ushort xorout, bool refin, bool refout, CrcTable table)
         {
-            CrcTableInfo tableInfo = CrcTableInfo.Standard;
-            if (table != null)
+            if (table is null)
             {
-                tableInfo = table.TableInfo;
+                throw new ArgumentNullException(nameof(table));
             }
-            switch (tableInfo)
+            switch (table.TableInfo)
             {
                 case CrcTableInfo.None:
                 default:
@@ -220,14 +233,18 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static CrcEngine GetEngine(int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTableInfo withTable)
+        {
+            return GetEngine(width, poly, init, xorout, refin, refout, new CrcTable(withTable, width, poly, refin));
+        }
+
         private static CrcEngine GetEngine(int width, uint poly, uint init, uint xorout, bool refin, bool refout, CrcTable table)
         {
-            CrcTableInfo tableInfo = CrcTableInfo.Standard;
-            if (table != null)
+            if (table is null)
             {
-                tableInfo = table.TableInfo;
+                throw new ArgumentNullException(nameof(table));
             }
-            switch (tableInfo)
+            switch (table.TableInfo)
             {
                 case CrcTableInfo.None:
                 default:
@@ -242,14 +259,18 @@ namespace Honoo.IO.Hashing
             }
         }
 
+        private static CrcEngine GetEngine(int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTableInfo withTable)
+        {
+            return GetEngine(width, poly, init, xorout, refin, refout, new CrcTable(withTable, width, poly, refin));
+        }
+
         private static CrcEngine GetEngine(int width, ulong poly, ulong init, ulong xorout, bool refin, bool refout, CrcTable table)
         {
-            CrcTableInfo tableInfo = CrcTableInfo.Standard;
-            if (table != null)
+            if (table is null)
             {
-                tableInfo = table.TableInfo;
+                throw new ArgumentNullException(nameof(table));
             }
-            switch (tableInfo)
+            switch (table.TableInfo)
             {
                 case CrcTableInfo.None:
                 default:
@@ -261,6 +282,11 @@ namespace Honoo.IO.Hashing
                 case CrcTableInfo.M16x:
                     return new CrcEngine64M16x(width, poly, init, xorout, refin, refout, table.GetUint64Table());
             }
+        }
+
+        private static CrcEngine GetEngine(int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTableInfo withTable)
+        {
+            return GetEngine(width, poly, init, xorout, refin, refout, new CrcTable(withTable, width, poly, refin));
         }
 
         private static CrcEngine GetEngine(int width, CrcValue poly, CrcValue init, CrcValue xorout, bool refin, bool refout, CrcTable table)
@@ -281,14 +307,11 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(xorout));
             }
-            CrcTableInfo tableInfo = CrcTableInfo.Standard;
-            CrcCore core = CrcCore.Auto;
-            if (table != null)
+            if (table is null)
             {
-                tableInfo = table.TableInfo;
-                core = table.Core;
+                throw new ArgumentNullException(nameof(table));
             }
-            switch (core)
+            switch (table.Core)
             {
                 case CrcCore.UInt8:
                     if (width > 8)
@@ -298,7 +321,7 @@ namespace Honoo.IO.Hashing
                     byte poly8 = poly.ToUInt8();
                     byte init8 = init.ToUInt8();
                     byte xorout8 = xorout.ToUInt8();
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngine8(width, poly8, init8, xorout8, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngine8Standard(width, poly8, init8, xorout8, refin, refout, table.GetUint8Table());
@@ -313,7 +336,7 @@ namespace Honoo.IO.Hashing
                     ushort poly16 = poly.ToUInt16();
                     ushort init16 = init.ToUInt16();
                     ushort xorout16 = xorout.ToUInt16();
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngine16(width, poly16, init16, xorout16, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngine16Standard(width, poly16, init16, xorout16, refin, refout, table.GetUint16Table());
@@ -328,7 +351,7 @@ namespace Honoo.IO.Hashing
                     uint poly32 = poly.ToUInt32();
                     uint init32 = init.ToUInt32();
                     uint xorout32 = xorout.ToUInt32();
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngine32(width, poly32, init32, xorout32, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngine32Standard(width, poly32, init32, xorout32, refin, refout, table.GetUint32Table());
@@ -343,7 +366,7 @@ namespace Honoo.IO.Hashing
                     ulong poly64 = poly.ToUInt64();
                     ulong init64 = init.ToUInt64();
                     ulong xorout64 = xorout.ToUInt64();
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngine64(width, poly64, init64, xorout64, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngine64Standard(width, poly64, init64, xorout64, refin, refout, table.GetUint64Table());
@@ -354,7 +377,7 @@ namespace Honoo.IO.Hashing
                     byte[] polyA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
                     byte[] initA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
                     byte[] xoroutA8 = CrcConverter.GetUInt8Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngineSharding8(width, polyA8, initA8, xoroutA8, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngineSharding8Standard(width, polyA8, initA8, xoroutA8, refin, refout, table.GetUint8Table());
@@ -365,7 +388,7 @@ namespace Honoo.IO.Hashing
                     ushort[] polyA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
                     ushort[] initA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
                     ushort[] xoroutA16 = CrcConverter.GetUInt16Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngineSharding16(width, polyA16, initA16, xoroutA16, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngineSharding16Standard(width, polyA16, initA16, xoroutA16, refin, refout, table.GetUint16Table());
@@ -377,7 +400,7 @@ namespace Honoo.IO.Hashing
                     uint[] polyA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
                     uint[] initA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
                     uint[] xoroutA32 = CrcConverter.GetUInt32Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngineSharding32(width, polyA32, initA32, xoroutA32, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngineSharding32Standard(width, polyA32, initA32, xoroutA32, refin, refout, table.GetUint32Table());
@@ -388,7 +411,7 @@ namespace Honoo.IO.Hashing
                     ulong[] polyA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, poly.ToHex(CrcCaseSensitivity.Lower), width);
                     ulong[] initA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, init.ToHex(CrcCaseSensitivity.Lower), width);
                     ulong[] xoroutA64 = CrcConverter.GetUInt64Array(CrcStringFormat.Hex, xorout.ToHex(CrcCaseSensitivity.Lower), width);
-                    switch (tableInfo)
+                    switch (table.TableInfo)
                     {
                         case CrcTableInfo.None: default: return new CrcEngineSharding64(width, polyA64, initA64, xoroutA64, refin, refout);
                         case CrcTableInfo.Standard: return new CrcEngineSharding64Standard(width, polyA64, initA64, xoroutA64, refin, refout, table.GetUint64Table());

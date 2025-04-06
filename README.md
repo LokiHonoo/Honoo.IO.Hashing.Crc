@@ -187,7 +187,7 @@ private static void Demo3()
 private static void Demo4()
 {
     // Custom width and parameters are supported.
-    var table = new CrcTable(CrcTableInfo.Standard, width, poly, refin, core);
+    var table = new CrcTable(CrcTableInfo.Standard, 217, poly, refin, core);
     var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, poly, init, xorout, true, true, table);
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumByteLength];
