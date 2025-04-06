@@ -161,7 +161,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public abstract byte[] ToByteArray(CrcEndian outputEndian);
+        public abstract byte[] ToBytes(CrcEndian outputEndian);
 
         /// <summary>
         /// Write to output buffer and return checksum byte length.
@@ -171,7 +171,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public abstract int ToByteArray(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
+        public abstract int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset);
 
         /// <summary>
         /// Gets <see cref="string"/> as "FF55" value of converted.

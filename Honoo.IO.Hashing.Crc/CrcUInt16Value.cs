@@ -104,7 +104,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override byte[] ToByteArray(CrcEndian outputEndian)
+        public override byte[] ToBytes(CrcEndian outputEndian)
         {
             int length = (int)Math.Ceiling(_width / 8d);
             byte[] output = new byte[length];
@@ -127,7 +127,7 @@ namespace Honoo.IO.Hashing
         /// <param name="outputOffset">Write start offset from buffer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public override int ToByteArray(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
+        public override int ToBytes(CrcEndian outputEndian, byte[] outputBuffer, int outputOffset)
         {
             if (outputBuffer is null)
             {

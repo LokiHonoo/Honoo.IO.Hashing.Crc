@@ -201,10 +201,10 @@ namespace Test
 
         private static string Calc(Crc crc, byte[] input)
         {
-            byte[] checksum1 = crc.ComputeFinal(input, 0, input.Length - 2).ToByteArray(CrcEndian.BigEndian);
+            byte[] checksum1 = crc.ComputeFinal(input, 0, input.Length - 2).ToBytes(CrcEndian.BigEndian);
             string hexU = BitConverter.ToString(checksum1).Replace("-", string.Empty);
             byte[] checksum2 = new byte[crc.ChecksumByteLength];
-            crc.ComputeFinal(input, 0, input.Length - 2).ToByteArray(CrcEndian.BigEndian, checksum2, 0);
+            crc.ComputeFinal(input, 0, input.Length - 2).ToBytes(CrcEndian.BigEndian, checksum2, 0);
             string hexL = BitConverter.ToString(checksum2).Replace("-", string.Empty).ToLowerInvariant();
             for (int k = 0; k < input.Length - 2; k++)
             {
@@ -428,7 +428,7 @@ namespace Test
             Console.WriteLine(d.ToBinary());
 
             Console.WriteLine(CrcConverter.GetHex(a, 30, CrcCaseSensitivity.Upper));
-            Console.WriteLine(BitConverter.ToString(b.ToByteArray(CrcEndian.BigEndian)).Replace("-", ""));
+            Console.WriteLine(BitConverter.ToString(b.ToBytes(CrcEndian.BigEndian)).Replace("-", ""));
             Console.WriteLine(c.ToHex(CrcCaseSensitivity.Upper));
         }
 
