@@ -181,7 +181,7 @@ private static void Demo3()
     var crc = new Crc32();
     crc.Update(inputBytes);
     // The return value length is crc.ChecksumByteLength.
-    byte[] checksum = crc.ComputeFinal().ToByteArray(CrcEndian.BigEndian);
+    byte[] checksum = crc.ComputeFinal().ToBytes(CrcEndian.BigEndian);
 }
 
 private static void Demo4()
@@ -191,7 +191,7 @@ private static void Demo4()
     var crc = Crc.CreateBy("CRC-217/CUSTOM", 217, poly, init, xorout, true, true, table);
     crc.Update(inputBytes);
     byte[] checksum = new byte[crc.ChecksumByteLength];
-    int length = crc.ComputeFinal().ToByteArray(CrcEndian.BigEndian, checksum, 0);
+    int length = crc.ComputeFinal().ToBytes(CrcEndian.BigEndian, checksum, 0);
 }
 
 ```
