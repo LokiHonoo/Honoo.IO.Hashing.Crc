@@ -684,7 +684,7 @@ namespace Honoo.IO.Hashing
         private readonly CrcValue _xorout;
 
         /// <summary>
-        /// Gets poly value.
+        /// Gets init value.
         /// </summary>
         public CrcValue Init => _init;
 
@@ -714,7 +714,7 @@ namespace Honoo.IO.Hashing
         public int Width => _width;
 
         /// <summary>
-        /// Gets poly value.
+        /// Gets xorout value.
         /// </summary>
         public CrcValue Xorout => _xorout;
 
