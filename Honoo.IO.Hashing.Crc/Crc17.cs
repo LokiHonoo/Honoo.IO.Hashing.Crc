@@ -12,8 +12,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 17;
         private const uint XOROUT = 0x00000;
-        private static uint[] _tableM16x;
-        private static uint[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc17CanFd class.
@@ -44,20 +42,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine32Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine32M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine32Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine32Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine32M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine32M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine32(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }

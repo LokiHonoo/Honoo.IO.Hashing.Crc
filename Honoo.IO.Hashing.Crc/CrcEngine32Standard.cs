@@ -20,6 +20,7 @@ namespace Honoo.IO.Hashing
         private readonly uint _xoroutParsed;
         private uint _crc;
         internal override int ChecksumByteLength => _checksumByteLength;
+        internal override int ChecksumHexLength => _checksumHexLength;
         internal override CrcCore Core => _core;
         internal override CrcTableInfo TableInfo => _tableInfo;
         internal override int Width => _width;

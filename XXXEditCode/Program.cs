@@ -9,16 +9,13 @@ namespace XXXEditCode
             var files = new List<string>();
             //var regexF = new Regex("Crc10.cs");
             var regexF = new Regex("Crc\\d+.cs");
-            var regex1 = new Regex("namespace Honoo\\.IO\\.Hashing");
-            var regex2 = new Regex("public (.*)\\(CrcTableInfo withTable = CrcTableInfo\\.Standard\\) : base\\(DEFAULT_NAME, GetEngine\\(withTable\\)\\)");
-            var regex3 = new Regex("internal static CrcName GetAlgorithmName\\(\\)");
-            var regex4 = new Regex("_table = (CrcEngine\\d+).GenerateTable(.*)");
-            var regex5 = new Regex("return new (CrcEngine\\d+)\\(WIDTH, REFIN, REFOUT, POLY, INIT, XOROUT, _table\\);");
-            var regex6 = new Regex("1011000101000101101010101101000111110100001001011010110000011110");
+            var regex1 = new Regex("private static (.*)\\[] _tableM16x;");
+            var regex2 = new Regex("private static (.*)\\[] _tableStandard;");
+            var regex3 = new Regex("case CrcTableInfo.Standard:");
+            var regex4 = new Regex("case CrcTableInfo.M16x:");
             //
             //
             //
-
             string[] tmp = Directory.GetFiles("D:\\Works\\Programs\\Honoo.IO.Hashing.Crc\\Honoo.IO.Hashing.Crc");
             foreach (string t in tmp)
             {
@@ -31,44 +28,49 @@ namespace XXXEditCode
             {
                 foreach (string file in files)
                 {
-                    var lines = new List<string>();
-                    string ppp = string.Empty;
-                    foreach (var line in File.ReadLines(file))
+                    var lines = File.ReadLines(file).ToArray();
+                    var result = new List<string>();
+                    for (int i = 0; i < lines.Length; i++)
                     {
+                        var line = lines[i];
                         Match match1 = regex1.Match(line);
                         Match match2 = regex2.Match(line);
                         Match match3 = regex3.Match(line);
+                        Match match4 = regex4.Match(line);
                         if (match1.Success)
                         {
                             //    lines.Add("using System;");
-                            lines.Add(line);
                         }
                         else if (match2.Success)
                         {
-                            ppp = match2.Groups[1].Value;
-                            lines.Add(line);
+                            // ppp = match2.Groups[1].Value;
                         }
                         else if (match3.Success)
                         {
-                            lines.Add("/// <summary>");
-                            lines.Add("/// Creates an instance of the algorithm.");
-                            lines.Add("/// </summary>");
-                            lines.Add("/// <param name=\"withTable\">Calculate with table.</param>");
-                            lines.Add("/// <returns></returns>");
-                            lines.Add($"public static {ppp} Create(  CrcTableInfo withTable = CrcTableInfo.Standard)");
-                            lines.Add("{");
-                            lines.Add($"return new {ppp}(withTable);");
-                            lines.Add(" }");
-                            lines.Add(line);
+                            i += 3;
+                            string ppp = lines[i].Trim().Trim(';').Replace("_tableStandard = ", string.Empty);
+                            i += 2;
+                            string ppp2 = lines[i].Trim().Replace("_tableStandard", ppp);
+                            result.Add(line + ppp2);
+                            i++;
+                        }
+                        else if (match4.Success)
+                        {
+                            i += 3;
+                            string ppp = lines[i].Trim().Trim(';').Replace("_tableM16x = ", string.Empty);
+                            i += 2;
+                            string ppp2 = lines[i].Trim().Replace("_tableM16x", ppp);
+                            result.Add(line + ppp2);
+                            i++;
                         }
                         else
                         {
-                            lines.Add(line);
+                            result.Add(line);
                         }
                     }
                     //Console.WriteLine(string.Join(Environment.NewLine, lines));
                     //Console.ReadKey(true);
-                    File.WriteAllLines(file, lines.ToArray());
+                    File.WriteAllLines(file, result.ToArray());
                 }
                 Console.WriteLine();
                 Console.WriteLine("Done.");
@@ -77,7 +79,7 @@ namespace XXXEditCode
 
         private static void Main(string[] args)
         {
-            // Do();
+            //Do();
         }
     }
 }

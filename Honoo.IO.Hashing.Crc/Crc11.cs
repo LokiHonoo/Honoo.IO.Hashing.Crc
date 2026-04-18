@@ -12,8 +12,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 11;
         private const ushort XOROUT = 0x000;
-        private static ushort[] _tableM16x;
-        private static ushort[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc11 class.
@@ -54,20 +52,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine16Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine16Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine16M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine16M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine16Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine16Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine16M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine16M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine16(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -85,8 +71,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 11;
         private const ushort XOROUT = 0x000;
-        private static ushort[] _tableM16x;
-        private static ushort[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc11Umts class.
@@ -117,20 +101,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine16Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine16Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine16M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine16M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine16Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine16Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine16M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine16M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine16(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }

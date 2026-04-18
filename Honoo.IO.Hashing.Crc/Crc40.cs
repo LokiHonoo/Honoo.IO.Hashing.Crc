@@ -12,8 +12,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 40;
         private const ulong XOROUT = 0xFFFFFFFFFF;
-        private static ulong[] _tableM16x;
-        private static ulong[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc40Gsm class.
@@ -44,20 +42,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine64Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine64Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine64M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine64M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine64Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine64Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine64M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine64M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine64(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }

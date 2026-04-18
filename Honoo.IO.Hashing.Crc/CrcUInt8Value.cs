@@ -101,33 +101,6 @@ namespace Honoo.IO.Hashing
         /// <summary>
         /// Gets <see cref="byte"/>[] value of converted.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public byte[] ToByteArray()
-        {
-            return new byte[] { _value };
-        }
-
-        /// <summary>
-        /// Write to output buffer and return checksum byte length.
-        /// </summary>
-        /// <param name="outputBuffer">Output buffer.</param>
-        /// <param name="outputOffset">Write start offset from buffer.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public int ToByteArray(byte[] outputBuffer, int outputOffset)
-        {
-            if (outputBuffer is null)
-            {
-                throw new ArgumentNullException(nameof(outputBuffer));
-            }
-            outputBuffer[outputOffset] = _value;
-            return 1;
-        }
-
-        /// <summary>
-        /// Gets <see cref="byte"/>[] value of converted.
-        /// </summary>
         /// <param name="outputEndian">Specifies the type of endian for output.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>

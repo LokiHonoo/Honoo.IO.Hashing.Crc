@@ -5,6 +5,7 @@
         #region Members
 
         internal abstract int ChecksumByteLength { get; }
+        internal abstract int ChecksumHexLength { get; }
         internal abstract CrcCore Core { get; }
         internal abstract CrcTableInfo TableInfo { get; }
         internal abstract int Width { get; }

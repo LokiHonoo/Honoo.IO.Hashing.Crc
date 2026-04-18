@@ -12,8 +12,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8 class.
@@ -53,20 +51,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -84,8 +70,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0xFF;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Autosar class.
@@ -116,20 +100,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -147,8 +119,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Bluetooth class.
@@ -179,20 +149,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -210,8 +168,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Cdma2000 class.
@@ -242,20 +198,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -273,8 +217,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Darc class.
@@ -305,20 +247,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -336,8 +266,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8DvbS2 class.
@@ -368,20 +296,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -399,8 +315,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Ebu class.
@@ -440,20 +354,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -471,8 +373,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8GsmA class.
@@ -503,20 +403,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -534,8 +422,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0xFF;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8GsmB class.
@@ -566,20 +452,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -597,8 +471,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Hitag class.
@@ -629,20 +501,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -660,8 +520,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8ICode class.
@@ -692,20 +550,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -723,8 +569,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x55;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Itu class.
@@ -764,20 +608,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -795,8 +627,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Lte class.
@@ -827,20 +657,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -858,8 +676,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Maxim class.
@@ -899,20 +715,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -930,8 +734,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8MifareMad class.
@@ -962,20 +764,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -993,8 +783,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Nrsc5 class.
@@ -1025,20 +813,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -1056,8 +832,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Opensafety class.
@@ -1088,20 +862,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -1119,8 +881,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Rohc class.
@@ -1151,20 +911,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -1182,8 +930,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = false;
         private const int WIDTH = 8;
         private const byte XOROUT = 0xFF;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8SaeJ1850 class.
@@ -1214,20 +960,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }
@@ -1245,8 +979,6 @@ namespace Honoo.IO.Hashing
         private const bool REFOUT = true;
         private const int WIDTH = 8;
         private const byte XOROUT = 0x00;
-        private static byte[] _tableM16x;
-        private static byte[] _tableStandard;
 
         /// <summary>
         /// Initializes a new instance of the Crc8Wcdma class.
@@ -1277,20 +1009,8 @@ namespace Honoo.IO.Hashing
             //
             switch (withTable)
             {
-                case CrcTableInfo.Standard:
-                    if (_tableStandard == null)
-                    {
-                        _tableStandard = CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableStandard);
-
-                case CrcTableInfo.M16x:
-                    if (_tableM16x == null)
-                    {
-                        _tableM16x = CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN);
-                    }
-                    return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, _tableM16x);
-
+                case CrcTableInfo.Standard: return new CrcEngine8Standard(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8Standard.GenerateTable(WIDTH, POLY, REFIN));
+                case CrcTableInfo.M16x: return new CrcEngine8M16x(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT, CrcEngine8M16x.GenerateTable(WIDTH, POLY, REFIN));
                 default: return new CrcEngine8(WIDTH, POLY, INIT, XOROUT, REFIN, REFOUT);
             }
         }

@@ -19,6 +19,11 @@ namespace Honoo.IO.Hashing
         public int ChecksumByteLength => _engine.ChecksumByteLength;
 
         /// <summary>
+        /// Gets output checksum hex string length.
+        /// </summary>
+        public int ChecksumHexLength => _engine.ChecksumHexLength;
+
+        /// <summary>
         /// Gets a value indicating whether the calculate core.
         /// </summary>
         public CrcCore Core => _engine.Core;
@@ -288,7 +293,8 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(input));
             }
-            return ComputeFinal(input, 0, input.Length);
+            _engine.Update(input, 0, input.Length);
+            return _engine.ComputeFinal();
         }
 
         /// <summary>
@@ -301,8 +307,12 @@ namespace Honoo.IO.Hashing
         /// <exception cref="Exception"></exception>
         public CrcValue ComputeFinal(byte[] inputBuffer, int offset, int length)
         {
+            if (inputBuffer == null)
+            {
+                throw new ArgumentNullException(nameof(inputBuffer));
+            }
             _engine.Update(inputBuffer, offset, length);
-            return ComputeFinal();
+            return _engine.ComputeFinal();
         }
 
         /// <summary>
@@ -334,7 +344,7 @@ namespace Honoo.IO.Hashing
             {
                 throw new ArgumentNullException(nameof(input));
             }
-            Update(input, 0, input.Length);
+            _engine.Update(input, 0, input.Length);
         }
 
         /// <summary>
